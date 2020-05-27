@@ -1,0 +1,30 @@
+
+      	.select,.select1{
+      		position: relative;
+      		width: 100%;
+      		border:0;
+      		text-align: center;
+      		padding-top: 0.2rem;
+      		margin-bottom: 0.2rem;
+      	}
+      	.select button,.select1 button{
+			height: 1.8rem;
+      		position: relative;
+      		background-color: rgba(0,0,0,0.1);
+      		margin: 0 0.5rem;
+      	}
+      	.selected ,.selected1{
+      		color: white;
+      		background-color: #CF2D28 !important;
+      		border: 0 !important;
+      	}
+      
+      	.activeselect ,.activeselect1{
+      		color: white !important;
+      		border: 0;
+      		background-color:#CF2D28 !important;
+      	}
+      	
+      	.liebiao,.liebiao1{
+      		display: none;
+      	}

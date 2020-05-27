@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>项目建设</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="/jdpt/static/css/all.css" />
+    <script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+    <script src="/jdpt/static/js/storage.js"></script>
+<style>
+    .body{
+		position: relative;
+		top:6vh;
+		padding: 1vw;
+		color: #555555;
+	}
+	.body p{
+		position: relative;
+		height: 5vh;
+		line-height: 5vh;
+	}
+</style>
+</head>
+
+<body>
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+    <img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+<header>
+    <a class="go-back">&lsaquo;</a>
+</header>
+<div class="body">
+
+</div>
+<script src="/jdpt/static/js/header.js"></script>
+<script src="/jdpt/static/js/mask.js"></script>
+<script>
+
+    var xjid=sessionStorage.getItem("xjid");
+	console.log(xjid);
+    showmask(loadmask);
+    $.ajax({
+        url:uri+"queryOperationManagementFindById/"+xjid,
+        dataType:"JSON",//服务器返回json格式数据
+        type:'get',//HTTP请求类型
+        success:function(mes){
+            console.log("项目建设信息");
+            console.log(mes);
+            var omName="";//名字
+            mes.OperationManagement.omName==null?omName="未知":omName=mes.OperationManagement.omName;
+            var omImplementation="";//是否实施
+            mes.OperationManagement.omImplementation==true?omImplementation="是":omImplementation="否";
+            var omTenderingmaterial="";//项目编号
+            mes.OperationManagement.omTenderingmaterial==null?omTenderingmaterial="未知":omTenderingmaterial=mes.OperationManagement.omTenderingmaterial;
+            var omImplementingparty="";//实施方
+            mes.OperationManagement.omImplementingparty==null?omImplementingparty="未知":omImplementingparty=mes.OperationManagement.omImplementingparty;
+            var omSourceoffunds="";//是否立项
+            mes.OperationManagement.omSourceoffunds==null?omSourceoffunds="未知":omSourceoffunds=mes.OperationManagement.omSourceoffunds;
+            var omImplementtheplan="";//是否招标
+            mes.OperationManagement.omImplementtheplan==null?omImplementtheplan="未知":omImplementtheplan=mes.OperationManagement.omImplementtheplan;
+            var omAcceptanceparty="";//验收方
+            mes.OperationManagement.omAcceptanceparty==null?omAcceptanceparty="未知":omAcceptanceparty=mes.OperationManagement.omAcceptanceparty;
+            var omFollowupmanagement="";//监理方
+            mes.OperationManagement.omFollowupmanagement==null?omFollowupmanagement="未知":omFollowupmanagement=mes.OperationManagement.omFollowupmanagement;
+            var omDivisionofresponsibility="";//支付情况
+            mes.OperationManagement.omDivisionofresponsibility==null?omDivisionofresponsibility="未知":omDivisionofresponsibility=mes.OperationManagement.omDivisionofresponsibility;
+            var omType="";//备注
+            mes.OperationManagement.omType==null?omType="未知":omType=mes.OperationManagement.omType;
+            var omTmZhaobiaowendang="";//招标文档
+            mes.OperationManagement.omTmZhaobiaowendang==null||""?omTmZhaobiaowendang=null:omTmZhaobiaowendang=mes.OperationManagement.omTmZhaobiaowendang;
+            var omTmShishiwendang="";//实施文档
+            mes.OperationManagement.omTmShishiwendang==null||""?omTmShishiwendang=null:omTmShishiwendang=mes.OperationManagement.omTmShishiwendang;
+            var omTmSourceoffundsfile="";//资金来源文档
+            mes.OperationManagement.omTmSourceoffundsfile==null||""?omTmSourceoffundsfile=null:omTmSourceoffundsfile=mes.OperationManagement.omTmSourceoffundsfile;
+            var omTmAcceptancepartyfile="";//验收方文档
+            mes.OperationManagement.omTmAcceptancepartyfile==null||""?omTmAcceptancepartyfile=null:omTmAcceptancepartyfile=mes.OperationManagement.omTmAcceptancepartyfile;
+            var omTmFollowupmanagementfile="";//后续管理文档
+            mes.OperationManagement.omTmFollowupmanagementfile==null||""?omTmFollowupmanagementfile=null:omTmFollowupmanagementfile=mes.OperationManagement.omTmFollowupmanagementfile;
+            var zrhffile="";//责任划分文档
+            mes.OperationManagement.omTmDivisionofresponsibilityfile==null||""?zrhffile=null:zrhffile=mes.OperationManagement.zrhffile;
+            var omTmBeiyong2="";//合同照片
+            mes.OperationManagement.omTmBeiyong2==null||""?omTmBeiyong2=null:omTmBeiyong2=mes.OperationManagement.omTmBeiyong2;
+            var omTmBeiyong1="";//会议介绍
+            mes.OperationManagement.omTmBeiyong1==null?omTmBeiyong1="未知":omTmBeiyong1=mes.OperationManagement.omTmBeiyong1;
+
+            var str="";
+            str+="<p>项目名：</td><td>"+omName+"</p>";
+            str+="<p>是否实施：</td><td>"+omImplementation+"</p>";
+            str+="<p>项目编号：</td><td>"+omTenderingmaterial+"</p>";
+            str+="<p>实施方：</td><td>"+omImplementingparty+"</p>";
+            str+="<p>是否立项：</td><td>"+omSourceoffunds+"</p>";
+            str+="<p>是否招标：</td><td>"+omImplementtheplan+"</p>";
+            str+="<p>验收方：</td><td>"+omAcceptanceparty+"</p>";
+            str+="<p>监理方：</td><td>"+omFollowupmanagement+"</p>";
+            str+="<p>支付情况：</td><td>"+omDivisionofresponsibility+"</p>";
+            str+="<p>备注：</p><p>"+omType+"</p>";
+            str+="<p>会议介绍：</p>"//+omTmBeiyong1+"</p>";
+			if(omTmBeiyong1==null||omTmBeiyong1==""){
+			    str+="<p>未知</p>";
+			}else {
+				str+="<p>"+omTmBeiyong1+"'</p>";
+			}
+            str+="<p>招标文档：</p>";
+            if(omTmZhaobiaowendang==null||omTmZhaobiaowendang==""){
+                str+="<p>未知</p>";
+            }else {
+				str+="<p>"+omTmZhaobiaowendang+"'</p>";
+            }
+            str+="<p>实施文档：</p>";
+            if(omTmShishiwendang==null||omTmShishiwendang==""){
+                str+="<p>未知</p>";
+            }else {
+                    str+="<p>"+omTmShishiwendang+"'</p>";
+                
+            }
+            str+="<p>资金来源文档：</p>";
+            if(omTmSourceoffundsfile==null||omTmSourceoffundsfile==""){
+                str+="<p>未知</p>";
+            }else {
+                str+="<p>"+omTmSourceoffundsfile+"'</p>";
+            }
+            str+="<p>后续管理文档：</p>";
+            if(omTmFollowupmanagementfile==null||omTmFollowupmanagementfile==""){
+                str+="<p>未知</p>";
+            }else {
+               str+="<p>"+omTmFollowupmanagementfile+"'</p>";
+            }
+            str+="<p>责任划分文档：</p>";
+            if(zrhffile==null||zrhffile==""){
+                str+="<p>未知</p>";
+            }else {
+               str+="<p>"+zrhffile+"'</p>";
+            }
+            str+="<p>合同照片：</p>";
+            if(omTmBeiyong2==null||omTmBeiyong2==""){
+                str+="<p>未知</p>";
+            }else {
+                var photos=omTmBeiyong2.split(",");
+                console.log(photos.length);
+                photos.length-=1;
+                for(var i=0;i<photos.length;i++){
+                    str+="<img  src='/jdpt/HJResourse/OperationManagement"+photos[i]+"'/>";
+                }
+            }
+            document.getElementsByClassName("body")[0].innerHTML=str;
+            hiden(loadmask);
+        },
+        error:function(xhr,type,errorThrown){
+            //异常处理
+			console.log(type);
+        }
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>村干部信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="/jdpt/static/css/iconfont.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/cards.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet" />
+		<script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+		<script src="/jdpt/static/js/storage.js"></script>
+	</head>
+	<style>
+		header{
+			position: fixed;
+			height: 5vh;
+			line-height: 5vh;
+		}
+		.pageselect{
+			bottom: 0rem;
+			position: fixed;
+		}
+		.content{
+			position: relative;
+			width: 100%;
+		}
+		.content .title{
+			position: relative;
+			width: 100%;
+			text-align: center;
+			color: white;
+			top: 2rem;
+			z-index: 1;
+		}
+		.content .errorimg{
+			position: relative;
+			width: 100%;
+			height: auto;
+			z-index: 0;
+		}
+	</style>
+	<body>
+	<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+		<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+	</div>
+		<div id="dymask" class="mask" onclick="hiden(this)">
+
+		</div>
+	<header>
+		<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+		<span style="padding-left: 2rem;">村干部信息</span>
+	</header>
+		<div class="content">
+			<ul id="dylist" class="table-view" style="top: 6.5vh;">
+
+			</ul>
+		</div>
+
+	<script src="/jdpt/static/js/header.js"></script>
+<script src="/jdpt/static/js/mask.js"></script>
+	<script>
+        var loadmask=document.getElementById("loadmask");
+        showmask(loadmask);
+        var dylist=[];
+        getdylist();
+        //点击查看党员详情
+        function showdyinfo(t){
+            var dyitem=parseInt(t.id.substring(2));
+            var dymask=document.getElementById("dymask");
+            var str="";
+            str+="<div id='dycard' class='dangyuan'><table cellpadding='0' cellspacing='0'><tr><td>相片：</td><td>";
+			if(dylist[dyitem][6]==""){
+			    str+="未知</td></tr><tr><td>姓名：</td><td>";
+			}else {
+                str+="<img style='width:60%;height:auto;' src='http://47.105.118.98/jdpt/HJResourse/VillagecadresImages/"+dylist[dyitem][6]+"'/>"+"</td></tr><tr><td>姓名：</td><td>";
+			}
+            str+=dylist[dyitem][0]+"</td></tr><tr><td>性别：</td><td>";
+            str+=dylist[dyitem][1]+"</td></tr><tr><td>联系方式：</td><td>";
+            str+=dylist[dyitem][2]+"</td></tr><tr><td>职位：</td><td>";
+			 str+=dylist[dyitem][3]+"</td></tr><tr><td>入职时间：</td><td>";
+            str+=dylist[dyitem][7]+"</td></tr><tr><td>工资：</td> <td>";
+            str+=dylist[dyitem][4]+"元 </td></tr><tr><td>分工：</td><td>";
+            str+=dylist[dyitem][5]+"</td></tr></table></div>";
+            dymask.innerHTML=str;
+            showmask(dymask);
+        }
+
+        function getdylist() {
+            showmask(loadmask);
+            var vId=userInfo.getItem("userVillageid");
+           // vId=1;
+            $.ajax({
+                url:uri+'PageFindVillagecadres/'+vId+"/"+1+"/100",
+                dataType:"JSON",//服务器返回json格式数据
+                type:'GET',//HTTP请求类型
+                headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                success:function(mes){
+                    console.log(mes);
+                    //总页数
+					if (mes.total==0){
+                        document.getElementById("dylist").innerHTML="<img style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                    } else {
+                        document.getElementById("dylist").innerHTML = "";
+                        dylist.length = 0;
+                        for (var i = 0; i < mes.record.length; i++) {
+                            var name = "";
+                            mes.record[i].vcName == null ? name = "未知" : name = mes.record[i].vcName;
+                            var xingbie = "";
+                            mes.record[i].vcSex == null ? xingbie = "未知" : xingbie = mes.record[i].vcSex;
+                            var dianhua = "";
+                            mes.record[i].vcPhone == null ? dianhua = "未知" : dianhua = mes.record[i].vcPhone;
+                            var zhiwei = "";
+                            mes.record[i].job == null ? zhiwei = "未知" : zhiwei = mes.record[i].job.jName;
+                            var daiyu = "";
+                            mes.record[i].vcGongzi == null ? daiyu = "未知" : daiyu = mes.record[i].vcGongzi;
+                            var zhizemingxi = "";
+                            mes.record[i].vcZhize == null ? zhizemingxi = "未知" : zhizemingxi = mes.record[i].vcZhize;
+                            var zhaopian="";
+                            mes.record[i].vcNewimagename == null ? zhaopian = "" : zhaopian = mes.record[i].vcNewimagename;
+							var ruzhitime="";
+							mes.record[i].vcBeiyong1 == null ? ruzhitime = "" : ruzhitime = mes.record[i].vcBeiyong1;
+                            dylist[i] = [name, xingbie, dianhua, zhiwei, daiyu, zhizemingxi,zhaopian,ruzhitime];
+
+                        }
+                        getdyitem(dylist);}
+                    hiden(loadmask);
+                },
+                error:function(){
+                }
+            });
+        }
+
+        function getdyitem(dydata){
+            var dylist=document.getElementById("dylist");
+            var str="";
+            for(var i=0;i<dydata.length;i++){
+                str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showdyinfo(this)'>"+dydata[i][0]+"</a></li>"
+            }
+            dylist.innerHTML=str;
+        }
+
+
+	</script>
+
+	</body>
+
+</html>

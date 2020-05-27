@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/all.css" />
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../js/all.js"></script>
+    <script src="../js/echarts.js"></script>
+    <script src="../js/jquery.date.js"></script>
+    <title>全区反馈</title>
+</head>
+<style>
+    .link tr {
+        cursor: pointer;
+    }
+    
+    .link tr :hover {
+        color: dodgerblue;
+    }
+    <style>
+	button {
+        border: none;
+        background-color: dodgerblue;
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+        margin: 0 1vw;
+    }
+    
+</style>
+</style>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12" style="height: 96vh;">
+                <div class="tu_contain">
+                    <div class="tu_card_header">
+                        <p>
+                            年份：
+                            <select id="getfktime" style="width: 10vw;margin-left: 0vw;" onchange="getallfk()">
+                			</select> &nbsp; &nbsp; 月份：
+                            <select id="getfktime1" style="width: 10vw;margin-left: 0vw;">
+                			</select> &nbsp; &nbsp;
+                            <button class="selectbutton" type="button" onclick="getfkbytime()">搜索</button>
+                        </p>
+                    </div>
+                    <div class="tu_info" id="fk_qq">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-7 col-xs-12" style="height: 96vh;">
+                <div class="tu_card">
+                    <div class="tu_card_header">
+                        <p><span id="time1"></span>各镇(街道)所辖行政村群众意见建议处理占比图</p>
+                    </div>
+                    <div class="tu_card_item">
+                        <table class="card_table link" onclick="to_fk_list()">
+                            <tr>
+                                <td>
+                                    <span>已处理群众意见建议量：</span><br>
+                                    <span id="ycl"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>未处理群众意见建议量：</span><br>
+                                    <span id="wcl"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="tu_card_item" id="fk_cl"></div>
+                </div>
+                <div class="tu_card">
+                    <div class="tu_card_header">
+                        <p><span id="time2"></span>各镇(街道)所辖行政村群众意见建议类型占比图</p>
+                    </div>
+                    <div class="tu_card_item ">
+                        <table class="card_table " onclick="to_fk_list1()">
+                            <tbody id="class_value" class="link">
+                            	
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tu_card_item" id="fk_class"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    (function() {
+        var str = "";
+        for (var i = year; i >= 2019; i--) {
+            str += "<option value='" + i + "'>" + i + "年</option>";
+        }
+        str += "<option value='" + "2019-01-01~" + year + "-12-31" + "'>近年来</option>";
+        document.getElementById("getfktime").innerHTML = str;
+        var str1 = "";
+        str1 += "<option value='allyear'>整年</option>";
+        for (var i = 1; i <= 12; i++) {
+            str1 += "<option value='" + i + "'>" + i + "月</option>";
+        }
+        document.getElementById("getfktime1").innerHTML = str1;
+        document.getElementById("getfktime").value = year;
+        document.getElementById("getfktime1").value = (mouth + 1);
+
+    })();
+
+    function getallfk() {
+        var obj1 = document.getElementById("getfktime");
+        var index1 = obj1.selectedIndex; // 选中索引
+        var thetimevalue1 = obj1.options[index1].text; // 选中文本
+        var thetime1 = obj1.options[index1].value; // 选中值
+        if (thetimevalue1 == "近年来") {
+            thetime = thetime1;
+            getqqtu(thetime, thetimevalue1);
+            getqqtypefk(thetime, thetimevalue1);
+        }
+    }
+    getfkbytime();
+
+    function getfkbytime() {
+        var obj1 = document.getElementById("getfktime");
+        var index1 = obj1.selectedIndex; // 选中索引
+        var thetimevalue1 = obj1.options[index1].text; // 选中文本
+        var thetime1 = obj1.options[index1].value; // 选中值
+        var obj2 = document.getElementById("getfktime1");
+        var index2 = obj2.selectedIndex; // 选中索引
+        var thetimevalue2 = obj2.options[index2].text; // 选中文本
+        var thetime2 = obj2.options[index2].value; // 选中值
+        if (thetimevalue1 == "近年来") {
+            thetime = thetime1;
+            getqqtu(thetime, thetimevalue1);
+            getqqtypefk(thetime, thetimevalue1);
+        } else {
+            if (thetimevalue2 == "整年") {
+                thetime = thetime1 + "-01-01~" + thetime1 + "-12-31";
+                var thetimevalue = thetime1 + "年";
+                getqqtu(thetime, thetimevalue);
+                getqqtypefk(thetime, thetimevalue);
+            } else {
+                thetime = thetime1 + "-" + gettruenumber(thetime2) + "-01~" + thetime1 + "-" + gettruenumber(thetime2 + 1) + "-01";
+                var thetimevalue = thetime1 + "年" + (thetime2) + "月";
+                getqqtu(thetime, thetimevalue);
+                getqqtypefk(thetime, thetimevalue);
+            }
+
+        }
+    }
+    var fkChart1 = echarts.init(document.getElementById('fk_qq'));
+    fkChart1.showLoading();
+    getqqtu(thetime, "本月");
+    getqqtypefk(thetime, "本月");
+    var fkChart2 = echarts.init(document.getElementById('fk_cl'));
+    fkChart2.showLoading();
+    var fkChart3 = echarts.init(document.getElementById('fk_class'));
+    fkChart3.showLoading();
+
+    function getqqtypefk(thetime, time) {
+        $.ajax({
+            url: uri + "qulxbintu",
+            data: {
+                time: thetime
+            },
+            dataType: 'json', //服务器返回json格式数据
+            type: 'post', //HTTP请求类型
+            timeout: 10000, //超时时间设置为10秒；
+            success: function(mes) {
+                console.log("类型");
+                console.log(mes);
+                var datas = [];
+                var str = "";
+                for (var i = 0, len = mes.data.length; i < len; i++) {
+                    str += "<tr><td><span>" + mes.data[i].type + "</span></td><td><span>" + mes.data[i].shuliang + "条</span></td></tr>";
+                    var datasitem = {
+                        value: mes.data[i].shuliang,
+                        name: mes.data[i].type,
+                    };
+                    datas.push(datasitem);
+                }
+                document.getElementById("class_value").innerHTML = str;
+                fkoption3 = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    series: [{
+                        name: '群众意见建议条数',
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '20',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: datas
+                    }],
+
+                };
+                fkChart3.hideLoading();
+                fkChart3.setOption(fkoption3);
+            },
+            error: function(type) {
+
+            }
+        })
+    }
+
+    function getqqtu(thetime, time) {
+        $.ajax({
+            url: uri + "Fankuileader",
+            data: {
+                zhenId: 0,
+                time: thetime
+            },
+            dataType: 'json', //服务器返回json格式数据
+            type: 'post', //HTTP请求类型
+            timeout: 10000, //超时时间设置为10秒；
+            success: function(mes) {
+                console.log("全区群众意见建议量");
+                console.log(mes);
+                var dataname = [];
+                var dataz = [];
+                var datay = [];
+                var dataw = [];
+                var ycl = 0,
+                    total = 0,
+                    wcl = 0;
+                for (var j = 0, len = zhensx.length; j < len; j++) {
+                    for (var i = 0, len = mes.data.length; i < len; i++) {
+                        if (zhensx[j].zhenName == mes.data[i].name) {
+                            dataname[j] = mes.data[i].name;
+                            dataz[j] = mes.data[i].total;
+                            datay[j] = mes.data[i].ycl;
+                            dataw[j] = mes.data[i].wcl;
+                            total += mes.data[i].total;
+                            ycl += mes.data[i].ycl;
+                            wcl += mes.data[i].wcl;
+                        } else {
+
+                        }
+                    }
+                }
+
+                //console.log(dataname);
+                document.getElementById("time1").innerHTML = time;
+                document.getElementById("time2").innerHTML = time;
+                document.getElementById("ycl").innerHTML = ycl + "条";
+                document.getElementById("wcl").innerHTML = wcl + "条";
+                fkoption1 = {
+
+                    title: {
+                        text: time + "各镇(街道)所辖行政村群众意见建议数量条形图",
+                        top: "3%",
+                        left: "3%",
+                        textStyle: {
+                            color: "#999999"
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow',
+                            label: {
+                                show: false
+                            },
+                        }
+                    },
+                    legend: {
+                        data: ['已处理群众意见建议', '处理中群众意见建议'],
+                        top: '10%',
+                        right: "6%",
+                    },
+                    grid: {
+                        top: '20%',
+                        left: '6%',
+                        right: '6%',
+                        bottom: '5%',
+                        containLabel: true
+                    },
+                    yAxis: {
+                        type: 'category',
+                        splitLine: {
+                            show: false
+                        },
+                        inverse: true,
+                        nameGap: 40,
+                        data: dataname,
+                        scale: true,
+                        axisLine: {
+                            show: false,
+                        },
+                        axisTick: {
+                            show: false
+                        }
+                    },
+                    xAxis: {
+                        type: 'value',
+                        name: "条",
+                        nameGap: 100,
+                        splitLine: {
+                            show: false
+                        },
+
+                        show: false
+                    },
+                    series: [{
+                        name: '已处理群众意见建议',
+                        type: 'bar',
+                        barMaxWidth: 20,
+                        itemStyle: {
+                            emphasis: {
+                                barBorderRadius: 10
+                            },
+                            normal: {
+                                color: "#37b3d5",
+                                barBorderRadius: 10,
+                                shadowColor: "#cccccc",
+                                shadowBlur: 20,
+                                /*color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+					                    offsetY: 0,
+					                    color: 'rgba(153,187,167,1)'
+					                }, {
+					                    offsetY: 1,
+					                    color: 'rgba(153,187,167,0.1)'
+					                    
+					            }])*/
+                            }
+                        },
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'right'
+                            }
+                        },
+                        data: datay
+                    }, {
+                        name: '处理中群众意见建议',
+                        type: 'bar',
+                        barMaxWidth: 20,
+                        itemStyle: {
+                            emphasis: {
+                                barBorderRadius: 5
+                            },
+                            normal: {
+                                color: "#e87884",
+                                barBorderRadius: 10,
+                                shadowColor: "#cccccc",
+                                shadowBlur: 10,
+                                /*color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+					                    offset: 0,
+					                    color: 'rgba(153,187,167,1)'
+					                }, {
+					                    offset: 1,
+					                    color: 'rgba(153,187,167,0.1)'
+					                    
+					            }])*/
+                            }
+                        },
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'right'
+                            }
+                        },
+                        data: dataw
+                    }],
+
+                };
+
+
+                fkChart1.setOption(fkoption1);
+                fkChart1.hideLoading();
+
+
+                fkoption2 = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    series: [{
+                        name: '群众意见建议条数',
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '20',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: [{
+                            value: ycl,
+                            name: '已处理群众意见建议',
+                            itemStyle: {
+                                color: "#37b3d5"
+                            },
+                        }, {
+                            value: wcl,
+                            name: '处理中群众意见建议',
+                            itemStyle: {
+                                color: "#e87884"
+                            },
+                        }]
+                    }],
+
+                };
+                fkChart2.hideLoading();
+                fkChart2.setOption(fkoption2);
+            },
+            error: function(xhr, type, errorThrown) {
+
+            }
+        });
+
+    }
+
+    function to_fk_list() {
+        window.location.href = "fk_list1.html";
+    }
+    function to_fk_list1() {
+        window.location.href = "fankuilist.html";
+    }
+</script>
+
+</html>

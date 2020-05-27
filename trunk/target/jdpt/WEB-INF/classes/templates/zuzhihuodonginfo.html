@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>组织活动</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="/jdpt/static/css/iconfont.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet" />
+		<link rel="stylesheet" href="/jdpt/static/css/all.css" />
+		<script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+		<script src="/jdpt/static/js/storage.js"></script>
+
+	</head>
+	<style>
+		header{
+			position: fixed;
+			height: 6vh;
+			line-height: 6vh;
+		}
+		.content{
+			position: relative;
+			height: 94vh;
+			top: 6vh;
+		}
+		.pageselect{
+			position: fixed;
+			bottom: 0rem;
+		}
+	</style>
+	<body>
+	<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+		<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+	</div>
+		<header>
+			<a class="go-back">&lsaquo;</a>
+			<span id="zhtitle" style="padding-left: 2rem;">三会一课</span>
+		</header>
+	
+
+		
+
+<div class="content">
+		
+<ul class="table-view" id="dylist">
+		   
+</ul>
+<div class="pageselect" id="dypage">
+		<button  onclick="show_hidendy(this)"  class="iconfont icon-zuo2"></button>
+		<button onclick="dygoup()">上一页</button>
+		<button id="dy_page_totals"></button>
+		<select id="dytopage">
+		</select>
+		<button onclick="godyjumppage()">跳转</button>
+		<button onclick="dygodown()">下一页</button>
+	</div>
+	</div>
+	<script src="/jdpt/static/js/header.js"></script>
+	<script src="/jdpt/static/js/mask.js"></script>
+		<script type="text/javascript">
+            var loadmask=document.getElementById("loadmask");
+            showmask(loadmask);
+
+				var zhid=userInfo.getItem("zhid");
+				var zhname=userInfo.getItem("zhname");
+                var vId=sessionStorage.getItem("userVillageid");
+                document.getElementById("zhtitle").innerHTML=zhname;
+
+                var dypage=true;
+                function show_hidendy(t) {
+                    if(dypage==false){
+                        document.getElementById("dypage").style.width="100%";
+                        t.style.transform="rotate(180deg)";
+                        t.style.otransform="rotate(180deg)";
+                        t.style.mstransform="rotate(180deg)";
+                        t.style.moztransform="rotate(180deg)";
+                        t.style.webkittransform="rotate(180deg)";
+                        dypage=true;
+                    }else {
+                        document.getElementById("dypage").style.width="2rem";
+                        t.style.transform="rotate(0deg)";
+                        t.style.otransform="rotate(0deg)";
+                        t.style.mstransform="rotate(0deg)";
+                        t.style.moztransform="rotate(0deg)";
+                        t.style.webkittransform="rotate(0deg)";
+                        dypage=false;
+                    }
+                }
+
+                var dylist=[];
+                var dytotalpage=1;
+                var dynowcount=0;
+                dygodown();
+
+
+
+                function showdyinfo(it){
+                    var dyitem=parseInt(it.id.substring(2));
+					var id=dylist[dyitem][0];
+					//alert(id);
+					sessionStorage.setItem("zhxiangxiid",id)
+					//console.log(sessionStorage.getItem("zhxiangxiid"));
+					window.location.href="zuzhihuodongxijie.html";
+					//console.log(sessionStorage.getItem("zhxiangxiid"));
+                }
+
+
+
+
+                function godyjumppage() {
+                    dynowcount=document.getElementById("dytopage").value;
+                    getdylist();
+                }
+
+                function getdylist() {
+                    showmask(loadmask);
+                    $.ajax({
+                        url:uri+"queryAllHuoDong/"+dynowcount+"/9/"+zhid+"/"+vId,
+                        dataType:"JSON",//服务器返回json格式数据
+                        type:'GET',//HTTP请求类型
+                        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                        success:function(mes){
+                            console.log("活动列表");
+                            console.log(mes);
+                            //总页数
+							if(mes.total==0){
+                                document.getElementById("dylist").innerHTML="<img style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+                            }else {
+                            document.getElementById("dylist").innerHTML="";
+                            dylist.length=0;
+                            dytotalpage=mes.total;
+                            //当前页
+                            dynowcount=mes.nowPage;
+                            //填写当前页共多少页
+                            document.getElementById("dy_page_totals").innerHTML=mes.nowPage+"/"+mes.total;
+                            //得到selectpage的页码选择
+                            var dypagestr="";
+                            for(var i=1;i<=mes.total;i++){
+                                dypagestr+="<option value='"+i+"'>"+i+"</option>";
+                            }
+                            document.getElementById("dytopage").innerHTML=dypagestr;
+
+                            for(var i=0;i<mes.huodongleixingList.length;i++){
+                                var dyzzhdId="";
+                                mes.huodongleixingList[i].dyzzhdId==null? dyzzhdId="无详细信息": dyzzhdId=mes.huodongleixingList[i].dyzzhdId;
+                                var dyzzhdName="";
+                                mes.huodongleixingList[i].dyzzhdName==null? dyzzhdName="无详细信息": dyzzhdName=mes.huodongleixingList[i].dyzzhdName;
+                                var dyzzhdTime="";
+                                mes.huodongleixingList[i].dyzzhdTime==null? dyzzhdTime="无详细信息": dyzzhdTime=mes.huodongleixingList[i].dyzzhdTime;
+                                var dyzzhdPhoto="";
+                                mes.huodongleixingList[i].dyzzhdZhenshilujing==null? dyzzhdPhoto="": dyzzhdPhoto=mes.huodongleixingList[i].dyzzhdZhenshilujing;
+                                var ttname=dyzzhdName;
+                                if(dyzzhdName.length>15){
+                                	ttname=dyzzhdName.substring(0,15)+"......";
+                                	dylist[i]=[dyzzhdId,ttname,dyzzhdTime,dyzzhdPhoto];
+                                }else{
+                                	dylist[i]=[dyzzhdId,ttname,dyzzhdTime,dyzzhdPhoto];
+                                }
+								
+                            }
+                            getdyitem(dylist);}
+                            hiden(loadmask);
+
+                        },
+                        error:function(){
+                            document.getElementById("dylist").innerHTML="<p class='title'><span>哎呀！您的网络好像断了。。。</span></p>" +"<img class='errorimg' src='/jdpt/static/img/losem.jpg'/>"
+
+                        }
+                    });
+                }
+
+                
+function getdyitem(dydata){
+                   
+ var dylist=document.getElementById("dylist");
+                    
+var str="";
+                    
+for(var i=0;i<dydata.length;i++){
+                        
+if(dydata[i][3]==""){
+                           
+ str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showdyinfo(this)'>"+"<div class='table-view-cell-body' style='position: relative;width: 100%'>"+dydata[i][1]+" <p class='table-view-cell-body-key'>"+dydata[i][2].substring(0,10)+"</p></div></a></li>"
+
+}
+else {
+                          
+  if(dydata[i][3]==""){
+                               
+ str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showdyinfo(this)'>"+"<div class='table-view-cell-body' style='position: relative;width: 100%'>"+dydata[i][1]+" <p class='table-view-cell-body-key'>"+dydata[i][2].substring(0,10)+"</p></div></a></li>"
+
+                            }else {
+                                var img=dydata[i][3].split(",")
+
+                                str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showdyinfo(this)'>"+"<img class='table-view-cell-img' src='/jdpt/HJResourse/Zuzhihuodong/"+ img[0]+"'/>"+"<div class='table-view-cell-body' style='position: relative;width: 100%'>"+dydata[i][1]+" <p class='table-view-cell-body-key'>"+dydata[i][2].substring(0,10)+"</p></div></a></li>"
+
+                            }
+                           }
+                    }
+                    dylist.innerHTML=str;
+                }
+
+                //下一页
+                function dygodown() {
+                    if(dynowcount<dytotalpage){
+                        dynowcount+=1;
+                        getdylist();
+                    }else {
+                        return;
+                    }
+                }
+                //上一页
+                function dygoup() {
+                    if(dynowcount==0){
+                        return
+                    }else{
+                        dynowcount-=1;
+                        // alert(dynowcount);
+                        getdylist();
+                    }
+
+                }
+
+
+		</script>
+	</body>
+
+</html>

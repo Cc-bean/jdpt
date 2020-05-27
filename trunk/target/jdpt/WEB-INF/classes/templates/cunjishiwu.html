@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>村内事务</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/iconfont.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/cards.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/swiper.min.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/zhengcexuezi.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/swiperiframe.css" rel="stylesheet"/>
+		<script src="/jdpt/static/js/swiper.min.js"></script>
+		<script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+		<script src="/jdpt/static/js/mask.js"></script>
+		<script src="/jdpt/static/js/storage.js"></script>
+	</head>
+	<style>
+		header{
+			position: fixed;
+			height: 5vh;
+			line-height: 5vh;
+		}
+		.pageselect{
+			position: absolute;
+		}
+		.search{
+			margin: -1rem 0;
+		}
+		#select{
+			position: relative;
+			top: 5vh;
+		}
+		.swiper-container{
+			position: relative;
+			height: 90vh;
+			top: 5vh;
+		}
+		ul{
+			margin-bottom: 5vh;
+		}
+	</style>
+	<body>
+
+	<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+		<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+	</div>
+
+			<header>
+				<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+				<span style="padding-left: 2rem;">村级事务</span>
+			</header>
+			<div id="select" class="xuanze">
+				<button value="huiyi" class="activeselect" onclick="change(this)">行政村会议</button>
+				<button value="huodong" onclick="change(this)"> 村组织活动</button>
+				<button value="qianru" onclick="change(this)">户口迁入</button>
+				<button value="qianchu" onclick="change(this)">户口迁出</button>
+			</div>
+
+
+		<div class="swiper-container">
+    		<div class="swiper-wrapper">
+		      	<div class="swiper-slide">
+		      		<!--
+                      	作者：1821898203@qq.com
+                      	时间：2019-07-15
+                      	描述：行政村会议
+                     -->
+
+					
+
+                      <ul class="table-view" id="huiyilist">
+
+		    		</ul>
+					<div class="pageselect" id="huiyipage">
+						<button  onclick="show_hidenhuiyi(this)"  class="iconfont icon-zuo2" ></button>
+						<button onclick="huiyigoup()">上一页</button>
+						<button id="huiyi_page_totals"></button>
+						<select id="huiyitopage">
+						</select>
+						<button onclick="huiyigojumppage()">跳转</button>
+						<button onclick="huiyigodown()">下一页</button>
+					</div>
+		      	</div>
+		      	<div class="swiper-slide">
+		      		
+		      		<!--
+                      	作者：1821898203@qq.com
+                      	时间：2019-07-15
+                      	描述：村活动
+                     -->
+					
+
+                     <ul class="table-view" id="huodonglist">
+
+
+		    		</ul>
+					<div class="pageselect" id="huodongpage">
+						<button  onclick="show_hidenhuodong(this)"  class="iconfont icon-zuo2"></button>
+						<button onclick="huodonggoup()">上一页</button>
+						<button id="huodong_page_totals"></button>
+						<select id="huodongtopage">
+						</select>
+						<button onclick="huodonggojumppage()">跳转</button>
+						<button onclick="huodonggodown()">下一页</button>
+					</div>
+					
+		      	</div>
+		      	<div class="swiper-slide">
+		      		<!--
+                      	作者：1821898203@qq.com
+                      	时间：2019-07-15
+                      	描述：户口迁移情况
+                     -->
+                     <ul class="table-view" id="qianrulist">
+
+
+		    		</ul>
+		      		
+		      	</div>
+				<div class="swiper-slide">
+					<!--
+                        作者：1821898203@qq.com
+                        时间：2019-07-15
+                        描述：户口迁移情况
+                   -->
+
+					<ul class="table-view" id="qianchulist">
+
+					</ul>
+
+				</div>
+    		</div>
+  	</div>
+
+		<script src="/jdpt/static/js/header.js"></script>
+		<script>
+            var loadmask=document.getElementById("loadmask");
+            showmask(loadmask);
+			var buttons=document.getElementsByTagName("button");
+    	var swiper = new Swiper('.swiper-container', {
+	       on:{
+			 slideChange:function(){
+			 	switch(swiper.activeIndex){
+			 		case 0:
+			 			buttons[0].classList.add("activeselect");
+			 			buttons[1].classList.remove("activeselect");
+			 			buttons[2].classList.remove("activeselect");
+                        buttons[3].classList.remove("activeselect");
+			 			break;
+			 		case 1:
+			 			buttons[1].classList.add("activeselect");
+			 			buttons[0].classList.remove("activeselect");
+			 			buttons[2].classList.remove("activeselect");
+                        buttons[3].classList.remove("activeselect");
+			 			break;
+			 		case 2:
+			 			buttons[2].classList.add("activeselect");
+			 			buttons[0].classList.remove("activeselect");
+			 			buttons[1].classList.remove("activeselect");
+                        buttons[3].classList.remove("activeselect");
+			 			break;
+					case 3:
+                        buttons[3].classList.add("activeselect");
+                        buttons[0].classList.remove("activeselect");
+                        buttons[1].classList.remove("activeselect");
+                        buttons[2].classList.remove("activeselect");
+                        break;
+
+			 	}
+			 }
+		 }
+	    });
+	    
+	     function change(it){
+			switch(it.value){
+				case "huiyi":
+					buttons[0].classList.add("activeselect");
+			 		buttons[1].classList.remove("activeselect");
+			 		buttons[2].classList.remove("activeselect");
+                    buttons[3].classList.remove("activeselect");
+			 		swiper.slideTo(0,300,false);
+				break;
+				case "huodong":
+					buttons[1].classList.add("activeselect");
+			 		buttons[0].classList.remove("activeselect");
+			 		buttons[2].classList.remove("activeselect");
+                    buttons[3].classList.remove("activeselect");
+			 		swiper.slideTo(1,300,false);
+				break;
+				case "qianru":
+					buttons[2].classList.add("activeselect");
+			 		buttons[0].classList.remove("activeselect");
+			 		buttons[1].classList.remove("activeselect");
+                    buttons[3].classList.remove("activeselect");
+			 		swiper.slideTo(2,300,false);
+				break;
+                case "qianchu":
+                    buttons[3].classList.add("activeselect");
+                    buttons[0].classList.remove("activeselect");
+                    buttons[1].classList.remove("activeselect");
+                    buttons[2].classList.remove("activeselect");
+                    swiper.slideTo(3,300,false);
+                    break;
+			}
+		}
+
+
+
+            /!*会议*!/
+            var huiyipage=true;
+            function show_hidenhuiyi(t) {
+                if(huiyipage==false){
+                    document.getElementById("huiyipage").style.width="100%";
+                    t.style.transform="rotate(180deg)";
+                    t.style.otransform="rotate(180deg)";
+                    t.style.mstransform="rotate(180deg)";
+                    t.style.moztransform="rotate(180deg)";
+                    t.style.webkittransform="rotate(180deg)";
+                    huiyipage=true;
+                }else {
+                    document.getElementById("huiyipage").style.width="2rem";
+                    t.style.transform="rotate(0deg)";
+                    t.style.otransform="rotate(0deg)";
+                    t.style.mstransform="rotate(0deg)";
+                    t.style.moztransform="rotate(0deg)";
+                    t.style.webkittransform="rotate(0deg)";
+                    huiyipage=false;
+                }
+            }
+
+
+            var huiyilist=[];
+            var huiyitotalpage=1;
+            var huiyinowcount=0;
+            huiyigodown();
+            function showhuiyi(t){
+                var huiyiitem=parseInt(t.id.substring(2));
+                var huiyiid=huiyilist[huiyiitem][1];
+                userInfo.setItem("huiyiid",huiyiid);
+                userInfo.setItem("type",1);
+                window.location.href="cunjishiwuinfo.html";
+            }
+            function huiyigojumppage() {
+                dynowcount=document.getElementById("huiyitopage").value;
+                gethuiyilist();
+            }
+            function gethuiyilist() {
+                showmask(loadmask);
+                var vId=sessionStorage.getItem("userVillageid");
+                $.ajax({
+                    url:uri+'FindHuiyiByCunId/'+vId+"/"+huiyinowcount+"/10",
+                    dataType:"JSON",//服务器返回json格式数据
+                    type:'GET',//HTTP请求类型
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    success:function(mes){
+                        console.log(mes);
+                        if (mes.total==0) {
+                            document.getElementById("huiyilist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+                        }else {
+                            huiyilist.length=0;
+                            huiyitotalpage=mes.total;
+                            huiyinowcount=mes.nowPage;
+                            //填写当前页共多少页
+                            document.getElementById("huiyi_page_totals").innerHTML=mes.nowPage+"/"+mes.total;
+                            //得到selectpage的页码选择
+                            var huiyipagestr="";
+                            for(var i=1;i<=mes.total;i++){
+                                huiyipagestr+="<option value='"+i+"'>"+i+"</option>";
+                            }
+                            document.getElementById("huiyitopage").innerHTML=huiyipagestr;
+
+                            for(var i=0;i<mes.record.length;i++){
+                                var vaTitle="";
+                                mes.record[i].vaTitle==null? vaTitle="未知": vaTitle=mes.record[i].vaTitle;
+                                var villageaffairId="";
+                                mes.record[i].villageaffairId==null?villageaffairId="未知":villageaffairId=mes.record[i].villageaffairId;
+                                huiyilist[i]=[vaTitle,villageaffairId];
+                            }
+                            gethuiyiitem(huiyilist);
+                        }
+                        hiden(loadmask);
+                    },
+                    error:function(xhr,type,errorThrown){
+
+                    }
+                });
+            }
+            function gethuiyiitem(huiyidata){
+                var huiyilist=document.getElementById("huiyilist");
+                var str="";
+                for(var i=0;i<huiyidata.length;i++){
+                    var name=huiyidata[i][0];
+                    if(name.length>15){
+                        name=huiyidata[i][0].substring(0,15)+"......";
+					}
+                    str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showhuiyi(this)'>"+huiyidata[i][0]+"</a></li>"
+                }
+                huiyilist.innerHTML=str;
+            }
+            //下一页
+            function huiyigodown() {
+                if(huiyinowcount<huiyitotalpage){
+                    huiyinowcount+=1;
+                    gethuiyilist();
+                }else {
+                    return;
+                }
+            }
+            //上一页
+            function huiyigoup() {
+                if(huiyinowcount==0){
+                    return;
+                }else{
+                    huiyinowcount-=1;
+                    gethuiyilist();
+                }
+
+            }
+
+
+            /!*活动*!/
+
+
+            var huodongpage=true;
+            function show_hidenhuodong(t) {
+                if(huodongpage==false){
+                    document.getElementById("huodongpage").style.width="100%";
+                    t.style.transform="rotate(180deg)";
+                    t.style.otransform="rotate(180deg)";
+                    t.style.mstransform="rotate(180deg)";
+                    t.style.moztransform="rotate(180deg)";
+                    t.style.webkittransform="rotate(180deg)";
+                    huodongpage=true;
+                }else {
+                    document.getElementById("huodongpage").style.width="2rem";
+                    t.style.transform="rotate(0deg)";
+                    t.style.otransform="rotate(0deg)";
+                    t.style.mstransform="rotate(0deg)";
+                    t.style.moztransform="rotate(0deg)";
+                    t.style.webkittransform="rotate(0deg)";
+                    huodongpage=false;
+                }
+            }
+
+            var huodonglist=[];
+            var huodongtotalpage=1;
+            var huodongnowcount=0;
+            huodonggodown();
+            //点击查看党员详情
+            function showhuodong(t){
+                var huodongitem=parseInt(t.id.substring(2));
+                var huodongid=huodonglist[huodongitem][1];
+                userInfo.setItem("huodongid",huodongid);
+                userInfo.setItem("type",2);
+                window.location.href="cunjishiwuinfo.html";
+            }
+
+            function huodonggojumppage() {
+                huodongnowcount=document.getElementById("huodongtopage").value;
+                gethuodonglist();
+            }
+
+            function gethuodonglist() {
+                showmask(loadmask);
+                var vId=sessionStorage.getItem("userVillageid");
+                $.ajax({
+                    url:uri+'ListHuoDong/'+vId+"/"+huodongnowcount+"/10",
+                    dataType:"JSON",//服务器返回json格式数据
+                    type:'GET',//HTTP请求类型
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    success:function(mes){
+                        console.log(mes);
+                        //总页数
+                        if (mes.total==0) {
+                            document.getElementById("huodonglist").innerHTML="<img style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+                        }else {
+                            document.getElementById("huodonglist").innerHTML="";
+                            huodonglist.length=0;
+                            huodongtotalpage=mes.total;
+                            //当前页
+                            huodongnowcount=mes.nowPage;
+                            //填写当前页共多少页
+                            document.getElementById("huodong_page_totals").innerHTML=mes.nowPage+"/"+mes.total;
+                            //得到selectpage的页码选择
+                            var huodongpagestr="";
+                            for(var i=1;i<=mes.total;i++){
+                                huodongpagestr+="<option value='"+i+"'>"+i+"</option>";
+                            }
+                            document.getElementById("huodongtopage").innerHTML=huodongpagestr;
+
+                            for(var i=0;i<mes.data.length;i++){
+                                var cdyzzhdName="";
+                                mes.data[i].cdyzzhdName==null? cdyzzhdName="未知": cdyzzhdName=mes.data[i].cdyzzhdName;
+                                var cdyzzhdId="";
+                                mes.data[i].cdyzzhdId==null?cdyzzhdId="未知":cdyzzhdId=mes.data[i].cdyzzhdId;
+                                var lxname="";
+                                mes.data[i].cunhuodongleixing.chdlxName==null?lxname="未知":lxname=mes.data[i].cunhuodongleixing.chdlxName;
+                                var time="";
+                                mes.data[i].cdyzzhdTime==null?time="未知":time=mes.data[i].cdyzzhdTime;
+                                huodonglist[i]=[cdyzzhdName,cdyzzhdId,lxname,time];
+
+                            }
+                            gethuodongitem(huodonglist);}
+                        hiden(loadmask);
+                    },
+                    error:function(xhr,type,errorThrown){
+                        //异常处理
+
+                    }
+                });
+            }
+
+            function gethuodongitem(huodongdata){
+                // alert(1)
+                var huodonglist=document.getElementById("huodonglist");
+                var str="";
+                for(var i=0;i<huodongdata.length;i++){
+                    var name=huodongdata[i][0];
+                    if(name.length>15){
+                        name=huodongdata[i][0].substring(0,15)+"......";
+					}
+                    str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showhuodong(this)'>"+name+"<br><span style='font-size: 10px;color: #555555;'>类型："+huodongdata[i][2]+"</span><span style='font-size: 10px;color: #555555;'>&emsp;时间："+huodongdata[i][3]+"</span></a></li>"
+                }
+                huodonglist.innerHTML=str;
+            }
+
+            //下一页
+            function huodonggodown() {
+                if(huodongnowcount<huodongtotalpage){
+                    huodongnowcount+=1;
+                    gethuodonglist();
+                }else {
+                    return;
+                }
+            }
+            //上一页
+            function huodonggoup() {
+                if(huodongnowcount==0){
+                    return
+                }else{
+                    huodongnowcount-=1;
+                    gethuodonglist();
+                }
+
+            }
+
+            /*迁入*/
+
+            var qianrulist=[];
+            getqianrulist();
+            //点击查看党员详情
+            function showqianru(t){
+                var qianruitem=parseInt(t.id.substring(2));
+                var personid=qianrulist[qianruitem][1];
+                userInfo.setItem("personid",personid);
+                userInfo.setItem("type",3);
+                window.location.href="cunjishiwuinfo.html";
+
+            }
+
+
+            function getqianrulist() {
+                showmask(loadmask);
+                var vId=sessionStorage.getItem("userVillageid");
+                $.ajax({
+                    url:uri+'FindByCunIdLeixing/'+vId+"/1/"+1+"/1000",
+                    dataType:"JSON",//服务器返回json格式数据
+                    type:'GET',//HTTP请求类型
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    success:function(mes){
+						console.log("迁入");
+                        console.log(mes);
+                        //总页数
+                        if (mes.total==0) {
+                            document.getElementById("qianrulist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+                        }else {
+                            document.getElementById("qianrulist").innerHTML="";
+                            qianrulist.length=0;
+                            for(var i=0;i<mes.record.length;i++){
+                                var hkqyName="";
+                                mes.record[i].hkqyName==null? hkqyName="未知": hkqyName=mes.record[i].hkqyName;
+                                var hkqyId="";
+                                mes.record[i].hkqyId==null? hkqyId="未知": hkqyId=mes.record[i].hkqyId;
+                                qianrulist[i]=[hkqyName,hkqyId];
+                            }
+                            getqianruitem(qianrulist);}
+                        hiden(loadmask);
+                    },
+                    error:function(xhr,type,errorThrown){
+                        //异常处理
+
+                    }
+                });
+            }
+
+            function getqianruitem(huiyidata){
+                var qianrulist=document.getElementById("qianrulist");
+                var str="";
+                for(var i=0;i<huiyidata.length;i++){
+                    str+="<li class='table-view-cell'>"+"<a id='qr"+i+"'"+" onclick='showqianru(this)'>"+huiyidata[i][0]+"</a></li>"
+                }
+                qianrulist.innerHTML=str;
+            }
+
+            /*迁出*/
+
+            var qianchulist=[];
+            //点击查看党员详情
+            getqianchulist();
+            function showqianchu(t){
+                var qianruitem=parseInt(t.id.substring(2));
+                var personid=qianchulist[qianruitem][1];
+                userInfo.setItem("personid",personid);
+                userInfo.setItem("type",4);
+                window.location.href="cunjishiwuinfo.html";
+
+            }
+
+            function getqianchulist() {
+                showmask(loadmask);
+                var vId=sessionStorage.getItem("userVillageid");
+                $.ajax({
+                    url:uri+'FindByCunIdLeixing/'+vId+"/2/"+1+"/10000",
+                    dataType:"JSON",//服务器返回json格式数据
+                    type:'GET',//HTTP请求类型
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    success:function(mes){
+						console.log("迁出");
+                        console.log(mes);
+                        //总页数
+						document.getElementById("qianchulist").innerHTML = "";
+						qianchulist.length = 0;
+                        if (mes.total==0) {
+                            document.getElementById("qianchulist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+                        }else {
+							//console.log("qianchu");
+                            for (var i = 0; i < mes.record.length; i++) {
+								console.log("");
+                                var hkqyName = "";
+                                mes.record[i].hkqyName == null ? hkqyName = "未知" : hkqyName = mes.record[i].hkqyName;
+                                var hkqyId="";
+                                mes.record[i].hkqyId==null? hkqyId="未知": hkqyId=mes.record[i].hkqyId;
+                                qianchulist[i]=[hkqyName,hkqyId];
+                            }
+							console.log(qianchulist);
+                            getqianchuitem(qianchulist);
+                        }
+                        hiden(loadmask);
+
+                    },
+                    error:function(xhr,type,errorThrown){
+                        //异常处理
+
+                    }
+                });
+            }
+
+            function getqianchuitem(huiyidata){
+				console.log("qianchu");
+                var qianchulist=document.getElementById("qianchulist");
+                var str="";
+                for(var i=0;i<huiyidata.length;i++){
+                    str+="<li class='table-view-cell'>"+"<a id='qc"+i+"'"+" onclick='showqianchu(this)'>"+huiyidata[i][0]+"</a></li>"
+                }
+                qianchulist.innerHTML=str;
+            }
+
+		</script>
+
+
+	</body>
+</html>

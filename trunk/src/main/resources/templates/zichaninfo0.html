@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>资产</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="/jdpt/static/css/all.css" rel="stylesheet"/>
+    <link href="/jdpt/static/css/iconfont.css" rel="stylesheet"/>
+    <link href="/jdpt/static/css/cards.css" rel="stylesheet"/>
+    <link href="/jdpt/static/css/swiper.min.css" rel="stylesheet"/>
+    <link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet"/>
+    <link href="/jdpt/static/css/zhengcexuezi.css" rel="stylesheet" />
+    <script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+	 <script src="/jdpt/static/js/storage.js"></script>
+</head>
+<style>
+    .pageselect{
+        bottom: 0rem;
+        position: fixed;
+    }
+</style>
+<body>
+
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+    <img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+
+    <header>
+        <span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+        <span style="padding-left: 2rem;" id="title"></span>
+    </header>
+
+    <div class="pageselect" id="dypage">
+        <button  onclick="show_hidendy(this)"  class="iconfont icon-zuo2" ></button>
+        <button onclick="dygoup()">上一页</button>
+        <button id="dy_page_totals">1/1</button>
+        <select id="dytopage">
+        </select>
+        <button onclick="godyjumppage()">跳转</button>
+        <button onclick="dygodown()">下一页</button>
+    </div>
+
+<ul class="table-view" id="dylist" style="margin-top: 3.1rem;">
+
+</ul>
+    <script src="/jdpt/static/js/header.js"></script>
+<script src="/jdpt/static/js/mask.js"></script>
+<script>
+    var loadmask=document.getElementById("loadmask");
+    showmask(loadmask);
+
+var zuid=sessionStorage.getItem("zuid");
+var zname=sessionStorage.getItem("zname");
+
+document.getElementById("title").innerHTML=zname;
+var dypage=true;
+function show_hidendy(t) {
+    if(dypage==false){
+        document.getElementById("dypage").style.width="100%";
+        t.style.transform="rotate(180deg)";
+        t.style.otransform="rotate(180deg)";
+        t.style.mstransform="rotate(180deg)";
+        t.style.moztransform="rotate(180deg)";
+        t.style.webkittransform="rotate(180deg)";
+        dypage=true;
+    }else {
+        document.getElementById("dypage").style.width="2rem";
+        t.style.transform="rotate(0deg)";
+        t.style.otransform="rotate(0deg)";
+        t.style.mstransform="rotate(0deg)";
+        t.style.moztransform="rotate(0deg)";
+        t.style.webkittransform="rotate(0deg)";
+        dypage=false;
+    }
+}
+
+var dylist=[];
+var dytotalpage=1;
+var dynowcount=0;
+dygodown();
+//点击查看党员详情
+function showdyinfo(t){
+    var dyitem=parseInt(t.id.substring(2));
+    var aid=dylist[dyitem][0];
+    var aname=dylist[dyitem][1];
+    sessionStorage.setItem("aid",aid);
+    sessionStorage.setItem("aname",aname);
+    window.location.href="zichanInfo.html";
+
+}
+
+
+
+
+function godyjumppage() {
+    dynowcount=document.getElementById("dytopage").value;
+    //alert(dynowcount);
+    getdylist();
+}
+
+function getdylist() {
+    showmask(loadmask);
+    var vId=sessionStorage.getItem("userVillageid");
+    $.ajax({
+        url:uri+'pageFindAssetsByZuVillage/'+vId+"/"+zuid+"/"+dynowcount+"/15",
+        dataType:"JSON",//服务器返回json格式数据
+        type:'GET',//HTTP请求类型
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        success:function(mes){
+            console.log(mes);
+            if(mes.status=="null"){
+                document.getElementById("dylist").innerHTML="<img onclick='hiden(this)' style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>";
+            }else {
+
+                //总页数
+                document.getElementById("dylist").innerHTML = "";
+                dylist.length = 0;
+                dytotalpage = mes.total;
+
+                //当前页
+                dynowcount = mes.nowPage;
+                //填写当前页共多少页
+                document.getElementById("dy_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                //得到selectpage的页码选择
+                var dypagestr = "";
+                for (var i = 1; i <= mes.total; i++) {
+                    dypagestr += "<option value='" + i + "'>" + i + "</option>";
+                }
+                document.getElementById("dytopage").innerHTML = dypagestr;
+
+                for (var i = 0; i < mes.record.length; i++) {
+                    var aType = "";
+                    mes.record[i].aType == null ? aType = "未录入" : aType = mes.record[i].aType;
+                    var assetsId = "";
+                    mes.record[i].assetsId == null ? assetsId = "未录入" : assetsId = mes.record[i].assetsId;
+                    dylist[i] = [assetsId, aType];
+                }
+                getdyitem(dylist);
+            }
+            hiden(loadmask);
+        },
+        error:function(){
+            document.getElementById("dylist").innerHTML="<p class='title'><span>哎呀！您的网络好像断了。。。</span></p>" +"<img class='errorimg' src='/jdpt/static/img/losem.jpg'/>"
+
+        }
+    });
+}
+
+function getdyitem(dydata){
+    var dylist=document.getElementById("dylist");
+    var str="";
+    for(var i=0;i<dydata.length;i++){
+        str+="<li class='table-view-cell'>"+"<a class='navigate-right' id='dy"+i+"'"+" onclick='showdyinfo(this)'>"+dydata[i][1]+"</a></li>"
+    }
+    dylist.innerHTML=str;
+}
+
+//下一页
+function dygodown() {
+    if(dynowcount<dytotalpage){
+        dynowcount+=1;
+        getdylist();
+    }else {
+        return;
+    }
+}
+//上一页
+function dygoup() {
+    if(dynowcount==1){
+        return
+    }else{
+        dynowcount-=1;
+        getdylist();
+    }
+
+}
+
+</script>
+
+
+
+</body>
+</html>

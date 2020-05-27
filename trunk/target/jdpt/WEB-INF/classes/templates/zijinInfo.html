@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>资金</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link href="/jdpt/static/css/all.css" rel="stylesheet"/>
+	<link href="/jdpt/static/css/iconfont.css" rel="stylesheet"/>
+	<link href="/jdpt/static/css/cards.css" rel="stylesheet"/>
+	<link href="/jdpt/static/css/header.css" rel="stylesheet"/>
+	<link href="/jdpt/static/css/swiper.min.css" rel="stylesheet"/>
+	<link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet"/>
+	<link href="/jdpt/static/css/zhengcexuezi.css" rel="stylesheet" />
+	<link href="/jdpt/static/css/swiperiframe.css" rel="stylesheet"/>
+	<script src="/jdpt/static/js/swiper.min.js"></script>
+	<script src="/jdpt/static/js/storage.js"></script>
+</head>
+<style>
+	.open{
+		position: relative;
+		float: right;
+		color: #CF2D28;
+		top: 0.1rem;
+		font-size: 1.8rem;
+		right: 1rem;
+	}
+	button{
+		padding: 0 1rem;
+	}
+</style>
+<body>
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+	<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+<header>
+	<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+	<span style="padding-left: 2rem;" id="title"></span>
+</header>
+
+<div id="select" class="select" style="margin-top: 3.1rem;">
+	<button value="xianjin" class="activeselect" onclick="change(this)" >现金收支</button>
+	<button value="yinhang" onclick="change(this)" >银行收支</button>
+	<button value="licai" onclick="change(this)">理财情况</button>
+
+</div>
+
+<div class="swiper-container">
+	<div class="swiper-wrapper">
+		<div class="swiper-slide">
+			<!--
+                作者：1821898203@qq.com
+                时间：2019-07-15
+                描述：行政村会议
+           -->
+			<div class="search">
+				<select class="text" id="xianjinselect">
+				</select>
+				<input class="button" type="button" value="搜索" onclick="gstmes()"/>
+			</div>
+
+			<div class="pageselect" id="xjpage">
+				<button  onclick="show_hidendxj(this)"  class="iconfont icon-zuo2" ></button>
+				<button onclick="xjgoup()">上一页</button>
+				<button id="xj_page_totals">1/1</button>
+				<select id="xjtopage">
+				</select>
+				<button onclick="goxjjumppage()">跳转</button>
+				<button onclick="xjgodown()">下一页</button>
+			</div>
+			<ul class="table-view" id="xjlist">
+
+			</ul>
+		</div>
+		<div class="swiper-slide">
+			<!--
+                作者：1821898203@qq.com
+                时间：2019-07-15
+                描述：银行收支
+           -->
+			<div class="pageselect" id="yhpage">
+				<button  onclick="show_hidenyh(this)"  class="iconfont icon-zuo2"></button>
+				<button onclick="yhgoup()">上一页</button>
+				<button id="yh_page_totals">1/1</button>
+				<select id="yhtopage">
+				</select>
+				<button onclick="goyhjumppage()">跳转</button>
+				<button onclick="yhgodown()">下一页</button>
+			</div>
+
+			<div class="search">
+				<select class="text" id="yinhangselect">
+				</select>
+				<input class="button" type="button" onclick="gstmes()" value="搜索" />
+			</div>
+			<ul class="table-view" id="yhlist">
+
+			</ul>
+		</div>
+		<div class="swiper-slide">
+			<!--
+                作者：1821898203@qq.com
+                时间：2019-07-15
+                描述：理财
+           -->
+			<div class="search">
+				<input type="text" id="licaiselect" placeholder="选择时间:"  data-options="{'type':'YYYY-MM','beginYear':2010,'endYear':2088}" style="height: 30px;width: 200px;border: 1px solid #ccc;"/>
+				<input class="button" type="button" onclick="getlicailist()" value="搜索" />
+
+			</div>
+			<ul class="table-view" id="licailist">
+
+			</ul>
+		</div>
+	</div>
+</div>
+<script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+<script src="/jdpt/static/js/jquery.date.js"></script>
+<script>
+    $.date('#licaiselect');
+</script>
+<script src="/jdpt/static/js/mask.js"></script>
+<script src="/jdpt/static/js/header.js"></script>
+
+<script>
+
+    var loadmask=document.getElementById("loadmask");
+    showmask(loadmask);
+
+    var style="现金收支";
+    var buttons=document.getElementsByTagName("button");
+    var swiper = new Swiper('.swiper-container', {
+        on:{
+            slideChange:function(){
+                switch(swiper.activeIndex){
+                    case 0:
+                        buttons[0].classList.add("activeselect");
+                        buttons[1].classList.remove("activeselect");
+                        buttons[2].classList.remove("activeselect");
+                        break;
+                    case 1:
+                        buttons[1].classList.add("activeselect");
+                        buttons[0].classList.remove("activeselect");
+                        buttons[2].classList.remove("activeselect");
+                        break;
+                    case 2:
+                        buttons[2].classList.add("activeselect");
+                        buttons[1].classList.remove("activeselect");
+                        buttons[0].classList.remove("activeselect");
+                        break;
+                }
+            }
+        }
+    });
+
+
+    function change(it){
+        switch(it.value){
+            case "xianjin":
+                buttons[0].classList.add("activeselect");
+                buttons[1].classList.remove("activeselect");
+                buttons[2].classList.remove("activeselect");
+                style="现金收支";
+                swiper.slideTo(0,300,false);
+                gstmes();
+                break;
+            case "yinhang":
+                buttons[1].classList.add("activeselect");
+                buttons[0].classList.remove("activeselect");
+                buttons[2].classList.remove("activeselect");
+                style="银行收支";
+                swiper.slideTo(1,300,false);
+                gstmes();
+                break;
+            case "licai":
+                buttons[2].classList.add("activeselect");
+                buttons[0].classList.remove("activeselect");
+                buttons[1].classList.remove("activeselect");
+                swiper.slideTo(2,300,false);
+                break;
+        }
+    }
+
+
+    var aname=sessionStorage.getItem("zzjname");
+    document.getElementById("title").innerHTML=aname;
+    function getyears() {
+        var str="";
+        var data=new Date();
+        var year=data.getFullYear();
+        for (var i=year;i>=2012;i--) {
+            str+="<option onclick='gstmes()' value='"+i+"'>"+i+"年</option>"
+        }
+        return str;
+    }
+    document.getElementById("xianjinselect").innerHTML=getyears();
+    document.getElementById("yinhangselect").innerHTML=getyears();
+	
+	
+    var dypage=false;
+    function show_hidendxj(t) {
+        if(dypage==false){
+            document.getElementById("xjpage").style.width="100%";
+            t.style.transform="rotate(180deg)";
+            t.style.otransform="rotate(180deg)";
+            t.style.mstransform="rotate(180deg)";
+            t.style.moztransform="rotate(180deg)";
+            t.style.webkittransform="rotate(180deg)";
+            dypage=true;
+        }else {
+            document.getElementById("xjpage").style.width="2rem";
+            t.style.transform="rotate(0deg)";
+            t.style.otransform="rotate(0deg)";
+            t.style.mstransform="rotate(0deg)";
+            t.style.moztransform="rotate(0deg)";
+            t.style.webkittransform="rotate(0deg)";
+            dypage=false;
+        }
+    }
+
+
+    var licaipage=false;
+    function show_hidenyh(t) {
+        if(licaipage==false){
+            document.getElementById("yhpage").style.width="100%";
+            t.style.transform="rotate(180deg)";
+            t.style.otransform="rotate(180deg)";
+            t.style.mstransform="rotate(180deg)";
+            t.style.moztransform="rotate(180deg)";
+            t.style.webkittransform="rotate(180deg)";
+            licaipage=true;
+        }else {
+            document.getElementById("yhpage").style.width="2rem";
+            t.style.transform="rotate(0deg)";
+            t.style.otransform="rotate(0deg)";
+            t.style.mstransform="rotate(0deg)";
+            t.style.moztransform="rotate(0deg)";
+            t.style.webkittransform="rotate(0deg)";
+            licaipage=false;
+        }
+    }
+
+
+
+    //跳转页面(现金)
+    function goxjjumppage() {
+        dynowcount=document.getElementById("xjtopage").value;
+        gstmes();
+    } //下一页
+    function xjgodown() {
+        if(xjnowcount<xjtotalpage){
+            xjnowcount+=1;
+            gstmes();
+        }else {
+            return;
+        }
+    } //上一页
+    function xjgoup() {
+        if(xjnowcount==0){
+            return
+        }else{
+            xjnowcount-=1;
+            gstmes();
+        }
+    }
+    //跳转页面银行
+    function goyhjumppage() {
+        dynowcount=document.getElementById("yhtopage").value;
+        gstmes();
+    } //下一页
+    function yhgodown() {
+        if(yhnowcount<yhtotalpage){
+            yhnowcount+=1;
+            gstmes();
+        }else {
+            return;
+        }
+    } //上一页
+    function yhgoup() {
+        if(yhnowcount==0){
+            return
+        }else{
+            yhnowcount-=1;
+            gstmes();
+        }
+    }
+    var xjlist=[];
+    var yhlist=[];
+    var xjtotalpage=1;
+    var yhtotalpage=1;
+    var xjnowcount=0;
+    var yhnowcount=0;
+    var xjnoeyear=document.getElementById("xianjinselect").value;
+    var yinhangnowyear=document.getElementById("yinhangselect").value;
+
+    gstmes();
+    function gstmes() {
+        showmask(loadmask);
+        var vId=sessionStorage.getItem("userVillageid");
+        var zuId=sessionStorage.getItem("zzjuid");
+        if(style=="现金收支"){
+            var year=document.getElementById("xianjinselect").value;
+            if(xjnoeyear==year){
+
+            }else {
+                xjnoeyear=year;
+                xjnowcount=1;
+            }
+            //alert(xjnoeyear+"/"+xjnowcount)
+            $.ajax({
+                url:uri+"findByYearStyle/"+vId+"/"+10+"/"+xjnoeyear+"/"+style+"/"+xjnowcount+"/12",
+                //url:"/jdpt/findByYearStyle/"+1+"/"+1+"/"+2015+"/"+"现金收支"+"/"+1+"/12",
+                dataType:"JSON",//服务器返回json格式数据
+                type:'GET',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                success:function (mes) {
+                    console.log(mes);
+                    if(mes.status=="null"|| mes.total==0){
+                        document.getElementById("xjlist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>";
+                    }else {
+                        document.getElementById("xjlist").innerHTML = "";
+                        xjlist.length = 0;
+                        xjtotalpage = mes.total;
+                        //当前页
+                        xjnowcount = mes.nowPage;
+                        //填写当前页共多少页
+                        document.getElementById("xj_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                        //得到selectpage的页码选择
+                        var xjpagestr = "";
+                        for (var i = 1; i <= mes.total; i++) {
+                            // alert(i);
+                            xjpagestr += "<option value='" + i + "'>" + i + "</option>";
+                        }
+                        document.getElementById("xjtopage").innerHTML = xjpagestr;
+
+                        for (var i = 0; i < mes.record.length; i++) {
+                            var capitalId = "";
+                            mes.record[i].capitalId == null ? capitalId = "未录入" : capitalId = mes.record[i].capitalId;
+                            var cType = "";
+                            mes.record[i].cType == null ? cType = "未录入" : cType = mes.record[i].cType;
+
+                            xjlist[i] = [capitalId, cType];
+                        }
+                        getxjitem(xjlist);
+                    }
+                    hiden(loadmask);
+                },
+                error:function () {
+                    document.getElementById("xjlist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/losem.jpg'/>";
+
+                }
+            })
+
+        }else {
+            var year=document.getElementById("yinhangselect").value;
+            if(yinhangnowyear==year){
+
+            }else {
+                yinhangnowyear=year;
+                yhnowcount=1;
+            }
+
+            $.ajax({
+                url:uri+"findByYearStyle/"+vId+"/"+zuId+"/"+yinhangnowyear+"/"+style+"/"+yhnowcount+"/12",
+                dataType:"JSON",//服务器返回json格式数据
+                type:'GET',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                success:function (mes) {
+                    console.log(mes);
+                    if(mes.status=="null"){
+                        document.getElementById("yhlist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>";
+                    }else {
+                        document.getElementById("yhlist").innerHTML = "";
+                        yhlist.length = 0;
+                        yhtotalpage = mes.total;
+                        //当前页
+                        yhnowcount = mes.nowPage;
+                        //填写当前页共多少页
+                        document.getElementById("yh_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                        //得到selectpage的页码选择
+                        var yhpagestr = "";
+                        for (var i = 1; i <= mes.total; i++) {
+                            // alert(i);
+                            yhpagestr += "<option value='" + i + "'>" + i + "</option>";
+                        }
+                        document.getElementById("yhtopage").innerHTML = yhpagestr;
+
+                        for (var i = 0; i < mes.record.length; i++) {
+                            var capitalId = "";
+                            mes.record[i].capitalId == null ? capitalId = "未知" : capitalId = mes.record[i].capitalId;
+                            var cType = "";
+                            mes.record[i].cType == null ? cType = "未知" : cType = mes.record[i].cType;
+
+                            yhlist[i] = [capitalId, cType];
+                        }
+                        getyhitem(yhlist);
+                    }
+                    hiden(loadmask);
+                },
+                error:function () {
+                    document.getElementById("yhlist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>";
+
+                }
+            })
+
+        }
+
+
+    }
+
+    function getyhitem(yinhang) {
+        var yinhanglist=document.getElementById("yhlist");
+        var str="";
+        for (var i=0;i<yinhang.length;i++){
+            var name=yinhang[i][1];
+            if(name.length>15){
+                name=yinhang[i][1].substring(0,15)+"......";
+            }
+            str+="<li class='table-view-cell'>"+"<a class='navigate-right' onclick='yhgo(this)' id='yh"+i+"'"+">"+name+"</a></li>"
+        }
+        yinhanglist.innerHTML=str;
+    }
+
+    function getxjitem(xianjin) {
+        var xainjinlist=document.getElementById("xjlist");
+        var str="";
+        for (var i=0;i<xianjin.length;i++){
+
+            var name=xianjin[i][1];
+            if(name.length>15){
+                name=xianjin[i][1].substring(0,15)+"......";
+            }
+            str+="<li class='table-view-cell'>"+"<a class='navigate-right' onclick='xjgo(this)' id='xj"+i+"'"+">"+name+"</a></li>"
+        }
+        xainjinlist.innerHTML=str;
+    }
+    function xjgo(t) {
+        var key=parseInt(t.id.substring(2));
+        var zjid=xjlist[key][0];
+        var zjname=xjlist[key][1];
+        sessionStorage.setItem("zjid",zjid);
+        sessionStorage.setItem("zjname",zjname);
+        window.location.href="zijinshouzhiInfo.html";
+
+    }
+    function yhgo(t) {
+        var key=parseInt(t.id.substring(2));
+        var zjid=yhlist[key][0];
+        var zjname=yhlist[key][1];
+        sessionStorage.setItem("zjid",zjid);
+        sessionStorage.setItem("zjname",zjname);
+        window.location.href="zijinshouzhiInfo.html";
+    }
+    var licailist=[];
+    var data=new Date();
+    var year=data.getFullYear();
+    var mouth=data.getMonth();
+    var time=year+"-"+mouth;
+    document.getElementById("licaiselect").value=time;
+    getlicailist();
+    function showlicaiinfo(t){
+        var dyitem=parseInt(t.id.substring(2));
+        var lcid=licailist[dyitem][1];
+        var lcname=licailist[dyitem][0];
+        sessionStorage.setItem("lcid",lcid);
+        sessionStorage.setItem("lcname",lcname);
+        window.location.href="zijinlicai.html";
+    }
+    function getlicailist() {
+        showmask(loadmask);
+        var zuId=sessionStorage.getItem("zuid");
+        var time=document.getElementById("licaiselect").value;
+        year=time.substring(0,4);
+        mouth=parseInt(time.substring(5,7));
+        console.log(time);
+        $.ajax({
+            url:uri+'findLicaiByYear/',
+            data:{
+                zuId:zuId,
+                year:year,
+                month:mouth
+            },
+            dataType:"JSON",//服务器返回json格式数据
+            type:'GET',//HTTP请求类型
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            success:function(mes){
+                console.log(mes);
+                //总页数
+                if (mes.status=="null"||mes.data.length==0){
+                    document.getElementById("licailist").innerHTML="<img style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+                } else {
+                    for (var i = 0; i < mes.data.length; i++) {
+                        var licainame = "";
+                        mes.data[i].lcName == null ? licainame = "未知" : licainame = mes.data[i].lcName;
+                        var licaiid = "";
+                        mes.data[i].lcId == null ? licaiid = "未知" : licaiid = mes.data[i].lcId;
+                        licailist[i] = [licainame, licaiid];
+                    }
+                    getlicaiitem(licailist);
+                }
+                hiden(loadmask);
+            },
+            error:function(){
+                document.getElementById("licailist").innerHTML="<img class='errorimg' src='/jdpt/static/img/losem.jpg'/>"
+
+            }
+        });
+    }
+
+    function getlicaiitem(dydata){
+        var dylist=document.getElementById("licailist");
+        var str="";
+        for(var i=0;i<dydata.length;i++){
+            str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showlicaiinfo(this)'>"+dydata[i][0]+"</a></li>"
+        }
+        dylist.innerHTML=str;
+    }
+
+
+
+
+</script>
+</body>
+</html>

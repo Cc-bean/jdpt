@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>意见建议中心</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/iconfont.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/cards.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/swiper.min.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/zhengcexuezi.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/swiperiframe.css" rel="stylesheet"/>
+		<script src="/jdpt/static/js/swiper.min.js"></script>
+		<script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+		<script src="/jdpt/static/js/mask.js"></script>
+		<script src="/jdpt/static/js/storage.js"></script>
+	</head>
+	<style>
+header{
+			position: fixed;
+			height: 5vh;
+			line-height: 5vh;
+		}
+		.open{
+			position: relative;
+			float: right;
+			right: 2vw;
+			font-size: 4vh;
+			color: #CF2D28;
+		}
+		.pageselect{
+			position: absolute;
+		}
+		.search{
+			margin: -1rem 0;
+		}
+		#select{
+			position: relative;
+			top: 6vh;
+		}
+		#select button{
+			height: 4vh;
+		}
+		.swiper-container{
+			position: relative;
+			height: 90vh;
+			top: 5vh;
+		}
+		.slide_body{
+			position: relative;
+			width: 100%;
+			height: 85vh;
+		}
+		.search{
+			position: relative;
+			top: 3vh;
+		}
+		ul{
+			position: relative;
+			top:5vh;
+			margin-bottom: 5vh;
+		}
+	</style>
+	<body>
+
+
+	<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+		<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+	</div>
+		<!-- <div id="yesmask" style="width: 100%;left: 0px;" class="mask" onclick="hiden(this)">
+
+		</div>
+		<div id="nomask" style="width: 100%;left: 0px;" class="mask" onclick="hiden(this)">
+
+		</div>
+	
+ -->
+		<header>
+			<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+			<span style="padding-left: 2rem;">历史意见建议</span>
+			<a class="open" onclick="openjianju1(this)">+</a>
+		</header>
+<div class="content">
+	<div id="select" class="xuanze">
+		<button value="had" class="activeselect" onclick="change(this)">已解决意见建议</button>
+		<button value="having" onclick="change(this)">处理中意见建议</button>
+	</div>
+	<div id="swiper-container" class="swiper-container">
+			<div class="swiper-wrapper">
+		      	<div class="swiper-slide">
+		      		<!--
+	                  	描述：已解决
+	                 -->
+	
+					<div class="slide_body">
+						<div class="search">
+							<select class="text" id="getyear">
+							</select>
+							<button class="button" onclick="getyeslist()">搜索</button>
+						</div>
+						<ul class="table-view" id="yeslist">
+							
+						</ul>
+					</div>
+						
+						<div class="pageselect" id="yespage">
+							<button  onclick="show_hidenyes(this)"  class="iconfont icon-zuo2"></button>
+							<button onclick="yesgoup()">上一页</button>
+							<button id="yes_page_totals">1/1</button>
+							<select id="yestopage">
+							</select>
+							<button onclick="yesgojumppage()">跳转</button>
+							<button onclick="yesgodown()">下一页</button>
+						</div>
+		      	</div>
+		      	<div class="swiper-slide">
+		      		
+		      		<!--
+	                  	描述：未解决
+	                 -->
+					<div class="slide_body">
+						<div class="search">
+							<select class="text" id="getyearno">
+							</select>
+							<button class="button" onclick="getnolist()" >搜索</button>
+						</div>
+						 <ul class="table-view" id="nolist">
+							
+						</ul>
+					</div>
+					
+					<div class="pageselect" id="nopage">
+						<button  onclick="show_hidenno(this)"  class="iconfont icon-zuo2" ></button>
+						<button onclick="nogoup()">上一页</button>
+						<button id="no_page_totals">1/1</button>
+						<select id="notopage">
+						</select>
+						<button onclick="nogojumppage()">跳转</button>
+						<button onclick="nogodown()">下一页</button>
+					</div>
+		      	</div>
+			</div>
+	</div>
+		
+</div>
+				
+
+	
+		<script src="/jdpt/static/js/header.js"></script>
+
+
+		<script>
+
+            var loadmask=document.getElementById("loadmask");
+            showmask(loadmask);
+			var data=new Date();
+			var year=data.getFullYear();
+			var stryear=""
+			for (var i=year;i>=2018;i--){
+			    stryear+="<option value='"+i+"'>"+i+"年</option>"
+			}
+			document.getElementById("getyear").innerHTML=stryear;
+			document.getElementById("getyearno").innerHTML=stryear;
+			var buttons=document.getElementsByTagName("button");
+    	var swiper = new Swiper('.swiper-container', {
+	       on:{
+			 slideChange:function(){
+			 	switch(swiper.activeIndex){
+			 		case 0:
+			 			buttons[0].classList.add("activeselect");
+			 			buttons[1].classList.remove("activeselect");
+			 			break;
+			 		case 1:
+			 			buttons[1].classList.add("activeselect");
+			 			buttons[0].classList.remove("activeselect");
+			 			break;
+			 	}
+			 }
+		 }
+	    });
+	     function change(it){
+			switch(it.value){
+				case "had":
+					buttons[0].classList.add("activeselect");
+			 		buttons[1].classList.remove("activeselect");
+			 		swiper.slideTo(0,300,false);
+				break;
+				case "having":
+					buttons[1].classList.add("activeselect");
+			 		buttons[0].classList.remove("activeselect");
+			 		swiper.slideTo(1,300,false);
+				break;
+			}
+		}
+
+
+/!*已解决*!/
+var yespage=false;
+function show_hidenyes(t) {
+    if(yespage==false){
+        document.getElementById("yespage").style.width="100%";
+        t.style.transform="rotate(180deg)";
+        t.style.otransform="rotate(180deg)";
+        t.style.mstransform="rotate(180deg)";
+        t.style.moztransform="rotate(180deg)";
+        t.style.webkittransform="rotate(180deg)";
+        yespage=true;
+    }else {
+        document.getElementById("yespage").style.width="2rem";
+        t.style.transform="rotate(0deg)";
+        t.style.otransform="rotate(0deg)";
+        t.style.mstransform="rotate(0deg)";
+        t.style.moztransform="rotate(0deg)";
+        t.style.webkittransform="rotate(0deg)";
+        yespage=false;
+    }
+}
+
+
+var yeslist=[];
+var yestotalpage=1;
+var yesnowcount=0;
+yesgodown();
+//点击查看党员详情
+function showyes(t){
+    var yesitem=parseInt(t.id.substring(2));
+    var yesmask=document.getElementById("yesmask");
+	var fkid=yeslist[yesitem][8];
+	sessionStorage.setItem("fkid",fkid);
+	window.location.href="fkxq.html";
+    /* var str="";
+    str+="<div class='dycard'><table cellpadding='0' cellspacing='0'><tr><td>意见建议标题：</td><td>";
+    str+=yeslist[yesitem][0]+"</td></tr><tr><td>意见建议类型：</td><td>";
+    str+=yeslist[yesitem][1]+"</td></tr><tr><td>受理单位：</td><td>";
+    str+=yeslist[yesitem][2]+"</td></tr><tr><td>受理时间：</td><td>";
+    str+=yeslist[yesitem][4].substring(0,10)+"</td></tr><tr><td>提交时间：</td> <td>";
+    str+=yeslist[yesitem][3].substring(0,10)+" </td></tr><tr><td>处理内容：</td><td>";
+    str+=yeslist[yesitem][5]+" </td></tr><tr><td>意见建议内容：</td><td>";
+    str+=yeslist[yesitem][6]+" </td></tr><tr><td>意见建议图片：</td><td>";
+    if(yeslist[yesitem][7]=="未录入"){
+        str+="无";
+    }else{
+        var imgs=yeslist[yesitem][5].split(",");
+        for(var i=0;i<imgs.length;i++){
+            str+="<img style='position: relative;width: 100%;border-radius: 0.2rem;top：10px;' src='http://47.105.118.98/HJResourse/Feedback/"+imgs[i]+"'/>"
+        }
+    }
+    str+="</td></tr></table></div>";
+    yesmask.innerHTML=str;
+    showmask(yesmask); */
+}
+
+
+function yesgojumppage() {
+    dynowcount=document.getElementById("yestopage").value;
+    getyeslist();
+}
+
+function getyeslist() {
+    showmask(loadmask);
+    var year=document.getElementById("getyear").value;
+    var userId=sessionStorage.getItem("userId");
+    $.ajax({
+        url:uri+'YichuliSearch/'+userId+"/"+year+"/"+yesnowcount+"/10",
+        dataType:"JSON",//服务器返回json格式数据
+        type:'GET',//HTTP请求类型
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        success:function(mes){
+            console.log(mes);
+            //总页数
+            if(mes.total==0){
+                document.getElementById("yeslist").innerHTML="<img style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+            }else {
+            document.getElementById("yeslist").innerHTML="";
+            yeslist.length=0;
+            yestotalpage=mes.total;
+            //当前页
+            yesnowcount=mes.nowPage;
+            //填写当前页共多少页
+            document.getElementById("yes_page_totals").innerHTML=mes.nowPage+"/"+mes.total;
+            //得到selectpage的页码选择
+            var yespagestr="";
+            for(var i=1;i<=mes.total;i++){
+                yespagestr+="<option value='"+i+"'>"+i+"</option>";
+            }
+
+            document.getElementById("yestopage").innerHTML=yespagestr;
+            for(var i=0;i<mes.record.length;i++){
+				var feedbackId="";
+				mes.record[i].feedbackId==null? feedbackId="未知": feedbackId=mes.record[i].feedbackId;
+                var fTitle="";
+                mes.record[i].fTitle==null? fTitle="未知": fTitle=mes.record[i].fTitle;
+                var backtype="";
+                mes.record[i].backtype.bType==null?backtype="未知":backtype=mes.record[i].backtype.bType;
+                var sldw="";
+                if(mes.record[i].department==null||mes.record[i].zhen!=null){
+                    sldw=mes.record[i].zhen.zName;
+                }else if(mes.record[i].department!=null||mes.record[i].zhen==null){
+                    sldw=mes.record[i].department.dName;
+                }else {
+                    sldw="未知";
+                }
+                var fTime="";
+                mes.record[i].fTime==null?fTime="未知":fTime=mes.record[i].fTime;
+                var frTime=""
+                mes.record[i].feedbackreply.frTime==null?frTime="未知":frTime=mes.record[i].feedbackreply.frTime;
+                var frContent="";
+                mes.record[i].feedbackreply.frContent==null?frContent="未知":frContent=mes.record[i].feedbackreply.frContent;
+                var fContent="";
+                mes.record[i].fContent==null? fContent="未知": fContent=mes.record[i].fContent;
+                var fImagepath="";
+                mes.record[i].fImagepath==null?fImagepath="未知":fImagepath=mes.record[i].fImagepath;
+                yeslist[i]=[fTitle,backtype,sldw,fTime,frTime,frContent,fContent,fImagepath,feedbackId];
+
+            }
+            getyesitem(yeslist);
+			}
+           
+        },
+        error:function(xhr,type,errorThrown){
+            //异常处理
+
+        }
+    });
+	 hiden(loadmask);
+}
+
+function getyesitem(yesdata){
+    var yeslist=document.getElementById("yeslist");
+    var str="";
+    for(var i=0;i<yesdata.length;i++){
+        str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showyes(this)'>"+yesdata[i][0]+"</a></li>"
+    }
+    yeslist.innerHTML=str;
+}
+
+//下一页
+function yesgodown() {
+    if(yesnowcount<yestotalpage){
+        yesnowcount+=1;
+        getyeslist();
+    }else {
+        return;
+    }
+}
+//上一页
+function yesgoup() {
+    if(yesnowcount==0){
+        return
+    }else{
+        nonowcount-=1;
+        getyeslist();
+    }
+
+}
+
+/*未解决*/
+
+
+var nopage=false;
+function show_hidenno(t) {
+    if(nopage==false){
+        document.getElementById("nopage").style.width="100%";
+        t.style.transform="rotate(180deg)";
+        t.style.otransform="rotate(180deg)";
+        t.style.mstransform="rotate(180deg)";
+        t.style.moztransform="rotate(180deg)";
+        t.style.webkittransform="rotate(180deg)";
+        nopage=true;
+    }else {
+        document.getElementById("nopage").style.width="2rem";
+        t.style.transform="rotate(0deg)";
+        t.style.otransform="rotate(0deg)";
+        t.style.mstransform="rotate(0deg)";
+        t.style.moztransform="rotate(0deg)";
+        t.style.webkittransform="rotate(0deg)";
+        nopage=false;
+    }
+}
+
+
+
+
+
+
+var nolist=[];
+var nototalpage=1;
+var nonowcount=0;
+nogodown();
+//点击查看党员详情
+function showno(t){
+    var noitem=parseInt(t.id.substring(2));
+    var nomask=document.getElementById("nomask");
+	var fkid=nolist[noitem][6];
+	sessionStorage.setItem("fkid",fkid);
+	window.location.href="fkxq.html";
+	/* 
+    var str="";
+    str+="<div class='dycard'><table cellpadding='0' cellspacing='0'><tr><td>意见建议标题：</td><td>";
+    str+=nolist[noitem][0]+"</td></tr><tr><td>意见建议类型：</td><td>";
+    str+=nolist[noitem][1]+"</td></tr><tr><td>受理单位：</td><td>";
+    str+=nolist[noitem][2]+"</td></tr><tr><td>提交时间：</td> <td>";
+    str+=nolist[noitem][3].substring(0,10)+" </td></tr><tr><td>意见建议内容：</td><td>";
+    str+=nolist[noitem][4]+" </td></tr><tr><td>意见建议图片：</td><td>";
+    if(nolist[noitem][5]=="未录入"){
+        str+="无</td></tr></table></div>";
+    }else {
+        var imgs=nolist[noitem][5].split(",")
+        str+="</td></tr></table>"
+        for(var i=0;i<imgs.length-1;i++){
+            str+="<img style='position: relative;width: 100%;border-radius: 0.2rem;' src='http://47.105.118.98/jdpt/HJResourse/Feedback/"+imgs[i]+"'/>"
+        }
+    }
+    nomask.innerHTML=str;
+    showmask(nomask); */
+}
+
+function nogojumppage() {
+    dynowcount=document.getElementById("notopage").value;
+    getnolist();
+}
+
+function getnolist() {
+    showmask(loadmask);
+    var userId=sessionStorage.getItem("userId");
+    var year=document.getElementById("getyearno").value;
+    $.ajax({
+        url:uri+'WeichuliSearch/'+userId+"/"+year+"/"+nonowcount+"/10",
+        dataType:"JSON",//服务器返回json格式数据
+        type:'GET',//HTTP请求类型
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        success:function(mes){
+            console.log(mes);
+            //总页数
+            if(mes.total==0){
+                document.getElementById("nolist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+            }else {
+            document.getElementById("nolist").innerHTML="";
+            nolist.length=0;
+            nototalpage=mes.total;
+            //当前页
+            nonowcount=mes.nowPage;
+            //填写当前页共多少页
+            document.getElementById("no_page_totals").innerHTML=mes.nowPage+"/"+mes.total;
+            //得到selectpage的页码选择
+            var nopagestr="";
+            for(var i=1;i<=mes.total;i++){
+                nopagestr+="<option value='"+i+"'>"+i+"</option>";
+            }
+            document.getElementById("notopage").innerHTML=nopagestr;
+            for(var i=0;i<mes.record.length;i++){
+				var feedbackId="";
+				mes.record[i].feedbackId==null? feedbackId="未知": feedbackId=mes.record[i].feedbackId;
+                var fTitle="";
+                mes.record[i].fTitle==null? fTitle="未知": fTitle=mes.record[i].fTitle;
+                var fType="";
+                mes.record[i].fType==null?fType="未知":fType=mes.record[i].fType;
+                var sldw="";
+                if(mes.record[i].department==null||mes.record[i].zhen!=null){
+                    sldw=mes.record[i].zhen.zName;
+                }else if(mes.record[i].department!=null||mes.record[i].zhen==null){
+                    sldw=mes.record[i].department.dName;
+                }else {
+                    sldw="未知";
+                }
+                var fTime="";
+                mes.record[i].fTime==null?fTime="未知":fTime=mes.record[i].fTime;
+                var fContent="";
+                mes.record[i].fContent==null? fContent="未知": fContent=mes.record[i].fContent;
+                var fImagepath="";
+                mes.record[i].fImagepath==null?fImagepath="未知":fImagepath=mes.record[i].fImagepath;
+                nolist[i]=[fTitle,fType,sldw,fTime,fContent,fImagepath,feedbackId];
+            }
+            getnoitem(nolist);
+			}
+            
+        },
+        error:function(xhr,type,errorThrown){
+            //异常处理
+
+        }
+    });
+	hiden(loadmask);
+}
+
+function getnoitem(nodata){
+    var nolist=document.getElementById("nolist");
+    var str="";
+    for(var i=0;i<nodata.length;i++){
+        str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showno(this)'>"+nodata[i][0]+"</a></li>"
+    }
+    nolist.innerHTML=str;
+}
+
+//下一页
+function nogodown() {
+    if(nonowcount<nototalpage){
+        nonowcount+=1;
+        getnolist();
+    }else {
+        return;
+    }
+}
+//上一页
+function nogoup() {
+    if(nonowcount==0){
+        return
+    }else{
+        nonowcount-=1;
+        getnolist();
+    }
+
+}
+
+
+
+
+  </script>
+  <script>
+  	function openjianju1(it){
+  	    it.href="fankui.html";
+			}
+  </script>
+	</body>
+</html>

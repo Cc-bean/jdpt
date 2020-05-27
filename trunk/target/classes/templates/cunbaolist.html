@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet" />
+	</head>
+	<style>
+		.cunbaolist{
+			position: relative;
+			width: 100%;
+			border-top: 1px solid #CCCCCC;
+			border-bottom: 1px solid #CCCCCC;
+		}
+		.cunbao-item{
+			position: relative;
+			display: block;
+			text-decoration: none;
+			padding: 0.5rem 0.5rem;
+			border-bottom: 1px solid #CCCCCC;
+		}
+		.cunbao-item:last-child{
+			border: none;
+		}
+		.cunbao-item:after{
+			position: relative;
+			content: ">";
+			top: -1.6rem;
+			width: 1rem;
+			height: 1rem;
+			color: #ACACB4;
+			float: right;
+		}
+		.cunbao-title{
+			position: relative;
+			font-size: 1rem;
+			color: rgba(0,0,0,0.7);
+		}
+		.cunbao-day{
+			position: relative;
+			font-size: 0.8rem;
+			color: rgba(0,0,0,0.4);
+		}
+		.cunbao-item:active{
+			background-color: rgba(0,0,0,0.05);
+		}
+	</style>
+	<body>
+		
+		<div class="cunbaolist">
+			<a class="cunbao-item" >
+				<div class="cunbao-title">撒监管办法及咯上的</div>
+				<div class="cunbao-day">xx人xx世间fabu</div>
+			</a>
+			<a class="cunbao-item">
+				<div class="cunbao-title">撒监管办法及咯上的</div>
+				<div class="cunbao-day">xx人xx世间fabu</div>
+			</a>
+		</div>
+
+		<script>
+			var cunbaoitem=document.getElementsByClassName("cunbao-item");
+			for (var i=0;i<cunbaoitem.length;i++) {
+				cunbaoitem[i].addEventListener("click",function(){
+					this.style.display.backgroundColor="rgba(0,0,0,0.05)";
+					window.parent.location.href="cunbao.html";
+				})
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="/jdpt/static/css/all.css" rel="stylesheet"/>
+    <script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+    <script src="/jdpt/static/js/storage.js"></script>
+</head>
+<style>
+    header{
+        position: fixed;
+    }
+    .body{
+        position: relative;
+        top: 3rem;
+        width: 100%;
+        padding: 0 0.5rem;
+    }
+    .body h2{
+
+    }
+    .body span:first-child{
+        font-size: 0.8rem;
+        color: #555555;
+        position: relative;
+        float: right;
+        right: 1rem;
+    }
+    .body span:last-child{
+        position: relative;
+        color: #555555;
+        font-size: 0.8rem;
+    }
+    .body p{
+        position: relative;
+        letter-spacing: 0.1rem;
+        color: #333333;
+        text-indent: 2em;
+    }
+    .body img{
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin: 0.5rem 0;
+        -webkit-border-radius: 0.2rem;
+        -moz-border-radius: 0.2rem;
+        border-radius: 0.2rem;
+    }
+    .content{
+        position: relative;
+        width: 100%;
+    }
+    .content .title{
+        position: relative;
+        width: 100%;
+        text-align: center;
+        color: white;
+        top: 2rem;
+        z-index: 1;
+    }
+    .content .errorimg{
+        position: relative;
+        width: 100%;
+        height: auto;
+        z-index: 0;
+    }
+</style>
+<body>
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+    <img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+<header>
+    <span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+</header>
+<div class="body">
+<div class="content">
+
+</div>
+</div>
+<script src="/jdpt/static/js/header.js"></script>
+<script src="/jdpt/static/js/mask.js"></script>
+<script>
+    var loadmask=document.getElementById("loadmask");
+    showmask(loadmask);
+
+
+    window.onload=function () {
+        if(typeof(FileReader)=="undefined")
+        {
+            alert("你的浏览器不支持文件读取");
+            document.write("");
+        }else
+        {
+            alert("你的浏览器支持文件读取");
+        }
+    }
+    var wenjianid=userInfo.getItem("wenjianid");
+    console.log(wenjianid);
+    $.ajax({
+        url:"/jdpt/query/"+wenjianid,
+        dataType:"JSON",//服务器返回json格式数据
+        type:'GET',//HTTP请求类型
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        success:function (mes) {
+            console.log(mes);
+            var jyNmaeoffile="";//文件名
+            mes.record[0].jyNmaeoffile==null? jyNmaeoffile="未录入": jyNmaeoffile=mes.record[0].jyNmaeoffile;
+            var jyLujing=new Blob();//文件路径
+            mes.record[0].jyLujing==null? jyLujing="": jyLujing=mes.record[0].jyLujing;
+            var jyTime="";//发布时间
+            mes.record[0].jyTime==null?jyTime="未录入":jyTime=mes.record[0].jyTime;
+            var jyFangwen="";//访问量
+            mes.record[0].jyFangwen==null? jyFangwen="未录入": jyFangwen=mes.record[0].jyFangwen;
+            var jyPeople="";//发布人
+            mes.record[0].jyPeople==null?jyPeople="未录入":jyPeople=mes.record[0].jyPeople;
+            var jyZhenshilujing="";//图片
+            mes.record[0].jyZhenshilujing==null?jyZhenshilujing="未录入":jyZhenshilujing=mes.record[0].jyZhenshilujing;
+            var photos=jyZhenshilujing.split(",");
+            var str="";
+            str+="<h2>"+jyNmaeoffile+"</h2><br>";
+            str+="<span style='position: relative;font-size: 0.8rem;color: #555555;'>发布人:"+jyPeople+"/阅:"+jyFangwen+"</span>"
+            str+="<span style='position: relative;float: right;right: 2rem;font-size: 0.8rem;color: #555555;'>时间:"+jyTime.substring(0.10)+"</span><br><br>";
+            if(photos.length>0){
+                str+="<img src='"+photos[0]+"' />";
+            }
+            if(jyLujing==""){
+                str+="<p>暂无文件</p>"
+            }else {
+                var reader=new FileReader();
+                reader.readAsText(jyLujing);
+                reader.onload=function (data) {
+                    str+="<div class='content'>"+data+"</div>";
+                }
+            }
+            if(photos.length>1){
+                for (var i=1;i<photos.length;i++)
+                    //缺个文件夹名字
+                str+="<img src='/jdpt/Photo/"+photos[i]+"' />";
+            }
+            document.getElementsByClassName("body")[0].innerHTML=str;
+            hiden(loadmask);
+        },
+        error:function(){
+            document.getElementsByClassName("content")[0].innerHTML="\t<p class='title'><span>哎呀！您的网络好像断了。。。</span></p>" +"<img class='errorimg' src='/jdpt/static/img/losem.jpg'/>"
+
+
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+header{
+    position: fixed;
+}
+.body{
+    position: relative;
+    width: 96%;
+    left: 2%;
+    top: 3rem;
+}
+.body h2{
+
+}
+.body span:first-child{
+    font-size: 0.8rem;
+    color: #555555;
+    position: relative;
+    float: right;
+    right: 1rem;
+}
+.body span:last-child{
+    position: relative;
+    color: #555555;
+    font-size: 0.8rem;
+}
+.body p{
+    position: relative;
+    letter-spacing: 0.1rem;
+    color: #333333;
+    text-indent: 2em;
+}
+.body img{
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin: 0.5rem 0;
+    -webkit-border-radius: 0.2rem;
+    -moz-border-radius: 0.2rem;
+    border-radius: 0.2rem;
+}
+.body table{
+    position: relative;
+    width: 96%;
+    color: #555555;
+    font-size: 1rem;
+    line-height: 2rem;
+    -webkit-border-radius: 0.5rem;
+    -moz-border-radius: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    padding: 0.5rem;
+    -webkit-box-shadow: inset 0px 0px 4px  rgba(0, 0, 0, 0.1);
+    -moz-box-shadow:inset 0px 0px 4px  rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0px 0px 4px  rgba(0, 0, 0, 0.1);
+}

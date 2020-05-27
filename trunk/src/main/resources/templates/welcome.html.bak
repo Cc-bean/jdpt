@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="/jdpt/static/css/all.css"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	
+		<style type="text/css">
+			html{
+				overflow: hidden;
+			}
+			 body{
+				position: relative;
+				background-image: url(/jdpt/static/img/20171211153421_FRSsP.png.jpg);
+				background-size: cover;
+				overflow: hidden;
+			} 
+			#bailu{
+				position: relative;
+				width: 70px;
+				height: 70px;
+				z-index: 100;
+				animation:mymove 5s infinite linear;
+				-webkit-animation:mymove 5s infinite linear; /*Safari and Chrome*/
+			}
+			#bailu3{
+				position: relative;
+				width: 90px;
+				height: 90px;
+				z-index: 100;
+				animation:mymove 4s infinite linear;
+				-webkit-animation:mymove 4s infinite linear; /*Safari and Chrome*/
+			}
+			#bailu2{
+				position: relative;
+				width:50px ;
+				height: 50px;
+				z-index: 100;
+				animation:mymove 6s infinite linear;
+				-webkit-animation:mymove 6s infinite linear; /*Safari and Chrome*/
+			}
+			@keyframes mymove
+			{
+			from {left:100%;top:40vh;}
+			to {left:-60%;top:-30%;}
+			}
+			@-webkit-keyframes mymove /*Safari and Chrome*/
+			{
+			from {left:100%;top:40vh;}
+			to {left:-60%;top:-30%;}
+			}
+			@keyframes mymove2
+			{
+			from {left:60%;top:50vh;}
+			to {left:-60%;top:-30%;}
+			}
+			@-webkit-keyframes mymove2 /*Safari and Chrome*/
+			{
+			from {left:60%;top:50vh;}
+			to {left:-60%;top:-30%;}
+			}
+			
+			#title{
+				position: absolute;
+				width: 18vw;
+				top: 16vh;
+				left: 20vw;
+				overflow: hidden;
+				text-align: center;
+				font-size: 6vw;
+				z-index: 1000;
+				font-family: "仿宋";
+				animation: titleshow 4s;
+				-ms-animation: titleshow 4s;
+				-moz-animation: titleshow 4s;
+				-webkit-animation: titleshow 4s;
+			}
+			@keyframes titleshow
+			{
+			from {opacity: 0;
+				-moz-opacity: 0;
+				-webkit-opacity: 0;}
+			to {opacity: 1;
+				-moz-opacity: 1;
+				-webkit-opacity: 1;}
+			}
+			@-webkit-keyframes titleshow /*Safari and Chrome*/
+			{
+			from {opacity: 0;
+				-moz-opacity: 0;
+				-webkit-opacity: 0;}
+			to {opacity: 1;
+				-moz-opacity: 1;
+				-webkit-opacity: 1;}
+			}
+			
+			button{
+				position: absolute;
+				bottom: 5vh;
+				border: none;
+				height: 30px;
+				line-height: 30px;
+				padding: 0 5px;
+				right: 10vw;
+				background-color: pink;
+				color: #ce103c;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<img id="title" src="/jdpt/static/img/title2.png" />
+		<img id='bailu2' src="/jdpt/static/img/timg.gif" >
+		<img id='bailu3' src="/jdpt/static/img/timg.gif" >
+		<img id='bailu' src="/jdpt/static/img/timg.gif" >
+		<button onclick="gotoindex()"  type="button">跳过</button>
+		<script type="text/javascript">
+			document.getElementById("title").style.opacity='1';
+			setInterval(goindex,1000);
+			var tt=0;
+			function goindex(){
+				tt++;
+				if(tt==5){
+					
+					window.location.replace('index.html');
+				}
+			} 
+			function gotoindex(){
+				window.location.replace('index.html');
+				}
+		</script>
+	</body>
+</html>

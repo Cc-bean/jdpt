@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>资金</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+
+		<link href="/jdpt/static/css/all.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/cards.css" rel="stylesheet" />
+		<link rel="stylesheet" href="/jdpt/static/css/searchAndlist.css" />
+	</head>
+	<style>
+		a{
+			text-decoration: none}
+	</style>
+	<body>
+		<header>
+			<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+			<span style="padding-left: 2rem;">xx年收支</span>
+		</header>
+		<ul class="table-view" style="margin-top: 3.1rem;">
+		        <li class="table-view-cell">
+		            <a class="dyitem navigate-right">
+		                 xx月收支
+		            </a>
+		        </li>
+		        <li class="table-view-cell">
+		            <a class="dyitem navigate-right">
+		             xx月收支
+		            </a>
+		        </li>
+		        
+		    </ul>
+		    
+<script src="/jdpt/static/js/header.js"></script>
+		    <script>
+		    	
+		    	
+		    	var dyitems=document.getElementsByClassName("dyitem");
+		    	for (var i=0;i<dyitems.length;i++) {
+		    		dyitems[i].addEventListener("click",function(){
+		    		    this.href="zijinshouzhiInfo.html";
+		    		})
+		    	}
+		    </script>
+	</body>
+</html>

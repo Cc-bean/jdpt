@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>村内事务</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="/jdpt/static/css/all.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/tablecard.css" />
+    <script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+    <script src="/jdpt/static/js/storage.js"></script>
+
+</head>
+
+<body>
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+    <img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+<header>
+    <a class="go-back">&lsaquo;</a>
+</header>
+<div class="body">
+
+</div>
+<script src="/jdpt/static/js/header.js"></script>
+<script src="/jdpt/static/js/mask.js"></script>
+<script>
+    var loadmask=document.getElementById("loadmask");
+    //showmask(loadmask);
+	var fkid=sessionStorage.getItem("fkid");
+	getqcpersoninf(fkid);
+    function getqcpersoninf(id) {
+        showmask(loadmask);
+        $.ajax({
+            url:uri+"YichuliInfo/"+id,
+            dataType:"JSON",//服务器返回json格式数据
+            type:'GET',//HTTP请求类型
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            success:function(mes){
+                console.log("反馈详情");
+                console.log(mes);
+               var fTitle="";
+                              mes.feedback.fTitle==null?fTitle="--":fTitle=mes.feedback.fTitle;
+                              var backtype="";
+                              mes.feedback.backtype==null?backtype="--":backtype=mes.feedback.backtype;
+                              var department="";
+                              mes.feedback.department==null?department="--":department=mes.feedback.department;
+                              var fTime="";
+                              mes.feedback.fTime==null?fTime="--":fTime=mes.feedback.fTime;
+                              var fContent="";
+                              mes.feedback.fContent==null?fContent="--":fContent=mes.feedback.fContent;
+                              var fHandle="";
+                              mes.feedback.fHandle==true?fHandle="已处理":fHandle="处理中";
+                              var feedbackreply="";
+                              mes.feedback.feedbackreply==null?feedbackreply="--":feedbackreply=mes.feedback.feedbackreply;
+                              var fImagepath="";
+                              mes.feedback.fImagepath==null?fImagepath="--":fImagepath=mes.feedback.fImagepath;
+                              var photos=fImagepath.split(",");
+                              photos.length-=1;
+                              
+                              var str="";
+                              str+="<table><tr><td>标题：</td><td>"+fTitle+"</td></tr>";
+                              str+="<tr><td>反馈类型：</td><td>"+backtype+"</td></tr>";
+                              str+="<tr><td>处理单位：</td><td>"+department+"</td></tr>";
+                              str+="<tr><td>反馈时间：</td><td>"+fTime+"</td></tr>";
+                              str+="<tr><td>反馈内容：</td><td>"+fContent+"</td></tr>";
+                               str+="<tr><td>是否处理：</td><td>"+fHandle+"</td></tr>";
+                              str+="<tr><td>处理结果：</td><td>"+feedbackreply+"</td></tr></table>";
+							  
+				if(photos.length===0){
+					str+="<p>反馈图片：无</p>";
+				}else{
+					str+="<p>反馈图片：</p>";
+					for(var i=0;i<photos.length;i++){
+					    str+="<img src='http://47.105.118.98/jdpt/HJResourse/Feedback/"+photos[i]+"'/>";
+					}
+				}
+                document.getElementsByClassName("body")[0].innerHTML=str;
+                hiden(loadmask);
+            },
+            error:function(xhr,type,errorThrown){
+                //异常处理
+
+            }
+        });
+    }
+</script>
+</body>
+</html>

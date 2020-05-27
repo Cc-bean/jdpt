@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组织活动</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="/jdpt/static/css/all.css" />
+    <script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+    <script src="/jdpt/static/js/storage.js"></script>
+
+</head>
+<style>
+    header{
+        position: fixed;
+		height: 6vh;
+		line-height: 6vh;
+    }
+    .body{
+        position: relative;
+        width: 96%;
+        left: 2%;
+        top: 6vh;
+    }
+    .body h2{
+
+    }
+    .body span:first-child{
+        font-size: 0.8rem;
+        color: #555555;
+        position: relative;
+        float: right;
+        right: 1rem;
+    }
+    .body span:last-child{
+        position: relative;
+        color: #555555;
+        font-size: 0.8rem;
+    }
+    .body p{
+        position: relative;
+        letter-spacing: 0.1rem;
+        color: #333333;
+        text-indent: 2em;
+    }
+    .body img{
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin: 0.5rem 0;
+        -webkit-border-radius: 0.2rem;
+        -moz-border-radius: 0.2rem;
+        border-radius: 0.2rem;
+    }
+
+</style>
+<body>
+
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+    <img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+
+<header>
+    <a class="go-back">&lsaquo;</a>
+</header>
+<div class="body">
+<div class="content"></div>
+</div>
+<script src="/jdpt/static/js/header.js"></script>
+<script src="/jdpt/static/js/mask.js"></script>
+<script>
+    var loadmask=document.getElementById("loadmask");
+    showmask(loadmask);
+    var theid=sessionStorage.getItem("zhxiangxiid");
+    $.ajax({
+        url:uri+"queryHuoDongById/"+theid,
+        dataType:"JSON",//服务器返回json格式数据
+        type:'GET',//HTTP请求类型
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        success:function(mes){
+            console.log("活动列表");
+            console.log(mes);
+           var name="";
+            mes.huodong.dyzzhdName==null?name="未知":name=mes.huodong.dyzzhdName;
+           var time="";
+            mes.huodong.dyzzhdTime==null?time="未知":time=mes.huodong.dyzzhdTime.substring(0,10);
+           var contenr="";
+            mes.huodong.dyzzhdContent==null?contenr="未知":contenr=mes.huodong.dyzzhdContent;
+           var place="";
+            mes.huodong.dyzzhdPlace==null?place="未知":place=mes.huodong.dyzzhdPlace;
+            var photo="";
+            mes.huodong.dyzzhdZhenshilujing==null?photo="":photo=mes.huodong.dyzzhdZhenshilujing;
+
+            var contens=contenr.split("/n");
+            var photos=photo.split(",");
+            photos.length-=1;
+            var str="";
+            str+="<h2>"+name+"</h2><br>";
+            str+="<span style='position: relative;float: right;right: 2rem;font-size: 0.8rem;color: #555555;'>时间:"+time.substring(0.10)+"</span><br><br>";
+            if(photos.length<=contens.length){
+                for (var i=0;i<contens.length;i++) {
+                    if(i<photos.length){
+                        str+="<p>"+contens[i]+"</p>";
+                        str+="<img src='/jdpt/HJResourse/Zuzhihuodong/"+photos[i]+"'/>";
+                    }else {
+                        str+="<p>"+contens[i]+"</p>";
+                    }
+                }
+            }else {
+                for (var i=0;i<photos.length;i++) {
+                    if(i<contens.length){
+                        str+="<img src='/jdpt/HJResourse/Zuzhihuodong/"+photos[i]+"'/>";
+                        str+="<p>"+contens[i]+"</p>";
+                    }else {
+                        str+="<img src='/jdpt/HJResourse/Zuzhihuodong/"+photos[i]+"'/>";
+                    }
+                }
+            }
+            str+="<br><span style='position: relative;color: #555555;font-size: 0.8rem;'>地点:"+place+"</span>";
+            document.getElementsByClassName("body")[0].innerHTML=str;
+            hiden(loadmask);
+        },
+        error:function(){
+            document.getElementsByClassName("content")[0].innerHTML="\t<p class='title'><span>哎呀！您的网络好像断了。。。</span></p>" +"<img class='errorimg' src='/jdpt/static/img/losem.jpg'/>"
+
+
+        }
+    });
+</script>
+</body>
+</html>

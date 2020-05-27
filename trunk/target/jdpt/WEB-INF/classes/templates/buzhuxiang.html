@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>补助项</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="/jdpt/static/css/searchAndlist.css" />
+		<link rel="stylesheet" href="/jdpt/static/css/cards.css" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/iconfont.css" rel="stylesheet" />
+		<script type="text/javascript" src="/jdpt/static/js/header.js"></script>
+		<script type="text/javascript" src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+		<script type="text/javascript" src="/jdpt/static/js/storage.js"></script>
+	</head>
+<style>
+	.pageselect{
+		position: fixed;
+	}
+	ul{
+		margin-bottom: 5vh;
+	}
+</style>
+	<body>
+	<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+		<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+	</div>
+		<div id="mask" class="mask" onclick="hiden(this)">
+			
+			<div id="buzhuxiang" class="dycard">
+			<table cellpadding="0" cellspacing="0">
+
+			</table>
+		</div>
+			
+		</div>
+	<div class="search">
+		<select  class="text"  id="selettype"><!--onchange="getdylist()"-->
+
+		</select>
+	<button class="button" id="sousuo">搜索</button>
+</div>
+<div class="content">
+		<ul class="table-view" id="dylist">
+
+		</ul>
+		<div class="pageselect" id="dypage">
+			<button id="show_hidendy"    class="iconfont icon-zuo2" ></button>
+			<button id="dygoup">上一页</button>
+			<button id="dy_page_totals">1/1</button>
+			<select id="dytopage">
+			</select>
+			<button id="godyjumppage" >跳转</button>
+			<button id="dygodown">下一页</button>
+		</div>
+</div>
+	<script src="/jdpt/static/js/mask.js"></script>
+		<script type="text/javascript">
+            var loadmask=document.getElementById("loadmask");
+            showmask(loadmask);
+        var vId=userInfo.getItem("userVillageid");
+        $.ajax({
+            url:uri+'FindSubsidytypeByCunId/'+vId,
+            dataType:"JSON",//服务器返回json格式数据
+            type:'GET',//HTTP请求类型
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            success:function (res) {
+                console.log(res);
+                var str="";
+                //显示下拉选择框中的内容
+                for (var i=0;i<res.type.length;i++){
+                    str+="<option value='"+res.type[i].subsidytypeId+"'>"+res.type[i].stName+"</option>";
+                }
+                document.getElementById("selettype").innerHTML=str;
+                var dypage=true;
+
+				document.getElementById("show_hidendy").addEventListener("click",function (ev) {
+                    if(dypage==false){
+                        document.getElementById("dypage").style.width="100%";
+                        this.style.transform="rotate(180deg)";
+                        this.style.otransform="rotate(180deg)";
+                        this.style.mstransform="rotate(180deg)";
+                        this.style.moztransform="rotate(180deg)";
+                        this.style.webkittransform="rotate(180deg)";
+                        dypage=true;
+                    }else {
+                        document.getElementById("dypage").style.width="2rem";
+                        this.style.transform="rotate(0deg)";
+                        this.style.otransform="rotate(0deg)";
+                        this.style.mstransform="rotate(0deg)";
+                        this.style.moztransform="rotate(0deg)";
+                        this.style.webkittransform="rotate(0deg)";
+                        dypage=false;
+                    }
+				})
+
+
+                var dylist=[];
+                var dytotalpage=1;
+                var dynowcount=0;
+                dygodown();
+                //点击查看党员详情
+
+				document.getElementById("godyjumppage").addEventListener("click",function (ev) {
+                    dynowcount=document.getElementById("dytopage").value;
+                    //alert(dynowcount);
+                    getdylist();
+				})
+
+
+                function getdylist() {
+                    showmask(loadmask);
+                    var select= document.getElementById("selettype").value;
+                  //  alert( document.getElementById("selettype"));
+                    //  alert(select);
+                    $.ajax({
+                        url:uri+'PageFindSubsidynameByTypeId/'+select+"/"+dynowcount+"/15",
+                        dataType:"JSON",//服务器返回json格式数据
+                        type:'GET',//HTTP请求类型
+                        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                        success:function(mes){
+                            console.log(mes);
+                            //总页数
+							if(mes.total==0){
+                                document.getElementById("dylist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>";
+
+                            }else {
+                                document.getElementById("dylist").innerHTML = "";
+                                dylist.length = 0;
+                                dytotalpage = mes.total;
+                                //当前页
+                                dynowcount = mes.nowPage;
+                                //填写当前页共多少页
+                                document.getElementById("dy_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                                //得到selectpage的页码选择
+                                var dypagestr = "";
+                                for (var i = 1; i <= mes.total; i++) {
+                                    dypagestr += "<option value='" + i + "'>" + i + "</option>";
+                                }
+                                document.getElementById("dytopage").innerHTML = dypagestr;
+
+                                for (var i = 0; i < mes.record.length; i++) {
+                                    var sName = "";
+                                    mes.record[i].sName == null ? sName = "未知" : sName = mes.record[i].sName;
+                                    var stName = "";
+                                    mes.record[i].subsidytype.stName == null ? stName = "未知" : stName = mes.record[i].subsidytype.stName;
+                                    var siStandard = "";
+                                    mes.record[i].subsidyinformation== null ? siStandard = "未知" : siStandard = mes.record[i].subsidyinformation.siStandard;
+                                    var siSubsidyamount = "";
+                                    mes.record[i].subsidyinformation== null ? siSubsidyamount = "未知" : siSubsidyamount = mes.record[i].subsidyinformation.siSubsidyamount;
+                                    dylist[i] = [sName, stName, siStandard, siSubsidyamount];
+                                }
+                                getdyitem(dylist);
+                                var as = document.getElementsByTagName("a");
+                                for (var i = 0; i < as.length; i++) {
+
+                                    as[i].addEventListener("click", function (evt) {
+                                        var dyitem = parseInt(this.id.substring(2));
+                                        var dymask = document.getElementById("mask");
+                                        var str = "";
+                                        str += "<div id='dycard' class='dangyuan'><table cellpadding='0' cellspacing='0'><tr><td>补助名称：</td><td>";
+                                        str += dylist[dyitem][0] + "</td></tr><tr><td>所属类型：</td><td>";
+                                        str += dylist[dyitem][1] + "</td></tr><tr><td>农村奖抚：</td><td>";
+                                        str += dylist[dyitem][2] + "</td></tr><tr><td>补助标准：</td> <td>";
+                                        str += dylist[dyitem][3] + "元</td></tr></table></div>";
+                                        dymask.innerHTML = str;
+										showmask(dymask);
+                                    })
+                                }
+
+                            }
+                            hiden(loadmask);
+                        },
+						error:function () {
+                             }
+
+                    });
+                }
+
+                function getdyitem(dydata){
+                    var dylist=document.getElementById("dylist");
+                    var str="";
+                    for(var i=0;i<dydata.length;i++){
+                        var data=dydata[i][0];
+                        if(data.length>18){
+                            data=dydata[i][0].substring(0,18)+"......";
+						}
+                        str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+">"+data+"</a></li>"
+                    }
+                    dylist.innerHTML=str;
+                }
+
+                function dygodown(){
+                    if(dynowcount<dytotalpage){
+                        dynowcount+=1;
+                        getdylist();
+                    }else {
+                        return;
+                    }
+				}
+                document.getElementById("dygodown").addEventListener("click",function (ev) {
+                    if(dynowcount<dytotalpage){
+                        dynowcount+=1;
+                        getdylist();
+                    }else {
+                        return;
+                    }
+				})
+                //下一页
+                //上一页
+				document.getElementById("dygoup").addEventListener("click",function (ev) {
+                    if(dynowcount==0){
+                        return
+                    }else{
+                        dynowcount-=1;
+                        getdylist();
+                    }
+				})
+		document.getElementById("sousuo").addEventListener("click",function (ev) {
+    			getdylist();
+		})
+
+            },
+			error:function () {
+                  }
+
+        })
+
+
+
+		</script>
+	</body>
+
+</html>

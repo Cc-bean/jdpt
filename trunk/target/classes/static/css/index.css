@@ -1,0 +1,242 @@
+header{
+	position: relative;
+	height: 5vh;
+	line-height: 5vh;
+	background-color: #CF2D28;
+	color: #DDDDDD;
+	font-size: 3vh;
+}
+header span{
+	position: relative;
+	padding: 0 10px;
+}
+.index_content{
+	position: relative;
+	width: 100%;
+	height: 90vh;
+}
+.menucontent{
+	position: relative;
+	width: 100%;
+	height: 4vh;
+	line-height: 4vh;
+	display: flex;
+}
+.menucontent #shead{
+	position: relative;
+	width: 90vw;
+	display: inline-block;
+	background-color: #EEEEEE;
+}
+#shead .swiper-slide{
+	position: relative;
+	width: auto;
+	padding: 0 10px;
+	height: 4vh;
+	line-height: 4vh;
+}
+.headactive{
+	color: #CF2D28;
+}
+.menucontent #menubutton{
+	position: relative;
+	width: 10vw;
+	text-align: center;
+	height: 4vh;
+	line-height: 4vh;
+	background-color: white;
+	color: #CF2D28;
+}
+#sbody {
+	position: relative;
+	width: 100%;
+	height: 85vh;
+	background-color: white;
+}
+#sbody .swiper-slide {
+	text-align: left;
+	background-color: white;
+	font-size: 18px;
+	overflow-y: scroll;
+}
+#imgswiper .swiper-slide{
+	text-align: center;
+	height: 14rem;
+	overflow-y: hidden;
+}
+#gonggaoswiper{
+	height: 2rem;
+}
+#gonggaoswiper  a{
+	position: relative;
+	width: 100%;
+	height: 2rem;
+	line-height: 2rem;
+	border-top: 1px solid rgba(0,0,0,0.1);
+	padding-top: 0.5rem;
+	color: #CF2D28;
+	display:inline-block;
+}
+#gonggaoswiper  a span{
+padding-left: 1rem;	
+font-size: 4vw;
+}
+#imgswiper img{
+	width: 100%;
+	height: auto;
+}
+#imgswiper img:after{
+	content: "暂无该行政村图片";
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+#menu{
+	position: absolute;
+	top: 15%;
+	height: 60%;
+	width: 90%;
+	box-sizing: content-box;
+	left: 5%;
+	border-radius: 2rem;
+	z-index: 10000;
+	box-shadow: 0px 0px 2rem #ccc;
+	background-color: white;
+	overflow: hidden;
+}
+#menu .header{
+	position: relative;
+	top: 0px;
+	width: 100%;
+	height: 4rem;
+	line-height: 4rem;
+	color: white;
+	font-size: 1.2rem;
+	background-color: #CF2D28;
+
+}
+#menu div span {
+	white-space: nowrap;
+	display: inline-block;
+	width: auto;
+	margin: 0.5rem 0.5rem;
+	background-color: rgba(207,45,40,0.2);
+	color: #CF2D28;
+	padding: 5px 10px;
+	border-radius: 5px;
+}
+/* 首页 */
+
+.cun{
+	position: relative;
+	width: 100%;
+	display: block;
+	text-align: center;
+	padding-top: 0.5rem ;
+}
+.cun1{
+	position: relative;
+	width: 23%;
+	height: 5rem;
+	display: inline-block;
+}
+
+.cun1 span:nth-child(1){
+	width: 3rem;
+	height: 3rem;
+	display: inline-block;
+	background-color: #CF2D28;
+	border-radius: 1.5rem;
+	color: white;
+	line-height: 3rem;
+	font-size: 2rem;
+}
+.cun1 span:nth-child(2){
+	width: 3rem;
+	height: 2rem;
+	display: inline-block;
+	line-height: 2rem;
+	font-size: 0.8rem;
+}
+
+.cunqing{
+	margin-top: 0.5rem;
+	border-top: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+}
+.jianjie{
+	position: relative;
+	width: 96%;
+	left: 2%;
+	margin-bottom: 1rem;
+	display: block;
+	border: 1px solid #CCCCCC;
+	overflow: hidden;
+}
+.jianjie-content{
+	position: relative;
+	box-sizing: content-box;
+	padding: 5px 0px;
+	width: 96%;
+	left: 2%;
+	height: auto;
+	font-size: 1rem;
+	letter-spacing: 0.1rem;
+	color: rgba(0,0,0,0.7);
+	overflow-y: scroll;
+	border-top: 1px solid #CCCCCC;
+}
+.jianjie-title{
+	position: relative;
+	width: 100%;
+	color: rgba(0,0,0,0.5);
+	height: 2rem;
+	font-size: 0.8rem;
+	line-height: 2rem;
+}
+.jianjie-title .one{
+	padding-left: 1rem;
+}
+.jianjie-title .two{
+	position: relative;
+	color: #CF2D28;
+	font-size: 2rem;
+	float: right;
+	padding-right: 1rem;
+}
+
+
+nav{
+		position:fixed;
+		border-top: 1px solid rgba(0,0,0,0.3);
+		width: 100%;
+		bottom: 0rem;
+		z-index: 10;
+		background-color: white;
+		text-align: center;
+	}
+	nav a{
+		color: black;
+		position: relative;
+		width: 32%;
+		display: inline-block;
+		color: #555555;
+	}
+	a span:first-child{
+		position: relative;
+		width: 100%;
+		font-size: 1em;
+		height: 2vh;
+		line-height: 2vh;
+		display: inline-block;
+	}
+	a span:last-child{
+		position: relative;
+		height: 2vh;
+		width: 100%;
+		display: inline-block;
+		font-size: 0.8em;
+	}

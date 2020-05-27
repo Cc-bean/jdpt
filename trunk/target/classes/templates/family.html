@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>家庭空间</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+
+		<link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/cards.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet" />
+		<script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+		<script src="/jdpt/static/js/storage.js"></script>
+
+		<script src="/jdpt/static/js/mask.js"></script>
+	</head>
+	<style>
+		.open{
+			position: relative;
+			float: right;
+			color: #CF2D28;
+			top: 0.1rem;
+			font-size: 1.8rem;
+			right: 1rem;
+		}
+		.content{
+			position: relative;
+			width: 100%;
+		}
+		.content .title{
+			position: relative;
+			width: 100%;
+			text-align: center;
+			color: white;
+			top: 2rem;
+			z-index: 1;
+		}
+		.content .errorimg{
+			position: relative;
+			width: 100%;
+			height: auto;
+			z-index: 0;
+		}
+	</style>
+
+	<body>
+
+	<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+		<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+	</div>
+
+		<div id="dymask" class="mask" onclick="hiden(this)">
+
+		</div>
+
+		<header>
+		<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+		<span style="padding-left: 2rem;">家庭空间</span>
+		<span class="open" onclick="openaddf()">+</span>
+	</header>
+		<div class="content" style="margin-top: 3.1rem;">
+	<ul id="dylist" class="table-view" style="top: 0.3rem;">
+
+	</ul>
+		</div>
+		<script src="/jdpt/static/js/header.js"></script>
+		<script type="text/javascript">
+            var loadmask=document.getElementById("loadmask");
+            showmask(loadmask);
+            var dylist=[];
+
+
+            //点击查看党员详情
+            function showdyinfo(t){
+                var dyitem=parseInt(t.id.substring(2));
+                var dymask=document.getElementById("dymask");
+
+                var str="";
+                str+="<div id='dycard' class='dangyuan'><table cellpadding='0' cellspacing='0'><tr><td>姓名：</td><td>";
+                str+=dylist[dyitem][0]+"</td></tr><tr><td>性别：</td><td>";
+                str+=dylist[dyitem][1]+"</td></tr><tr><td>联系方式：</td><td>";
+                str+=dylist[dyitem][2]+"</td></tr><tr><td>民族：</td><td>";
+                str+=dylist[dyitem][3]+"</td></tr><tr><td>政治面貌：</td> <td>";
+                str+=dylist[dyitem][4]+" </td></tr><tr><td>与持卡人关系：</td><td>";
+                str+=dylist[dyitem][5]+"</td></tr></table>";
+                str+="<div style='position: relative;width: 100%;margin: 2rem 0rem 0rem 2rem'><button style='background-color:darkgreen ;padding: 0.5rem;color: white;margin:0 1rem' onclick='updatam("+dylist[dyitem][6]+")'>修改</button><button style='background-color: #CF2D28;padding: 0.5rem;color: white;margin:0 1rem' onclick='deletm("+dylist[dyitem][6]+")'>删除</button></div></div>"
+                dymask.innerHTML=str;
+                showmask(dymask);
+            }
+
+
+			function updatam(t){
+				sessionStorage.setItem("memberid",t);
+				window.location.href="xiugaimember.html";
+			}
+            function deletm(t){
+
+                $.ajax({
+                    url:'/jdpt/DeleteMember/'+t,
+                    dataType:"JSON",//服务器返回json格式数据
+                    type:'GET',//HTTP请求类型
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    success:function(mes){
+					console.log(mes);
+						if(mes.statue=="success"){
+							alert("删除成功！");
+                            getdylist();
+						}
+                    },
+                    error:function(xhr,type,errorThrown){
+                        //异常处理
+
+                    }
+                });
+            }
+            getdylist();
+            function getdylist() {
+                showmask(loadmask);
+                var userId=sessionStorage.getItem("userId");
+                $.ajax({
+                    url:'/jdpt/FindFamilyMember/'+userId,
+                    dataType:"JSON",//服务器返回json格式数据
+                    type:'GET',//HTTP请求类型
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    success:function(mes){
+                        console.log(mes);
+                        dylist.length=0;
+                        console.log()
+                        if(mes.member.length==0){
+                            document.getElementById("dylist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+                        }else {
+                  for(var i=0;i<mes.member.length;i++){
+                            var fiName="";
+                            mes.member[i].fiName==null? fiName="未知": fiName=mes.member[i].fiName;
+                            var fiSex="";
+                            mes.member[i].fiSex==null?fiSex="未知":fiSex=mes.member[i].fiSex;
+                            var fiPhone="";
+                            mes.member[i].fiPhone==null?fiPhone="未知":fiPhone=mes.member[i].fiPhone;
+                            var nName="";
+                            mes.member[i].nation.Nname==null?nName="未知":nName=mes.member[i].nation.nNmae;
+                            var policystatu=""
+                            mes.member[i].policystatu.pName==null?policystatu="未知":policystatu=mes.member[i].policystatu.pName;
+                            var fiRelation="";
+                            mes.member[i].fiRelation==null?fiRelation="未知":fiRelation=mes.member[i].fiRelation;
+                            var familyinformationId="";
+                     		 mes.member[i].familyinformationId==null?familyinformationId="未知":familyinformationId=mes.member[i].familyinformationId;
+                            dylist[i]=[fiName,fiSex,fiPhone,nName,policystatu,fiRelation,familyinformationId];
+
+                        }
+                        getdyitem(dylist);}
+                  hiden(loadmask);
+
+                    },
+                    error:function(){
+                     }
+                });
+            }
+
+            function getdyitem(dydata){
+                var dylist=document.getElementById("dylist");
+                var str="";
+                for(var i=0;i<dydata.length;i++){
+                    str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showdyinfo(this)'>"+dydata[i][0]+"</a></li>"
+                }
+                dylist.innerHTML=str;
+            }
+
+
+
+
+            function openaddf(){
+				window.location.href="addfamilymemeber.html";
+			}
+		</script>
+	</body>
+
+</html>

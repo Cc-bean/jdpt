@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/all.css" />
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../js/all.js"></script>
+    <script src="../js/echarts.js"></script>
+    <title>全区反馈</title>
+</head>
+<style>
+    .row {
+        margin-bottom: 20px;
+    }
+</style>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: 96vh;">
+                <div class="tu_contain">
+                    <div class="tu_card_header">
+                        <p>近年来全区各镇(街道)所辖行政村资金柱状图(年表)</p>
+                    </div>
+                    <div class="tu_info" id="zj_qq_year"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: 96vh;">
+                <div class="tu_contain">
+                    <div class="tu_card_header">
+                        <p>
+                            <select id="getyear" onchange="gettheyear_data()">
+                            
+                            </select>
+                            全区各镇(街道)所辖行政村资金柱状图(月表)
+                        </p>
+                    </div>
+                    <div class="tu_info" id="zj_qq"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script>
+    var myChartzjsr = echarts.init(document.getElementById('zj_qq'));
+    myChartzjsr.showLoading();
+    var myChartzjsr1 = echarts.init(document.getElementById('zj_qq_year'));
+    myChartzjsr1.showLoading();
+
+    getzj1();
+    var str = "";
+    for (var i = year; i > 2012; i--) {
+        str += "<option value='" + i + "'>" + i + "年</option>";
+    }
+    document.getElementById("getyear").innerHTML = str;
+    var selectyear = document.getElementById("getyear").value;
+    getzj(selectyear);
+
+    function gettheyear_data() {
+        selectyear = document.getElementById("getyear").value;
+        getzj(selectyear);
+    }
+
+    function myisnull(data) {
+        if (data == null || data == undefined) {
+            return 0;
+        } else {
+            return data;
+        }
+    }
+
+    function getzj1() {
+        $.ajax({
+            url: uri + "leaderCapitalController/findAllCapital",
+            dataType: 'json', //服务器返回json格式数据
+            data: {
+                regionId: regionId
+            },
+            type: 'post', //HTTP请求类型
+            timeout: 5000, //超时时间设置为10秒；
+            success: function(mes) {
+                console.log(mes);
+                var thedate = new Date();
+                var minyear = 2013,
+                    maxyear = thedate.getFullYear();
+                var zhens = [];
+                var xAxisdata = [];
+                
+                for (var i = 0, len = zhensx.length; i < len; i++) {
+
+                    zhens[i] = zhensx[i].sName;
+
+                }
+
+                for (var i = maxyear; i >= minyear; i--) {
+                    xAxisdata.push(i + "年");
+                }
+                //console.log(zhens);
+                console.log(xAxisdata);
+                var options = [];
+                var types = ['收入', '支出'];
+                for (var i = 0, len = xAxisdata.length; i < len; i++) {
+
+                    var sr = [],
+                        zc = [];
+                    var theyear;
+                    theyear = parseInt(xAxisdata[i].substr(0, 4));
+                    console.log(theyear);
+				for (var j = 0, len1 = zhensx.length; j < len1; j++) {
+                    for (var m = 0, mmax = zhens.length; m < mmax; m++) {
+                        //console.log(mmax);
+                        if(mes.data[m].zhen.zhenId==zhensx[j].zhenid){
+                        	var sritem = 0,
+                            zcitem = 0,
+                            xjsritem = 0,
+                            xjzcitem = 0,
+                            yhsritem = 0,
+                            yhzcitem = 0;
+
+                        for (var n1 = 0, nmax1 = mes.data[m].bankCapital.length; n1 < nmax1; n1++) {
+                            var itemyear = parseInt(mes.data[m].bankCapital[n1].CD_Income);
+                            if (itemyear == theyear) {
+                                yhsritem += (parseFloat(returnnum(mes.data[m].bankCapital[n1].CD_Beiyong1)) / 10000);
+                                yhzcitem += (parseFloat(returnnum(mes.data[m].bankCapital[n1]["SUM(CD_Beiyong2)"])) / 10000);
+                            }
+
+                        }
+                        for (var n2 = 0, nmax2 = mes.data[m].cashCapital.length; n2 < nmax2; n2++) {
+
+                            var itemyear = parseInt(mes.data[m].cashCapital[n2].CD_Income);
+                            if (itemyear == theyear) {
+                                xjsritem += (parseFloat(returnnum(mes.data[m].cashCapital[n2].CD_Beiyong1)) / 10000);
+                                xjzcitem += (parseFloat(returnnum(mes.data[m].cashCapital[n2]["SUM(CD_Beiyong2)"])) / 10000);
+                            }
+
+                        }
+                        sritem = xjsritem + yhsritem;
+                        zcitem = xjzcitem + yhzcitem;
+                        sr.push(sritem.toFixed(4));
+                        zc.push(zcitem.toFixed(4));
+                        }
+                        
+                    }
+
+}
+
+                    var optionitem = {
+                        xAxis: [{
+                            data: zhens // 镇名
+                        }],
+                        yAxis: [{
+                            type: 'value',
+                            name: "人民币（万元）"
+                        }],
+                        legend: {
+                            type: "scroll",
+                            data: types, //收入，支出
+                            itemGap: 5,
+                            pageIconColor: 'white',
+                            pageTextStyle: {
+                                color: "#ccc"
+                            },
+                        },
+                        series: [{
+                            type: 'bar',
+                            name: types[0],
+                            data: sr,
+                            cursor: 'pointer',
+                            itemStyle: {
+                                emphasis: {
+                                    barBorderRadius: 7
+                                },
+                                normal: {
+                                    barBorderRadius: 7
+                                }
+                            },
+                        }, {
+                            type: 'bar',
+                            name: types[1],
+                            data: zc,
+                            cursor: 'pointer',
+                            itemStyle: {
+                                emphasis: {
+                                    barBorderRadius: 7
+                                },
+                                normal: {
+                                    barBorderRadius: 7
+                                }
+                            },
+                        }],
+                        color: ["lightgreen", "lightcoral"]
+
+                    }
+
+                    options.push(optionitem);
+                }
+
+                var optionzj = {
+                    //timeline基本配置都写在baseoption 中
+                    baseOption: {
+                        timeline: {
+                            type: 'slider',
+                            bottom: '15',
+                            left: '10',
+                            right: '10',
+                            axisType: 'category',
+                            show: true,
+                            autoPlay: false,
+                            playInterval: 2000,
+                            data: xAxisdata,
+                            controlStyle: {
+                                emphasis: {
+                                    color: "dodgerblue",
+                                    borderColor: "dodgerblue",
+                                    shadowColor: 'dodgerblue',
+                                }
+                            },
+                            checkpointStyle: {
+                                color: "dodgerblue",
+                                borderColor: "dodgerblue",
+                                shadowColor: 'dodgerblue',
+                                shadowBlur: 15
+                            },
+                            itemStyle: {
+                                emphasis: {
+                                    color: "dodgerblue",
+                                    borderColor: "dodgerblue",
+                                    shadowColor: 'dodgerblue',
+                                    shadowBlur: 10
+                                }
+                            }
+                        },
+                        grid: {
+                            left: '80',
+                            top: '40',
+                            right: '10',
+                            bottom: '20%'
+                        },
+                        xAxis: [{
+                            type: 'category'
+                        }, ],
+                        yAxis: {
+                            type: 'value',
+                        },
+                        series: [{
+                            type: 'bar',
+                        }, ],
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow',
+                                label: {
+                                    show: false
+                                }
+                            }
+                        },
+                        calculable: true,
+                    },
+                    //变量则写在options中
+                    options: options
+                }
+
+                myChartzjsr1.setOption(optionzj);
+                myChartzjsr1.hideLoading();
+            },
+            error: function(xhr, type, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    }
+
+    function getzj(selectyear) {
+        $.ajax({
+            url: uri + "leaderCapitalController/findAllCapital",
+            dataType: 'json', //服务器返回json格式数据
+            data: {
+                regionId: regionId
+            },
+            type: 'post', //HTTP请求类型
+            timeout: 5000, //超时时间设置为10秒；
+            success: function(mes) {
+                console.log(mes);
+                var zhens = [];
+                var xAxisdata = [];
+                
+                for (var i = 0, len = zhensx.length; i < len; i++) {
+                    zhens[i] = zhensx[i].sName;
+                }
+
+                for (var i = 1; i <= 12; i++) {
+                    xAxisdata.push(i + "月");
+                }
+                //console.log(zhens);
+                console.log(xAxisdata);
+                var options = [];
+                var types = ['收入', '支出'];
+                for (var i = 0, len = xAxisdata.length; i < len; i++) {
+                	
+                	
+                    var sr = [],
+                        zc = [];
+                    var themouth;
+                    if (xAxisdata[i].length == 3) {
+
+                        themouth = parseInt(xAxisdata[i].substr(0, 2));
+                    } else {
+
+                        themouth = parseInt(xAxisdata[i][0]);
+                    }
+                    
+                    for (var j = 0, len1 = zhensx.length; j < len1; j++) {
+                    	
+                    for (var m = 0, mmax = zhens.length; m < mmax; m++) {
+                    	if(mes.data[m].zhen.zhenId==zhensx[j].zhenid){
+                        var sritem = 0,
+                            zcitem = 0,
+                            xjsritem = 0,
+                            xjzcitem = 0,
+                            yhsritem = 0,
+                            yhzcitem = 0;
+                        for (var n1 = 0, nmax1 = mes.data[m].bankCapital.length; n1 < nmax1; n1++) {
+                            var itemmouth = parseInt(mes.data[m].bankCapital[n1].CD_Expenditure);
+                            var itemyear = parseInt(mes.data[m].bankCapital[n1].CD_Income);
+                            if (itemmouth == themouth && itemyear == selectyear) {
+                                yhsritem += (parseInt(returnnum(mes.data[m].bankCapital[n1].CD_Beiyong1)) / 10000);
+                                yhzcitem += (parseInt(returnnum(mes.data[m].bankCapital[n1]["SUM(CD_Beiyong2)"])) / 10000);
+
+                            }
+                        }
+                        for (var n2 = 0, nmax2 = mes.data[m].cashCapital.length; n2 < nmax2; n2++) {
+                            var itemmouth = parseInt(mes.data[m].cashCapital[n2].CD_Expenditure);
+                            var itemyear = parseInt(mes.data[m].cashCapital[n2].CD_Income);
+                            if (itemmouth == themouth && itemyear == selectyear) {
+                                xjsritem += (parseInt(returnnum(mes.data[m].cashCapital[n2].CD_Beiyong1)) / 10000);
+                                xjzcitem += (parseInt(returnnum(mes.data[m].cashCapital[n2]["SUM(CD_Beiyong2)"])) / 10000);
+                            }
+                        }
+                        sritem = xjsritem + yhsritem;
+                        zcitem = xjzcitem + yhzcitem;
+                        sr.push(sritem);
+                        zc.push(zcitem);
+                    }
+                    }}
+                    var optionitem = {
+                        xAxis: [{
+                            data: zhens // 镇名
+                        }],
+                        yAxis: [{
+                            type: 'value',
+                            name: "人民币（万元）"
+                        }],
+                        legend: {
+                            type: "scroll",
+                            data: types, //收入，支出
+                            itemGap: 5,
+                            pageIconColor: 'white',
+                            pageTextStyle: {
+                                color: "#ccc"
+                            },
+                        },
+                        series: [{
+                            type: 'bar',
+                            name: types[0],
+                            data: sr,
+                            cursor: 'pointer',
+                            itemStyle: {
+                                emphasis: {
+                                    barBorderRadius: 7
+                                },
+                                normal: {
+                                    barBorderRadius: 7
+                                }
+                            },
+                        }, {
+                            type: 'bar',
+                            name: types[1],
+                            data: zc,
+                            cursor: 'pointer',
+                            itemStyle: {
+                                emphasis: {
+                                    barBorderRadius: 7
+                                },
+                                normal: {
+                                    barBorderRadius: 7
+                                }
+                            },
+                        }],
+                        color: ["lightgreen", "lightcoral"]
+
+                    }
+
+                    options.push(optionitem);
+                }
+
+                var optionzj = {
+                    //timeline基本配置都写在baseoption 中
+                    baseOption: {
+                        timeline: {
+                            type: 'slider',
+                            bottom: '15',
+                            left: '10',
+                            right: '10',
+                            axisType: 'category',
+                            show: true,
+                            autoPlay: false,
+                            playInterval: 2000,
+                            data: xAxisdata,
+                            controlStyle: {
+                                emphasis: {
+                                    color: "dodgerblue",
+                                    borderColor: "dodgerblue",
+                                    shadowColor: 'dodgerblue',
+                                }
+                            },
+                            checkpointStyle: {
+                                color: "dodgerblue",
+                                borderColor: "dodgerblue",
+                                shadowColor: 'dodgerblue',
+                                shadowBlur: 15
+                            },
+                            itemStyle: {
+                                emphasis: {
+                                    color: "dodgerblue",
+                                    borderColor: "dodgerblue",
+                                    shadowColor: 'dodgerblue',
+                                    shadowBlur: 10
+                                }
+                            }
+                        },
+                        grid: {
+                            left: '80',
+                            top: '40',
+                            right: '10',
+                            bottom: '20%'
+                        },
+                        xAxis: [{
+                            type: 'category'
+                        }, ],
+                        yAxis: {
+                            type: 'value',
+                        },
+                        series: [{
+                            type: 'bar',
+                        }, ],
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow',
+                                label: {
+                                    show: false
+                                }
+                            }
+                        },
+                        calculable: true,
+                    },
+                    //变量则写在options中
+                    options: options
+                }
+
+                myChartzjsr.setOption(optionzj);
+                myChartzjsr.hideLoading();
+            },
+            error: function(xhr, type, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    }
+
+    function returnnum(num) {
+        if (num == "" || num == null || num == undefined) {
+            return 0;
+        } else {
+            return num;
+        }
+    }
+</script>
+
+</html>

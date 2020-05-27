@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>学习园地</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet" />
+	<link href="/jdpt/static/css/cards.css" rel="stylesheet" />
+	<link href="/jdpt/static/css/iconfont.css" rel="stylesheet" />
+	<link href="/jdpt/static/css/all.css" rel="stylesheet" />
+	<script type="text/javascript" src="/jdpt/static/js/header.js"></script>
+	<script type="text/javascript" src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+	<script type="text/javascript" src="/jdpt/static/js/storage.js"></script>
+</head>
+<style >
+	.pageselect{
+		position: fixed;
+	}
+	ul{
+		margin-bottom: 5vh;
+	}
+</style>
+<body>
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+	<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+<!--//上下页-->
+
+<div id="dymask" class="mask" onclick="hiden(this)">
+
+</div>
+		<header>
+				<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+				<span style="padding-left: 2rem;">法律法规</span>
+		</header>
+		<div class="content" style="margin-top: 50px;">
+			
+			<ul id="dylist" class="table-view">
+					
+			</ul>
+			<div class="pageselect" id="dypage">
+				<button  class="iconfont icon-zuo2" ></button>
+				<button onclick="goup()">上一页</button>
+				<button id="total">1/1</button>
+				<select id="pages">
+				</select>
+				<button onclick="jumppage()">跳转</button>
+				<button onclick="godown()">下一页</button>
+			</div>
+
+		</div>
+
+<script src="/jdpt/static/js/mask.js"></script>
+<script src="/jdpt/static/js/header.js"></script>
+	<script>
+		
+		    var nowpage=1;
+		    var type="2";
+		    var totalpage=1;
+		    getItems(type);
+		    function getItems(type){
+		        showmask(loadmask);
+		        $.ajax({
+		            url:uri+"queryLawByType/"+nowpage+"/12"+"/"+type,
+		            dataType:"JSON",//服务器返回json格式数据
+		            type:'GET',
+		            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		            success:function (mes) {
+		                console.log(mes);
+		                if(mes.total==0){
+		                   document.getElementById("dylist").innerHTML="<img  style='width: 100%' src='/jdpt/static/img/null.png'/>"
+		                }else {
+		                    totalpage = mes.total;
+		                    //当前页
+		                    nowpage = mes.nowPage;
+		                    //填写当前页共多少页
+		                    document.getElementById("total").innerHTML = mes.nowPage + "/" + mes.total;
+		                    //得到selectpage的页码选择
+		                    var dypagestr = "";
+		                    //显示跳转页的下拉框
+		                    for (var i = 1; i <= mes.total; i++) {
+		                        dypagestr += "<option value='" + i + "'>" + i + "</option>";
+		                    }
+		                    document.getElementById("pages").innerHTML = dypagestr;
+		                    var str = "";
+					        for (var i = 0; i < mes.lawPage.length; i++) {
+					            var name=mes.lawPage[i][0];
+					            if(name.length>15){
+					                name=lawlist[i][0].substring(0,15)+"......";
+					            }
+					            str+="<li class='table-view-cell'><a href='/jdpt/HJResourse/Law/"+mes.lawPage[i][3]+"' class='navigate-right'  style='text-decoration:none;color: black'>"+name+"</a></li>";
+					        }
+					        document.getElementById("dylist").innerHTML=str;
+		                }
+		                hiden(loadmask);
+		            },
+		            error:function () {
+		                //
+		            }
+		        });
+		    }
+		 	function goup() {
+		        if(nowpage<=1){
+		        	alert("已是第一页！");
+		        }else {
+		            nowpage-=1;
+		            getItems(type);
+		        }
+		    }
+		    function godown() {
+		        if(nowpage<totalpage){
+		            nowpage+=1;
+		            getItems(type);
+		        }else {
+		            alert("已是最后一页！")
+		        }
+		    }
+		    function jumppage() {
+		        nowpage=document.getElementById("pages").value;
+		        getItems(type);
+		    }
+		</script>
+		
+	
+</body>
+
+</html>

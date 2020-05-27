@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>资金</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet" />
+		<script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+		<script src="/jdpt/static/js/storage.js"></script>
+		<script src="/jdpt/static/js/mask.js"></script>
+	</head>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+			border: none;
+		}
+		#xiangqing{
+			position: relative;
+			width: 100%;
+			padding: 0.5rem;
+		}
+		#xiangqing span{
+			position: relative;
+			display: inline-block;
+		}
+		#xiangqing tr td{
+			border:1px solid rgba(0,0,0,0.1);
+			height: 3rem;
+		}
+		#xiangqing tr td:first-child{
+			padding: 0.4rem;
+			font-size: 0.8rem;
+			color: white;
+			width: 30%;
+			line-height: 1.4rem;
+		}
+		.shiyou{
+			padding-left: 0.5rem;
+			position: relative;
+			font-size: 0.9rem;
+			letter-spacing: 0.2rem;
+			text-overflow:ellipsis ;
+			color: rgba(0,0,0,0.7);
+		}
+		.shiyou:active{
+			background-color: rgba(0,0,0,0.05);
+		}
+		.img{
+			position: relative;
+			width: 100%;
+			height: auto;
+		}
+		.img img{
+			position: relative;
+			width: 100%;
+		}
+		#jieyu{
+			position: relative;
+			display: inline-block;
+			float: right;
+			right: 1rem;
+			height: 1rem;
+			margin-top: 1rem;
+			line-height: 1rem;
+		}
+		button{
+			position: relative;
+			padding: 4px;
+			border: none;
+			border-radius: 4px;
+			background-color: pink;
+			color: #CF2D28;
+		}
+		.hetong{
+			position: fixed;
+			z-index: 100;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgb(0,0,0,0.2);
+			display: none;
+		}
+		.hetong img{
+			position: relative;
+			width: 100%;
+		}
+	</style>
+	<body>
+	<div class="hetong" id="hetong" onclick="hiden(it)">
+		
+	</div>
+	<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+		<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+	</div>
+		<header>
+			<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+		</header>
+		<h4 id="title" style="padding:0 1rem;margin-top: 3.1rem;"></h4>
+		<div class="img" id="alert"></div>
+
+			<span id="jieyu">月结余：12324元</span>
+
+		<table cellpadding="0" border="0" cellspacing="5px" id="xiangqing">
+
+		</table>
+	<script src="/jdpt/static/js/header.js"></script>
+	<script src="/jdpt/static/js/mask.js"></script>
+	<script>
+        var loadmask=document.getElementById("loadmask");
+        showmask(loadmask);
+
+		var zjid=sessionStorage.getItem("zjid");
+		var zjname=sessionStorage.getItem("zjname");
+		//alert(zjid+zjname)
+        $.ajax({
+            url:uri+"findByZijinId/"+zjid,
+            dataType:"JSON",//服务器返回json格式数据
+            type:'GET',//HTTP请求类型
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            success:function(mes){
+                console.log("资金收支");
+                console.log(mes);
+                if(mes.status=="null"){
+                    document.getElementById("jieyu").innerHTML="<img onclick='hiden(this)' style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+                }else {
+                document.getElementById("jieyu").innerHTML="本月结余：￥"+mes.monthincome.toFixed(2)+"元";
+                var str="";
+                for(var i=0;i<mes.record.length;i++){
+					if(mes.record[i].meicishouzhi<0){
+						str+="<tr><td  style='background-color:#CF2D28;position: relative'><span>"+mes.record[i].zijinxiangqing.cdTime.substring(0,10)+"</span><br><span>￥"+mes.record[i].meicishouzhi.toFixed(2)+"元</span></td><td>"+mes.record[i].zijinxiangqing.cdXiangqing;
+						if(myisnull(mes.record[i].zijinxiangqing.cdBeiyong1)){
+							str+="</td></tr>";
+						}else{
+							str+="<button id='"+mes.record[i].zijinxiangqing.cdBeiyong1+"' onclick='showht(this)'>查看合同</button>"
+							str+="</td></tr>";
+						}
+					}else {
+                        str+="<tr><td  style='background-color:darkgreen;position: relative'><span>"+mes.record[i].zijinxiangqing.cdTime.substring(0,10)+"</span><br><span>￥"+mes.record[i].meicishouzhi.toFixed(2)+"元</span></td><td>"+mes.record[i].zijinxiangqing.cdXiangqing+"</td></tr>";
+
+                    }
+				}
+           	 document.getElementById("xiangqing").innerHTML=str;}
+                hiden(loadmask);
+            },
+            error:function(){
+                document.getElementsByTagName("body")[0].innerHTML="<p class='title'><span>哎呀！您的网络好像断了。。。</span></p>" +"<img class='errorimg' src='/jdpt/static/img/losem.jpg'/>"
+
+
+            }
+        });
+		document.getElementById("title").innerHTML=zjname;
+		function myisnull(mystring){
+			if(mystring==null||mystring==""||mystring==undefined){
+				return true
+			}else{
+				return false
+			}
+		}
+		function showht(it){
+			var photos=it.id;
+			phones.length--;
+			var str="";
+			for(var i=0,len=photos.length;i<len;i++){
+				str+="<img src='http://47.105.118.98/jdpt/HJResourse/Capitaldetails/"+photos[i]+"'/>"
+			}
+			document.getElementById("hetong").innerHTML=str;
+			document.getElementById("hetong").style.display="block";
+		}
+	</script>
+	</body>
+</html>

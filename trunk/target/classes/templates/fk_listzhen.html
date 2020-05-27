@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/swiper.min.css" />
+    <link rel="stylesheet" href="../css/all.css" />
+     <link rel="stylesheet" href="../css/mytable.css" />
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../js/swiper.min.js"></script>
+    <script src="../js/all.js"></script>
+</head>
+<style>
+	button {
+        border: none;
+        background-color: dodgerblue;
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+        margin: 0 1vw;
+    }
+    
+</style>
+<body>
+    <div id="loadingdiv" class="loadingdiv">
+        <img src="../images/loading.gif" />
+    </div>
+    <div id="hoverdiv" class="hoverdiv" >
+    	<div class="exit 	glyphicon glyphicon-remove" onclick="hidenhoverdiv()"></div>
+    	<div id="hoverdivcontent" style="margin-top: 1vw;"> 
+    	</div>
+    </div>
+    <div class="mask_lg" style="display: none;">
+        <div class="exit glyphicon glyphicon-resize-small" onclick="hidenimg()"></div>
+        <div class="content">
+            <div class="swiper-container">
+                <div class="swiper-wrapper" id="fkimgs">
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="btn-toolbar" role="toolbar">
+            <div class="btn-group" style="margin-right: 1vw;">
+                <button id="fanhui" type="button" class="btn btn-default fanhui">返回</button>
+            </div>
+            年：<select id="theyear"></select>
+            月：<select id="themouth">
+            	<option value='0'>全年</option>
+            	<option value='1'>1月</option>
+            	<option value='2'>2月</option>
+            	<option value='3'>3月</option>
+            	<option value='4'>4月</option>
+            	<option value='5'>5月</option>
+            	<option value='6'>6月</option>
+            	<option value='7'>7月</option>
+            	<option value='8'>8月</option>
+            	<option value='9'>9月</option>
+            	<option value='10'>10月</option>
+            	<option value='11'>11月</option>
+            	<option value='12'>12月</option>
+            </select>
+            行政村：<select id="zhenjiedao"></select>
+            状态：<select id='zhuangtai'>
+            	<option value="2">全部</option>
+            	<option value="1">已解决</option>
+            	<option value="0">未解决</option>
+            </select>
+            <button onclick="getallfkqq()">搜索</button>
+        </div>
+        <table class="table" style="table-layout: fixed;width: 100%">
+            <thead class="mytable">
+                <th width="28%">标题</th>
+                <th width="48%">内容</th>
+                <th width="8%">类型</th>
+                <th width="8%">是否处理</th>
+                <th width="8%">反馈图片</th>
+            </thead>
+            <tbody id="fk_list">
+
+            </tbody>
+        </table>
+        <div class="thepage">
+        		共<span id="count" style="color: dodgerblue;"></span>条数据
+            	请选择每次显示的数据条数：
+            	<select id="pagesize" onchange="tothepagesize()">
+            		<option value="10">10</option>
+            		<option value="14">14</option>
+            		<option value="16">16</option>
+            		<option value="18">18</option>
+            		<option value="20">20</option>
+            	</select>
+            	当前页：<span id="thepage" style="color: dodgerblue;"></span>总页码：<span id="total" style="color: dodgerblue;"></span>
+            	<button onclick="pageup()">上一页</button>
+            	请选择您要查询的页码：<select id="pages" onchange="tozhepage()"></select>
+            	<button onclick="pagedown()">下一页</button>
+        </div>
+    </div>
+</body>
+<script>
+	zhenName=sessionStorage.getItem("zhenName");
+	zhenId=sessionStorage.getItem("zhenId");
+	var zhuangtai = sessionStorage.getItem("zhuangtai");
+	thetime=sessionStorage.getItem("thetime");
+    //alert(thetime);
+    var themouth=parseInt(thetime.substr(5,2));
+    //alert(themouth);
+    document.getElementById("themouth").value=themouth;
+	document.getElementById("zhuangtai").value=zhuangtai;
+	villageId=0;
+    var pagesize=10;
+    var startpage=1;
+    var total=0;
+	//alert(zhenName);
+	(function(){
+    	var str="";
+    	for(var i=year;i>=2018;i--){
+    		str+="<option value='"+i+"'>"+i+"年</option>";
+    	}
+    	document.getElementById("theyear").innerHTML=str;
+    	$.ajax({
+                url: uri + "cun_List",
+                data: {
+                    zhenId: zhenId
+                },
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                timeout: 10000, //超时时间设置为10秒；
+                success: function(mes) {
+                    console.log("村庄")
+                    console.log(mes);
+                        var str1="";
+				    	str1+="<option value='0'>全镇(街道)</option>";
+				    	for(var i=0,len=mes.data.length;i<len;i++){
+				    		str1+="<option value='"+mes.data[i].villageId+"'>"+mes.data[i].vName+"</option>"
+				    	}
+				    	document.getElementById("zhenjiedao").innerHTML=str1;
+
+                    //固定村的函数
+                },
+                error: function(type) {}
+            })
+    })();
+    
+    
+    getfk_list(zhenName,thetime, zhuangtai,startpage,pagesize,villageId);
+    function pageup(){
+    	if(startpage<=1){
+    		alert("已经是第一页了！")
+    	}else{
+    		startpage--;
+    		getfk_list(zhenName,thetime, zhuangtai,startpage,pagesize,villageId);
+    	}
+    }
+    function pagedown(){
+    	if(startpage>=total){
+    		alert("已经是最后一页了！")
+    	}else{
+    		startpage++;
+    		getfk_list(zhenName,thetime, zhuangtai,startpage,pagesize,villageId);
+    	}
+    }
+    
+    function tozhepage(){
+    	startpage=document.getElementById("pages").value;
+    	getfk_list(zhenName,thetime, zhuangtai,startpage,pagesize,villageId);
+    }
+    
+    function tothepagesize(){
+    	pagesize=document.getElementById("pagesize").value;
+    	startpage=1;
+    	getfk_list(zhenName,thetime, zhuangtai,startpage,pagesize,villageId);
+    }
+   
+    //var loadingdiv = ; //document.getElementById("loadingdiv");
+
+    function getfk_list(zhenName,thetime, zhuangtai,startPage,pageSize,vId) {
+        $("#loadingdiv").show();
+        $.ajax({
+            url: uri + "ququanfankui",
+            data: {
+                time: thetime,
+                zhuangtai: zhuangtai,
+                startPage:startPage,
+                pageSize:pageSize,
+                zhenname:zhenName,
+                villageId:vId
+            },
+            dataType: 'json', //服务器返回json格式数据
+            type: 'post', //HTTP请求类型
+            timeout: 10000, //超时时间设置为10秒；
+            success: function(mes) {
+            	console.log('全区反馈');
+                console.log(mes);
+                $("#total").html(mes.total);
+            	$("#thepage").html(startpage);
+            	$("#count").html(mes.count);
+            	var str1="";
+            	total=mes.total;
+            	for(var i=1,len=mes.total;i<=len;i++){
+            		str1+="<option value='"+i+"'>"+i+"</option>";
+            	}
+            	$("#pages").html(str1);
+                var str = "";
+                for (var i = 0, len = mes.data.length; i < len; i++) {
+                    str += " <tr><td onclick='showcontent(this)'>" + mes.data[i].F_Title + "</td><td onclick='showcontent(this)'>" + mes.data[i].F_Content + "</td><td>" + mes.data[i].B_Type + "</td><td>";
+                    if (mes.data[i].F_Handle == true) {
+                        str += "已处理</td><td>";
+                    } else {
+                        str += "未处理</td><td>";
+                    }
+                    if (mes.data[i].F_ImagePath == null || mes.data[i].F_ImagePath == "") {
+                        str += "无</td></tr>";
+                    } else {
+                        str += "<button id='" + mes.data[i].F_ImagePath + "' onclick='showimg(this)'>查看</button></td></tr>";
+                    }
+
+                }
+                document.getElementById("fk_list").innerHTML = str;
+                $("#loadingdiv").hide();
+            },
+            error: function() {
+
+            }
+        })
+
+    }
+    new Swiper(".swiper-container", {
+        slidesPerView: 1,
+        loop: true,
+        observer: true,
+        observeParents: true,
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+    
+    function getallfkqq(){
+    	zhuangtai=document.getElementById("zhuangtai").value;
+    	zhenId=document.getElementById("zhenjiedao").value;
+    	year=parseInt(document.getElementById("theyear").value);
+    	mouth=parseInt(document.getElementById("themouth").value);
+    	if(mouth==0||mouth=='0'){
+    		thetime=year+"-01-01~"+year+"-12-31";
+    	}else if(mouth==12){
+    		thetime=year+"-"+gettruenumber(mouth)+"-01~"+year+"-12-31";
+    	}else{
+    		thetime=year+"-"+gettruenumber(mouth)+"-01~"+year+"-"+gettruenumber((mouth+1))+"-01";
+    	
+    	}
+    	startpage=1;
+    	//alert(thetime);
+    	getfk_list(zhenName,thetime, zhuangtai,startpage,pagesize,villageId);
+    }
+   
+    $("#fanhui").click(function() {
+        window.history.go(-1);
+    })
+
+    function showimg(it) {
+        // alert(it.id);
+        var photos = it.id.split(",");
+        photos.length--;
+        var str = "";
+        for (var i = 0, len = photos.length; i < len; i++) {
+            str += " <div class='swiper-slide'><img src='" +uri1+ "HJResourse/Feedback/" + photos[i] + "' /></div>";
+        }
+        document.getElementById("fkimgs").innerHTML = str;
+        $(".mask_lg")[0].style.display = "block";
+    }
+
+    function hidenimg() {
+        $(".mask_lg")[0].style.display = "none";
+    }
+    
+      function hidenhoverdiv(){
+    	document.getElementById("hoverdiv").style.display="none";
+    }
+     function showcontent(it){
+    	document.getElementById("hoverdiv").style.display="block";
+    	document.getElementById("hoverdivcontent").innerHTML=it.innerHTML;
+    }
+</script>
+
+</html>

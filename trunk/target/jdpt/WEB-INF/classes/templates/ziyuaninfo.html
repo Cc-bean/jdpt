@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>资源</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="/jdpt/static/css/searchAndlist.css" />
+		<link rel="stylesheet" href="/jdpt/static/css/cards.css" />
+		<link rel="stylesheet" href="/jdpt/static/css/all.css" />
+		<link rel="stylesheet" href="/jdpt/static/css/iconfont.css" />
+		<script src="/jdpt/static/js/jquery-2.1.0.min.js"> </script>
+		<script src="/jdpt/static/js/storage.js"> </script>
+	</head>
+	<style>
+		.pageselect{
+			bottom: 0.1rem;
+		}
+	</style>
+	<body>
+	<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+		<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+	</div>
+
+	<div class="pageselect" id="dypage">
+		<button  onclick="show_hidendy(this)"  class="iconfont icon-zuo2"></button>
+		<button onclick="dygoup()">上一页</button>
+		<button id="dy_page_totals">1/1</button>
+		<select id="dytopage">
+		</select>
+		<button onclick="godyjumppage()">跳转</button>
+		<button onclick="dygodown()">下一页</button>
+	</div>
+	<header>
+		<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+	</header>
+		<ul class="table-view" id="dylist" style="margin-top: 3.1rem;">
+		</ul>
+		<script src="/jdpt/static/js/header.js"></script>
+<script src="/jdpt/static/js/mask.js"></script>
+		<script type="text/javascript">
+            var loadmask=document.getElementById("loadmask");
+            showmask(loadmask);
+
+            var dypage=true;
+            function show_hidendy(t) {
+                if(dypage==false){
+                    document.getElementById("dypage").style.width="100%";
+                    t.style.transform="rotate(180deg)";
+                    t.style.otransform="rotate(180deg)";
+                    t.style.mstransform="rotate(180deg)";
+                    t.style.moztransform="rotate(180deg)";
+                    t.style.webkittransform="rotate(180deg)";
+                    dypage=true;
+                }else {
+                    document.getElementById("dypage").style.width="2rem";
+                    t.style.transform="rotate(0deg)";
+                    t.style.otransform="rotate(0deg)";
+                    t.style.mstransform="rotate(0deg)";
+                    t.style.moztransform="rotate(0deg)";
+                    t.style.webkittransform="rotate(0deg)";
+                    dypage=false;
+                }
+            }
+			var zuid=sessionStorage.getItem("zuid");
+			var child=sessionStorage.getItem("child");
+            var dylist=[];
+            var dytotalpage=1;
+            var dynowcount=0;
+            dygodown();
+            //点击查看党员详情
+            function showdyinfo(t){
+                var dyitem=parseInt(t.id.substring(2));
+				var id=dylist[dyitem][1];
+				sessionStorage.setItem("zcitemId",id);
+				window.location.href="ziyuaninfoinfo.html";
+            }
+
+            function godyjumppage() {
+                dynowcount=document.getElementById("dytopage").value;
+                //alert(dynowcount);
+                getdylist();
+            }
+
+            function getdylist() {
+                showmask(loadmask);
+                var vId=sessionStorage.getItem("userVillageid");
+                $.ajax({
+                    url:uri+'ziyuanQueryFangChanName/'+vId+"/"+zuid+"/"+child+"/"+dynowcount+"/15",
+                    dataType:"JSON",//服务器返回json格式数据
+                    type:'GET',//HTTP请求类型
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    success:function(mes){
+                        console.log(mes);
+                        //总页数
+						if(mes.fangchanname.total==0||mes.fangchanname.status=="null"){
+                            document.getElementById("dylist").innerHTML="<img style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+
+                        }else {
+
+                        document.getElementById("dylist").innerHTML="";
+                        dylist.length=0;
+                        dytotalpage=mes.fangchanname.total;
+                        //当前页
+                        dynowcount=mes.fangchanname.nowPage;
+                        //填写当前页共多少页
+                        document.getElementById("dy_page_totals").innerHTML=mes.fangchanname.nowPage+"/"+mes.fangchanname.total;
+                        //得到selectpage的页码选择
+                        var dypagestr="";
+                        for(var i=1;i<=mes.fangchanname.total;i++){
+                            dypagestr+="<option value='"+i+"'>"+i+"</option>";
+                        }
+                        document.getElementById("dytopage").innerHTML=dypagestr;
+
+                        for(var i=0;i<mes.fangchanname.data.length;i++){
+                            var rdName="";
+                            mes.fangchanname.data[i].rdName==null? rdName="未录入": rdName=mes.fangchanname.data[i].rdName;
+                            var resourcesdetailsId="";
+                            mes.fangchanname.data[i].resourcesdetailsId==null?resourcesdetailsId="未录入":resourcesdetailsId=mes.fangchanname.data[i].resourcesdetailsId;
+                           dylist[i]=[rdName,resourcesdetailsId];
+                        }
+                        console.log(dylist[0]);
+                        getdyitem(dylist);}
+                        hiden(loadmask);
+
+                    },
+                    error:function(xhr,type,errorThrown){
+                        //异常处理
+
+                    }
+                });
+            }
+
+            function getdyitem(data){
+                var dylist=document.getElementById("dylist");
+                var str="";
+                for(var i=0;i<data.length;i++){
+                    str+="<li class='table-view-cell'>"+"<a id='dy"+i+"'"+" onclick='showdyinfo(this)'>"+data[i][0]+"</a></li>"
+                }
+                dylist.innerHTML=str;
+            }
+
+            //下一页
+            function dygodown() {
+                if(dynowcount<dytotalpage){
+                    dynowcount+=1;
+                    getdylist();
+                }else {
+                    return;
+                }
+            }
+            //上一页
+            function dygoup() {
+                if(dynowcount==0){
+                    return
+                }else{
+                    // alert(dynowcount);
+                    getdylist();
+                }
+
+            }
+
+
+
+		</script>
+	</body>
+
+</html>

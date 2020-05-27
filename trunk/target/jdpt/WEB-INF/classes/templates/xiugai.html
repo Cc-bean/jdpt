@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>个人信息修改</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet" />
+		<script src="/jdpt/static/js/storage.js"></script>
+		<script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+	</head>
+<style>
+		p{
+			margin: 0;
+			padding-left: 1rem;
+			padding-right: 1rem;
+		}
+		p label,p input{
+			position: relative;
+			display: inline;
+		}
+		p label{
+			width: 35%;
+			padding-left: 0.5rem;
+			height: 2rem;
+			line-height: 2rem;
+		}
+		p input{
+			width: 60%;
+		}
+
+		.block1{
+			border: 1px solid #C0C0C0;
+			height: 2.6rem;
+			margin-bottom: 0.7rem;
+			margin-left: 1rem;
+			margin-right: 1rem;
+		}
+		.block1 input{
+			position: relative;
+			width: 100%;
+			border: none;
+			z-index: 10;
+			height: 100%;
+		}
+		#tijiao{
+			border: 0;
+			color: white;
+			background-color: #CF2D28;
+			width: 80%;
+			height: 2.4rem;
+			border-radius: 1.2rem;
+		}
+
+</style>
+	<body>
+
+<!--
+	<div class="mask" id="mask1">
+		<div class="alert">
+			<div class="alert-header">提示信息</div>
+			<div class="alert-content"><span ></span><span>还有信息没有输入哦！</span></div>
+			<div class="alert-button" onclick="ok1()">确定</div>
+		</div>
+	</div>-->
+
+		<header>
+			<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+
+		</header>
+		<div style="margin-top: 3.1rem;">
+			<h2 style="text-align: center; margin: 1rem 0">修改密码</h2>
+			<p>
+				<label>请输入旧密码：</label>
+				
+				<p class="block1">
+					<input type="tel" name="phone" id="jiupass" value="" placeholder="请输入旧密码"/>
+				</p>
+			</p>
+			<p>
+				<label>请输入新密码：</label>
+				<p class="block1">
+					<input type="text" name="name" id="newpass" value="" placeholder="请输入新密码"/>
+				</p>
+				
+			</p>
+
+
+		</div>
+		
+		<div style="text-align: center;padding-top: 1rem;">
+			<button id="tijiao" onclick="yes()">提交</button>
+		</div>
+		<script src="/jdpt/static/js/header.js"></script>
+		<script src="/jdpt/static/js/mask.js"></script>
+		<script type="text/javascript">
+
+function yes(){
+    var jiupass=document.getElementById("jiupass").value;
+    var mima=userInfo.getItem("userPassword");
+    var uid=userInfo.getItem("userId");
+    if(jiupass!=mima){
+        alert("旧密码填写错误");
+        return;
+	}else {
+
+		var newpass=document.getElementById("newpass").value;
+            $.ajax({
+                url: '/jdpt/Updatepwd/',
+				data:{
+                    userId:uid,
+                    userPassword:newpass
+				},
+                dataType: "JSON",//服务器返回json格式数据
+                type: 'POST',//HTTP请求类型
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                success:function (mes) {
+                    console.log(mes);
+                    if (mes.statue=="修改成功"){
+                        userInfo.setItem("userPassword",newpass);
+                        alert("修改成功！");
+                    }
+                }
+            })
+}}
+		</script>
+
+
+	</body>
+
+</html>

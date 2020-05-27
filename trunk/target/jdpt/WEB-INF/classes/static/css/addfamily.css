@@ -1,0 +1,70 @@
+p{
+    margin: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+p label,p input{
+    position: relative;
+    display: inline;
+}
+p label{
+    width: 35%;
+    padding-left: 0.5rem;
+}
+p input{
+    width: 60%;
+}
+
+p select{
+    border: none;
+    outline: none;
+    height: 2.4rem;
+}
+.block1{
+    border: 1px solid #C0C0C0;
+    height: 2.6rem;
+    margin-bottom: 0.7rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.block1 input{
+    position: relative;
+    width: 100%;
+    border: none;
+    z-index: 10;
+    height: 100%;
+}
+.block{
+    border: 1px solid #C0C0C0;
+    height: 2.6rem;
+    margin-bottom: 0.7rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.block select{
+    position: relative;
+    top: 0rem;
+    width: 70%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    color: #555555;
+}
+.block:after{
+    content: "";
+    width: 2.4rem;
+    height: 2.4rem;
+    background: url(../img/down.png) no-repeat center;
+    position:absolute;
+    right: 20px;
+    pointer-events: none;
+
+}
+#tijiao{
+    border: 0;
+    color: white;
+    background-color: #CF2D28;
+    width: 80%;
+    height: 2.4rem;
+    border-radius: 1.2rem;
+}

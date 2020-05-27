@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>资金</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="/jdpt/static/css/iconfont.css" rel="stylesheet" />
+    <link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet" />
+    <link href="/jdpt/static/css/cards.css" rel="stylesheet" />
+    <link href="/jdpt/static/css/all.css" rel="stylesheet" />
+    <link href="/jdpt/static/css/tablecard.css" rel="stylesheet" />
+    <script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+    <script src="/jdpt/static/js/storage.js"></script>
+    <script src="/jdpt/static/js/mask.js"></script>
+</head>
+
+<body id="body">
+
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+    <img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+
+<header>
+    <span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+    <span style="padding-left: 2rem;">资金理财</span>
+</header>
+<h2 id="lcname" style="margin-top: 3.1rem;"></h2>
+<div id="lccontent" style="position: relative;width: 100%;">
+
+</div>
+</body>
+<script>
+    var loadmask=document.getElementById("loadmask");
+    //showmask(loadmask);
+    var lcid=sessionStorage.getItem("lcid");
+    var lcname=sessionStorage.getItem("lcname");
+    var mask=document.getElementById("imgmask");
+    var maskimg=document.getElementById("maskimg");
+    document.getElementById("lcname").innerHTML=lcname;
+    $.ajax({
+        url:'/jdpt/findLiCaiById/'+lcid,
+        dataType:"JSON",//服务器返回json格式数据
+        type:'GET',//HTTP请求类型
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        success:function(mes){
+            console.log(mes);
+            var str="";
+
+           var photos=mes.data.lcLujing.split(",");
+           console.log(photos.length);
+           photos.length-=1;
+           for(var i=0;i<photos.length;i++){
+               console.log(photos[i]);
+               str+="<div class='imgcontent'><img src='/jdpt/HJResourse/Licaiqingkuang/"+photos[i]+"'/></div>"
+           }
+           document.getElementById("imgs").innerHTML=str;
+            hiden(loadmask);
+        },
+        error:function(){
+           // document.getElementById("body").innerHTML="<img class='errorimg' src='/jdpt/static/img/losem.jpg'/>"
+
+        }
+    });
+
+
+    var imgs=document.getElementsByTagName("img");
+    for (var i=0;i<imgs.length;i++){
+        imgs[i].addEventListener("click",function (evt) {
+            maskimg.src=this.src;
+            showmask(mask);
+        })
+    }
+
+
+</script>
+</html>

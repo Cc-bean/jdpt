@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>首页</title>
+    <link rel="stylesheet" href="/jdpt/static/css/all.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/index.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/iconfont.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/cards.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/searchAndlist.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/zhediemianban.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/mine.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/swiper.min.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/fankui.css" />
+    <script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+    <script src="/jdpt/static/js/zhediemianban.js"></script>
+    <script src="/jdpt/static/js/swiper.min.js"></script>
+    <script src="/jdpt/static/js/mask.js"></script>
+    <script src="/jdpt/static/js/storage.js"></script>
+</head>
+<style type="text/css">
+    .active {
+        color: #CF2D28;
+        animation: navdh 0.3s;
+    }
+    
+    @keyframes navdh {
+        from {
+            transform: scale(0.2);
+        }
+        to {
+            transform: scale(1);
+        }
+    }
+</style>
+<script>
+    if (!sessionStorage.hasOwnProperty("userId")) {
+        alert("登录信息过期，请先登录！");
+        window.location.replace("/jdpt");
+    }
+</script>
+
+<body>
+    <header><span>郑州市惠济区村(居)务监督平台</span></header>
+</body>
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+    <img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif" />
+</div>
+<div class="mask" id="dymask" onclick="hiden(this)">
+
+</div>
+<div class="mask" id="xjmask" onclick="hiden(this)">
+    <div class="dangyuan"></div>
+</div>
+<!--组织发展-->
+<div class="mask" id="zfmask" onclick="hiden(this)">
+    <div class="dangyuan" id="zuzhicard">
+    </div>
+</div>
+<div class="mask" id="maskmenu" onclick="hiden(this)">
+    <div id="menu">
+        <div class="header">全部板块</div>
+        <div style="margin-top: 2rem;">
+            <span id="menu1" onclick="goto(this)">首页</span>
+            <span id="menu3" onclick="goto(this)">党员发展</span>
+            <span id="menu4" onclick="goto(this)">党组织活动</span>
+            <!--<span id="menu5" onclick="goto(this)">教育咨询</span>-->
+            <span id="menu6" onclick="goto(this)">资源</span>
+            <span id="menu7" onclick="goto(this)">资产</span>
+            <span id="menu8" onclick="goto(this)">资金</span>
+            <span id="menu9" onclick="goto(this)">项目建设信息</span>
+            <!--<span id="menu10" onclick="goto(this)">政策学习</span>-->
+            <span id="menu11" onclick="goto(this)">学习园地</span>
+        </div>
+    </div>
+</div>
+<div class="index_content" id="theshouye">
+    <div class="menucontent">
+        <div id="shead" class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide headactive">首页</div>
+                <div class="swiper-slide">党员发展</div>
+                <div class="swiper-slide">党组织活动</div>
+                <!--<div class="swiper-slide">教育咨询</div>-->
+                <div class="swiper-slide">资源</div>
+                <div class="swiper-slide">资产</div>
+                <div class="swiper-slide">资金</div>
+                <div class="swiper-slide">项目建设信息</div>
+                <!--<div class="swiper-slide">政策学习</div>-->
+                <div class="swiper-slide" style="padding-right: 2rem;">学习园地</div>
+            </div>
+        </div>
+        <div id="menubutton"><span class="iconfont icon-caidan1" style="font-size: 1.5rem;"></span></div>
+
+    </div>
+    <div id="sbody" class="swiper-container">
+
+        <div class="swiper-wrapper">
+            <!--
+		                作者：1821898203@qq.com
+		                时间：2019-07-12
+		                描述：首页
+		            -->
+            <div class="swiper-slide">
+
+                <div class="content" id="shouyevue">
+                    <div id="imgswiper" class="swiper-container">
+                        <div class="swiper-wrapper" id="getimgs">
+
+                        </div>
+                        <div class="swiper-pagination"></div>
+
+                    </div>
+                    <div id="gonggaoswiper" class="swiper-container">
+                        <div class="swiper-wrapper" id="ggswiper">
+
+                        </div>
+                        <div class="swiper-pagination"></div>
+
+                    </div>
+                    <div class="cunqing">
+                        <div class="cun">
+                            <a class="cun1" onclick="open1(this)">
+                                <span class="iconfont icon-ganbujiaoliu"></span><br/>
+                                <span style="color: #333333;font-size: 0.8rem;">干部信息</span>
+                            </a>
+
+                            <a class="cun1" onclick="openbuzhu(this)">
+                                <span class="iconfont icon-love" style="font-size: 2rem;"></span><br/>
+                                <span style="color: #333333;font-size: 0.8rem;">补助信息</span>
+                            </a>
+                            <a class="cun1" onclick="open4(this)">
+                                <span class="iconfont icon-guanli" style="font-size: 2.2rem;"></span><br/>
+                                <span style="color: #333333;font-size: 0.8rem;">事务信息</span>
+                            </a>
+                            <a class="cun1" onclick="open2(this)" id="gonggao">
+                                <span class="iconfont icon-gonggao4"></span><br/>
+                                <span style="color: #333333;font-size: 0.8rem;">村公告</span>
+                            </a>
+                        </div>
+                        <div class="jianjie">
+                            <div class="jianjie-title">
+                                <span class="one"><span id="cunname"></span>简介</span>
+                                <span class="two iconfont icon-lvyouchengshijianzhucity-nongcunfangzihouse"></span>
+                            </div>
+                            <div class="jianjie-content">
+                                <p id="cunjianjie"></p>
+                            </div>
+
+                        </div>
+                        <!--<div class="jianjie">
+								<div class="jianjie-title">
+									<span class="one">行政村发展规划</span>
+									<span class="two iconfont icon-kangjuxiangcun"></span>
+								</div>
+										
+								<div class="jianjie-content">
+									<p id="cunguihua"></p>
+								</div>
+								
+							</div>-->
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!--
+		                        作者：1821898203@qq.com
+		                        时间：2019-07-12
+		                        描述：组织发展
+		                    -->
+            <div class="swiper-slide">
+
+                <div class="pageselect" id="zfpage">
+                    <button onclick="show_hidenzf(this)" class="iconfont icon-zuo2"></button>
+                    <button onclick="zfgoup()">上一页</button>
+                    <button id="zf_page_totals">1/1</button>
+                    <select id="zftopage">
+						</select>
+                    <button onclick="gozfjumppage()">跳转</button>
+                    <button onclick="zfgodown()">下一页</button>
+                </div>
+                <div class="content">
+                    <div class="xuanze" style="top: -5px;">
+                        <label>年份：</label>
+                        <select id="getzfoptions" class="selectoption" style="display: inline;width: 20%;height: 1.6rem;">
+							</select>
+                        <label>类别：</label>
+                        <select id="zfkey" class="selectoption" style="display: inline;width: 20%;height: 1.6rem;">
+								<option value="1">积极分子</option>
+								<option value="2">发展对象</option>
+								<option value="3">预备党员</option>
+								<option value="4">正式党员</option>
+							</select>
+                        <button id="ok" style="background-color: #CF2D28;color: white;" onclick="zfgodown1()">搜索</button>
+                    </div>
+                    <ul class="table-view" id="zflist">
+                    </ul>
+                </div>
+            </div>
+            <!--
+		                作者：1821898203@qq.com
+		                时间：2019-07-12
+		                描述：组织活动
+		            -->
+            <div class="swiper-slide">
+
+                <div class="pageselect" id="zhpage">
+                    <button onclick="show_hidenzh(this)" class="iconfont icon-zuo2"></button>
+                    <button onclick="zhgoup()">上一页</button>
+                    <button id="zh_page_totals">1/1</button>
+                    <select id="zhtopage">
+						</select>
+                    <button onclick="gozhjumppage()">跳转</button>
+                    <button onclick="zhgodown()">下一页</button>
+                </div>
+                <div class="content">
+
+                    <ul class="table-view" id="zhlist">
+
+                    </ul>
+
+                </div>
+            </div>
+            <!--
+		                作者：1821898203@qq.com
+		                时间：2019-07-12
+		                描述：教育咨询
+		            -->
+            <!--<div class="swiper-slide">
+		
+					<div class="pageselect" id="jypage">
+						<button  onclick="show_hidenjy(this)"  class="iconfont icon-zuo2" ></button>
+						<button onclick="jygoup()">上一页</button>
+						<button id="jy_page_totals">1/1</button>
+						<select id="jytopage">
+						</select>
+						<button onclick="gojyjumppage()">跳转</button>
+						<button onclick="jygodown()">下一页</button>
+					</div>
+					<div class="content">
+		
+						<ul class="table-view" id="jylist">
+						</ul>
+		
+					</div>
+				</div>-->
+            <!--
+		                作者：1821898203@qq.com
+		                时间：2019-07-12
+		                描述：资源
+		            -->
+            <div class="swiper-slide">
+
+
+                <div class="pageselect" id="zypage">
+                    <button onclick="show_hidenzy(this)" class="iconfont icon-zuo2"></button>
+                    <button onclick="zygoup()">上一页</button>
+                    <button id="zy_page_totals">1/1</button>
+                    <select id="zytopage">
+						</select>
+                    <button onclick="gozyjumppage()">跳转</button>
+                    <button onclick="zygodown()">下一页</button>
+                </div>
+                <div class="content" id="zylist">
+
+                </div>
+            </div>
+            <!--
+		            作者：1821898203@qq.com
+		            时间：2019-07-12
+		            描述：资产
+		        -->
+            <div class="swiper-slide">
+                <div class="content">
+                    <ul class="table-view" id="zclist">
+                    </ul>
+                </div>
+            </div>
+            <!--
+		            作者：1821898203@qq.com
+		            时间：2019-07-12
+		            描述：资金
+		        -->
+            <div class="swiper-slide">
+                <div class="content">
+                    <ul class="table-view" id="zjlist">
+                    </ul>
+                </div>
+            </div>
+            <!--
+		                作者：1821898203@qq.com
+		                时间：2019-07-12
+		                描述：项目建设信息
+		            -->
+            <div class="swiper-slide">
+
+                <div class="pageselect" id="xjpage">
+                    <button onclick="show_hidenxj(this)" class="iconfont icon-zuo2"></button>
+                    <button onclick="xjgoup()">上一页</button>
+                    <button id="xj_page_totals">1/1</button>
+                    <select id="xjtopage">
+						</select>
+                    <button onclick="goxjjumppage()">跳转</button>
+                    <button onclick="xjgodown()">下一页</button>
+                </div>
+                <div class="content">
+                    <div class="search">
+                        <input id="searchxjname" class="text" type="text" placeholder="请输入项目名称" />
+                        <input class="button" type="button" onclick="getxjlist()" value="搜索" />
+                    </div>
+                    <ul class="table-view" id="xmjslist">
+                    </ul>
+                </div>
+            </div>
+            <!--
+		            作者：1821898203@qq.com
+		            时间：2019-07-12
+		            描述：政策学习
+		        -->
+            <!--<div class="swiper-slide">
+		
+					<div class="pageselect" id="zstupage">
+						<button  onclick="show_hidenzstu(this)"  class="iconfont icon-zuo2" ></button>
+						<button onclick="zstugoup()">上一页</button>
+						<button id="zstu_page_totals">1/1</button>
+						<select id="zstutopage">
+		
+						</select>
+						<button onclick="gozstujumppage()">跳转</button>
+						<button onclick="zstugodown()">下一页</button>
+					</div>
+					<div class="content">
+						<div class="xuanze" style="border: none; box-shadow: none !important;">
+							<button value="zx1" name="" class="anniu activeselect" onclick="addzx(this)">国家级</button>
+							<button value="zx2" name="" class="anniu" onclick="addzx(this)">省厅级</button>
+							<button value="zx3" name="" class="anniu" onclick="addzx(this)">市区级</button>
+							<button value="zx4" name="" class="anniu" onclick="addzx(this)">镇村级</button>
+						</div>
+		
+						<ul class="table-view " id="zx1">
+		
+						</ul>
+		
+						<ul class="table-view liebiao" id="zx2">
+		
+						</ul>
+		
+						<ul class="table-view liebiao" id="zx3">
+		
+						</ul>
+		
+						<ul class="table-view liebiao" id="zx4">
+		
+						</ul>
+					</div>
+				</div>-->
+            <!--
+		                作者：1821898203@qq.com
+		                时间：2019-07-12
+		                描述：法律教育//学习园地
+		            -->
+            <div class="swiper-slide">
+
+
+                <!--<div class="pageselect" id="flpage">
+						<button  onclick="show_hidenfl(this)"  class="iconfont icon-zuo2" ></button>
+						<button onclick="flgoup()">上一页</button>
+						<button id="fl_page_totals">1/1</button>
+						<select id="fltopage">
+						</select>
+						<button onclick="gofljumppage()">跳转</button>
+						<button onclick="flgodown()">下一页</button>
+					</div>-->
+                <div class="content">
+                    <!--<div class="xuanze">
+							<button value="fv1" name="" class="anniu1 activeselect1" onclick="addfalv(this)">国家级</button>
+							<button value="fv2" name="" class="anniu1" onclick="addfalv(this)">省厅级</button>
+							<button value="fv3" name="" class="anniu1" onclick="addfalv(this)">市区级</button>
+							<button value="fv4" name="" class="anniu1" onclick="addfalv(this)">镇村级</button>
+						</div>-->
+                    <ul class="table-view">
+                        <li class='table-view-cell'><a onclick="window.parent.location.href='xxyddgdj.html';" class='navigate-right'>党规党纪</a></li>
+                        <li class='table-view-cell'><a onclick="window.parent.location.href='xxydflfg.html';" class='navigate-right'>法律法规</a></li>
+                        <li class='table-view-cell'><a onclick="window.parent.location.href='xxydzc.html';" class='navigate-right'>政策</a></li>
+                        <li class='table-view-cell'><a onclick="window.parent.location.href='xxydqt.html';" class='navigate-right'>其他</a></li>
+
+                    </ul>
+
+                    <div class="content">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("cunname").innerHTML = userInfo.getItem("vName");
+        document.getElementById("menubutton").addEventListener("click", function(ev) {
+            var menumask = document.getElementById("maskmenu");
+            showmask(menumask);
+            //document.getElementById("menu").style.display="block";
+        });
+        var hckey = 0;
+        var sbody = new Swiper("#sbody", {
+            observer: true,
+            observeParents: true,
+            on: {
+                slideChange: function() {
+                    shead.slideTo(sbody.activeIndex, 300, false);
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(sbody.activeIndex).addClass("headactive");
+                    sessionStorage.setItem("hckey", sbody.activeIndex);
+                }
+            }
+        });
+        var shead = new Swiper("#shead", {
+            slidesPerView: "auto",
+            speed: 300,
+            observer: true,
+            observeParents: true,
+            on: {
+                click: function() {
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(this.clickedIndex).addClass("headactive");
+                    sbody.slideTo(this.clickedIndex, 300, false);
+                    sessionStorage.setItem("hckey", this.clickedIndex);
+                }
+            }
+        });
+
+        if (sessionStorage.hasOwnProperty("hckey")) {
+            //  alert(hckey);
+            hckey = parseInt(sessionStorage.getItem("hckey"));
+        } else {
+            sessionStorage.setItem("hckey", hckey);
+        }
+
+        $("#shead .swiper-slide").removeClass("headactive");
+        $("#shead .swiper-slide").eq(hckey).addClass("headactive");
+        shead.slideTo(hckey, 300, false);
+        sbody.slideTo(hckey, 300, false);
+
+        function goto(t) {
+            switch (t.id) {
+                case "menu1":
+                    sbody.slideTo(0, 300, false);
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(0).addClass("headactive");
+                    sessionStorage.setItem("hckey", 0);
+                    break;
+                case "menu3":
+                    sbody.slideTo(1, 300, false);
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(1).addClass("headactive");
+                    sessionStorage.setItem("hckey", 1);
+                    break;
+                case "menu4":
+                    sbody.slideTo(2, 300, false);
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(2).addClass("headactive");
+                    sessionStorage.setItem("hckey", 2);
+                    break;
+                    //		            case "menu5":
+                    //		                sbody.slideTo(4,300,false);
+                    //		                $("#shead .swiper-slide").removeClass("headactive");
+                    //		                $("#shead .swiper-slide").eq(3).addClass("headactive");
+                    //		                sessionStorage.setItem("hckey",3);
+                    //		                break;
+                case "menu6":
+                    sbody.slideTo(3, 300, false);
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(3).addClass("headactive");
+                    sessionStorage.setItem("hckey", 3);
+                    break;
+                case "menu7":
+                    sbody.slideTo(4, 300, false);
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(4).addClass("headactive");
+                    sessionStorage.setItem("hckey", 4);
+                    break;
+                case "menu8":
+                    sbody.slideTo(5, 300, false);
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(5).addClass("headactive");
+                    sessionStorage.setItem("hckey", 5);
+                    break;
+                case "menu9":
+                    sbody.slideTo(6, 300, false);
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(6).addClass("headactive");
+                    sessionStorage.setItem("hckey", 6);
+                    break;
+                case "menu10":
+                    sbody.slideTo(7, 300, false);
+                    $("#shead .swiper-slide").removeClass("headactive");
+                    $("#shead .swiper-slide").eq(7).addClass("headactive");
+                    sessionStorage.setItem("hckey", 7);
+                    break;
+                    //		            case "menu11":
+                    //		                sbody.slideTo(8,300,false);
+                    //		                $("#shead .swiper-slide").removeClass("headactive");
+                    //		                $("#shead .swiper-slide").eq(8).addClass("headactive");
+                    //		                sessionStorage.setItem("hckey",8);
+                    //		                break;
+            }
+        }
+    </script>
+    <script>
+        var loadmask = document.getElementById("loadmask");
+        showmask(loadmask);
+
+        function open1(t) {
+            window.location.href = "cunganbuxinxi.html";
+        }
+
+        function open2(t) {
+            window.location.href = "cungonggao.html";
+        }
+
+        function openbuzhu(t) {
+            window.location.href = "buzhuxinxi.html";
+        }
+
+        function open4(t) {
+            window.location.href = "cunjishiwu.html";
+        }
+        document.getElementById("gonggao").classList.add("donghua");
+        getshouyedata();
+        var gonggao = [];
+
+        function getshouyedata() {
+            var Villageid = sessionStorage.getItem("userVillageid");
+            //村简介
+            console.log(uri);
+            $.ajax({
+                url: uri + 'FindVillagesurveyByVid/' + Villageid,
+                dataType: "JSON", //服务器返回json格式数据
+                type: 'GET', //HTTP请求类型
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                success: function(mes) {
+                    //console.log("村简介：");
+                    //console.log(mes);
+                    document.getElementById("cunjianjie").innerHTML = mes.villagesurvey.vsSurvey;
+                },
+                error: function(xhr, type, errorThrown) {}
+            });
+            //村发展规划
+            //		        $.ajax({
+            //		            url:uri+'FindCunfazhanByVillageId/'+Villageid,
+            //		            dataType:"JSON",//服务器返回json格式数据
+            //		            type:'GET',//HTTP请求类型
+            //		            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            //		            success:function(mes){
+            //		                console.log("村规划");
+            //		                console.log(mes);
+            //		                var cunguihua="";
+            //		                if(mes.cunfanzhan==null){
+            //		                    cunguihua="暂无信息"
+            //		                }else {
+            //		                    cunguihua=mes.cunfanzhan.cfzContent;
+            //		
+            //		                }
+            //		                document.getElementById("cunguihua").innerHTML=cunguihua;
+            //		
+            //		            },
+            //		            error:function(xhr,type,errorThrown){
+            //		            }
+            //		        });
+            $.ajax({
+                url: uri + 'Cungonggao/' + Villageid,
+                dataType: "JSON", //服务器返回json格式数据
+                type: 'GET', //HTTP请求类型
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                success: function(mes) {
+                    console.log("村公告");
+                    console.log(mes);
+                    for (var i = 0; i < mes.data.length; i++) {
+                        var vbTitle = mes.data[i].vbTitle;
+                        var villagebulletinId = mes.data[i].villagebulletinId;
+                        var vbContent = mes.data[i].vbContent;
+                        var vbLanchtime = mes.data[i].vbLanchtime;
+                        gonggao[i] = [villagebulletinId, vbTitle, vbContent, vbLanchtime];
+                    }
+                    getgonggao(gonggao);
+                },
+                error: function(xhr, type, errorThrown) {
+                    //异常处理
+
+                }
+            });
+            $.ajax({
+                url: uri + 'FindVimg/' + Villageid,
+                dataType: "JSON", //服务器返回json格式数据
+                type: 'GET', //HTTP请求类型
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                success: function(mes) {
+                    console.log("图片");
+                    console.log(mes);
+                    var str = "";
+                    for (var i = 0; i < mes.img.length; i++) {
+                        str += "<div class='swiper-slide'><img src='http://47.105.118.98/jdpt/" + mes.img[i] + "'/></div>"
+                    }
+                    document.getElementById("getimgs").innerHTML = str;
+                    var imgswiper = new Swiper('#imgswiper', {
+                        slidesPerView: 1,
+                        loop: true,
+                        observer: true,
+                        observeParents: true,
+                        autoplay: {
+                            delay: 2500,
+                            disableOnInteraction: false,
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                    });
+                },
+                error: function(xhr, type, errorThrown) {
+                    //异常处理
+
+                }
+            });
+        }
+
+        function getgonggao(array) {
+            // alert(1);
+            var str = "";
+            for (var i = 0; i < array.length; i++) {
+                str += "<div class='swiper-slide'><a onclick='gogonggao(this)' id='gg" + i + "'><span>" + array[i][1].substring(0, 15) + "......" + "</span></a></div>"
+            }
+            document.getElementById("ggswiper").innerHTML = str;
+            var ggswiper = new Swiper('#gonggaoswiper', {
+                slidesPerView: 1,
+                loop: true,
+                observer: true,
+                observeParents: true,
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
+            });
+        }
+
+        function gogonggao(t) {
+            var dymask = document.getElementById("dymask");
+            var dyitem = parseInt(t.id.substring(2));
+            var str = "<div id='dycard' class='dangyuan'>";
+            str += "<p style='top:10px;padding:0 5px;margin:5px 0;'>标题：</p>";
+            str += "<p  style='padding:0 5px;margin:5px 0;'>" + gonggao[dyitem][1] + "</p>";
+            str += "<p  style='padding:0 5px;margin:5px 0;'>时间：" + gonggao[dyitem][3] + "</p>";
+            str += "<p  style='padding:0 5px;margin:5px 0;'>内容：</p>";
+            str += "<p  style='padding:0 5px;margin:5px 0;text-indent:2em;'>" + gonggao[dyitem][2] + "</p></div>";
+            dymask.innerHTML = str;
+            showmask(dymask);
+
+        }
+    </script>
+
+    <!--&lt;!&ndash;组织发展&ndash;&gt;-->
+    <script type="text/javascript">
+        var options = document.getElementById("getzfoptions");
+        var nowdata = new Date();
+        var nowyear = nowdata.getFullYear();
+        var strzf = ""
+        for (var i = nowyear; i >= 2012; i--) {
+            strzf += "<option value='" + i + "'>" + i + "年</option>";
+        }
+        options.innerHTML = strzf;
+
+
+        var zfpage = true;
+
+        function show_hidenzf(t) {
+            if (zfpage == false) {
+                document.getElementById("zfpage").style.width = "100%";
+                t.style.transform = "rotate(180deg)";
+                t.style.otransform = "rotate(180deg)";
+                t.style.mstransform = "rotate(180deg)";
+                t.style.moztransform = "rotate(180deg)";
+                t.style.webkittransform = "rotate(180deg)";
+                zfpage = true;
+            } else {
+                document.getElementById("zfpage").style.width = "2rem";
+                t.style.transform = "rotate(0deg)";
+                t.style.otransform = "rotate(0deg)";
+                t.style.mstransform = "rotate(0deg)";
+                t.style.moztransform = "rotate(0deg)";
+                t.style.webkittransform = "rotate(0deg)";
+                zfpage = false;
+            }
+        }
+
+        var nowdata = new Date();
+        var nowzyyear = nowdata.getFullYear();
+        var zflist = [];
+        var zftotalpage = 1;
+        var zfnowpage = 1;
+        var entity1 = parseInt(document.getElementById("zfkey").value);
+        var Vid = userInfo.getItem("userVillageid");
+        getzfjjlist(entity1, zfnowpage);
+        //上一页
+        function zfgoup() {
+            if (zfnowpage < 1) {
+                alert("已经是第一页了！")
+            } else {
+                zfnowpage--;
+                getzfjjlist(entity1, zfnowpage);
+            }
+        }
+        //下一页
+        function zfgodown() {
+            if (zfnowpage >= zftotalpage) {
+                alert("已经是最后一页了！")
+            } else {
+                zfnowpage++;
+                getzfjjlist(entity1, zfnowpage);
+            }
+        }
+
+        function zfgodown1() {
+            entity1 = parseInt($("#zfkey").val());
+            nowzyyear = $("#getzfoptions").val();
+            zfnowpage = 1;
+            getzfjjlist(entity1, zfnowpage);
+        }
+
+        function showzfinfo(t) {
+
+            var zfmask = document.getElementById("zfmask");
+            var zfitem = parseInt(t.id.substring(2));
+            var str = "";
+            str += "<div class='dangyuan' style='max-height：70vh;'><table cellpadding='0' cellspacing='0'><tr><td width='50%'>姓名：</td><td width='50%'>";
+            str += zflist[zfitem][0] + "</td></tr><tr><td>性别：</td><td>";
+            str += zflist[zfitem][1] + "</td></tr><tr><td>籍贯：</td><td>";
+            str += zflist[zfitem][2] + "</td></tr><tr><td>身份：</td><td>";
+            str += zflist[zfitem][3] + "</td></tr><tr><td>成为积极分子时间：</td><td>";
+            str += zflist[zfitem][4] + "</td></tr><tr><td>成为发展对象时间：</td> <td>";
+            str += zflist[zfitem][5] + "</td></tr><tr><td>成为预备党员时间：</td><td>";
+            str += zflist[zfitem][6] + "</td></tr><tr><td>转正时间：</td> <td>";
+            str += zflist[zfitem][7] + "</td></tr></table></div>";
+            zfmask.innerHTML = str;
+            showmask(zfmask);
+        }
+
+        //积极分子
+        function getzfjjlist(type, startpage) {
+            showmask(loadmask);
+            var vId = sessionStorage.getItem("userVillageid");
+            $.ajax({
+                url: uri + "QSelect/",
+                dataType: "JSON", //服务器返回json格式数据
+                type: 'POST', //HTTP请求类型
+                data: {
+                    villageId: vId,
+                    year: nowzyyear,
+                    entity: type,
+                    startPage: startpage,
+                    pageSize: 10
+                },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                success: function(mes) {
+                    console.log("组织发展");
+                    console.log(mes);
+                    if (mes.total == 0) {
+                        document.getElementById("zflist").innerHTML = "<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                    } else {
+                        document.getElementById("zflist").innerHTML = "";
+                        zflist.length = 0;
+                        zftotalpage = mes.total;
+                        //当前页
+                        zfnowcount = mes.nowPage;
+                        //填写当前页共多少页
+                        document.getElementById("zf_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                        //得到selectpage的页码选择
+                        //
+                        var zfpagestr = "";
+                        for (var i = 1; i <= mes.total; i++) {
+                            zfpagestr += "<option value='" + i + "'>" + i + "</option>";
+                        }
+                        document.getElementById("zftopage").innerHTML = zfpagestr;
+                        for (var i = 0, len = mes.data.length; i < len; i++) {
+                            var zzfzName = turestr(mes.data[i].zzfzName); //姓名
+                            var zzfzSex = turestr(mes.data[i].zzfzSex); //性别
+                            var zzfzAddress = turestr(mes.data[i].zzfzAddress); //籍贯
+                            var zzfzEntity = turestr(mes.data[i].zzfzEntity); //身份
+                            var jjfzTime = turestr(mes.data[i].jjfzTime) //成为积极fenzi时间
+                            var fzdxTime = turestr(mes.data[i].fzdxTime); //成为发展对象时间
+                            var ybdyTime = turestr(mes.data[i].ybdyTime) //成为预备党员时间
+                            var zsdyTime = turestr(mes.data[i].zsdyTime); //转正时间
+                            zflist[i] = [zzfzName, zzfzSex, zzfzAddress, zzfzEntity, jjfzTime, fzdxTime, ybdyTime, zsdyTime];
+                        }
+                        getzfitem(zflist);
+                    }
+                    hiden(loadmask);
+                },
+                error: function(xhr, type, errorThrown) {}
+            });
+        }
+
+
+        function getzfitem(data) {
+            var zflistdom = document.getElementById("zflist");
+            var str = ""
+            for (var i = 0; i < data.length; i++) {
+                str += "<li class='table-view-cell'>" + "<a id='zf" + i + "'" + " onclick='showzfinfo(this)'>" + data[i][0] + "</a></li>"
+            }
+            zflistdom.innerHTML = str;
+        }
+    </script>
+    <!--&lt;!&ndash;组织活动&ndash;&gt;-->
+    <script>
+        var zhpage = true;
+
+        function show_hidenzh(t) {
+            if (zhpage == false) {
+                document.getElementById("zhpage").style.width = "100%";
+                t.style.transform = "rotate(180deg)";
+                t.style.otransform = "rotate(180deg)";
+                t.style.mstransform = "rotate(180deg)";
+                t.style.moztransform = "rotate(180deg)";
+                t.style.webkittransform = "rotate(180deg)";
+                zhpage = true;
+            } else {
+                document.getElementById("zhpage").style.width = "2rem";
+                t.style.transform = "rotate(0deg)";
+                t.style.otransform = "rotate(0deg)";
+                t.style.mstransform = "rotate(0deg)";
+                t.style.moztransform = "rotate(0deg)";
+                t.style.webkittransform = "rotate(0deg)";
+                zhpage = false;
+            }
+        }
+
+        var zhlist = [];
+        var zhtotalpage = 1;
+        var zhnowcount = 0;
+        zhgodown();
+
+        //跳转到指定页
+        function gozhjumppage() {
+            dynowcount = document.getElementById("zhtopage").value;
+            getjylist();
+        }
+
+        function showzhinfo(t) {
+            var key = parseInt(t.id.substr(2));
+            var zhid = zhlist[key][0];
+            var zhname = zhlist[key][1];
+            userInfo.setItem("zhid", zhid);
+            userInfo.setItem("zhname", zhname);
+            window.location.href = "zuzhihuodonginfo.html";
+        }
+
+        function getzhlist() {
+            showmask(loadmask);
+            var vId = sessionStorage.getItem("userVillageid");
+            $.ajax({
+                url: uri + '/queryAllLeiXing/' + zhnowcount + "/13/" + vId,
+                dataType: "JSON", //服务器返回json格式数据
+                type: 'GET', //HTTP请求类型
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                success: function(mes) {
+                    /* console.log("组织活动");
+                     console.log(mes);*/
+                    if (mes.total == 0) {
+                        document.getElementById("zhlist").innerHTML = "<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                    } else {
+
+                        document.getElementById("zhlist").innerHTML = null;
+                        zhlist.length = 0;
+                        zhtotalpage = mes.total;
+                        //当前页
+                        zhnowcount = mes.nowPage;
+                        //填写当前页共多少页
+                        document.getElementById("zh_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                        //得到selectpage的页码选择
+                        var zhpagestr = "";
+                        for (var i = 1; i <= mes.total; i++) {
+                            zhpagestr += "<option value='" + i + "'>" + i + "</option>";
+                        }
+                        document.getElementById("zhtopage").innerHTML = zhpagestr;
+                        for (var i = 0; i < mes.huodongleixingList.length; i++) {
+                            var hdlxId = "";
+                            mes.huodongleixingList[i].hdlxId == null ? hdlxId = "" : hdlxId = mes.huodongleixingList[i].hdlxId;
+                            var hdlxName = "";
+                            mes.huodongleixingList[i].hdlxName == null ? hdlxName = "未知" : hdlxName = mes.huodongleixingList[i].hdlxName;
+                            var hdlxQu = "";
+                            mes.huodongleixingList[i].hdlxQu == null ? hdlxQu = "" : hdlxQu = mes.huodongleixingList[i].hdlxQu;
+                            var hdlxSheng = "";
+                            mes.huodongleixingList[i].hdlxSheng == null ? hdlxSheng = "" : hdlxSheng = mes.huodongleixingList[i].hdlxSheng;
+                            var hdlxShi = "";
+                            mes.huodongleixingList[i].hdlxShi == null ? hdlxShi = "" : hdlxShi = mes.huodongleixingList[i].hdlxShi;
+                            var hdlxVillage = "";
+                            mes.huodongleixingList[i].hdlxVillage == null ? hdlxVillage = "" : hdlxVillage = mes.huodongleixingList[i].hdlxVillage;
+                            var hdlxZhen = "";
+                            mes.huodongleixingList[i].hdlxZhen == null ? hdlxZhen = "" : hdlxZhen = mes.huodongleixingList[i].hdlxZhen;
+
+
+                            //id，名称，区，圣，市，村，镇，
+                            var place = hdlxSheng + "" + hdlxShi + "" + hdlxQu + "" + hdlxZhen + "" + hdlxVillage;
+                            zhlist[i] = [hdlxId, hdlxName, place];
+                        }
+                        var zhlistdom = document.getElementById("zhlist");
+                        var str = "";
+                        for (var i = 0; i < zhlist.length; i++) {
+                            str += "<li class='table-view-cell'>" + "<a id='zh" + i + "'" + " onclick='showzhinfo(this)'>" + "<div class='table-view-cell-body' style='position: relative;width: 100%'>" + zhlist[i][1] + "</div></a></li>"
+                        }
+                        zhlistdom.innerHTML = str;
+
+                    }
+                    hiden(loadmask);
+                },
+                error: function(xhr, type, errorThrown) {}
+            });
+        }
+        //下一页
+        function zhgodown() {
+            if (zhnowcount < zhtotalpage) {
+                zhnowcount += 1;
+                getzhlist();
+            } else {
+                return;
+            }
+        }
+        //上一页
+        function zhgoup() {
+            if (zhnowcount == 0) {
+                return
+            } else {
+                zhnowcount -= 1;
+                getzhlist();
+            }
+
+        }
+    </script>
+    <!--&lt;!&ndash;教育咨询&ndash;&gt;-->
+    <script>
+        /*
+                        		
+                        		    var jypage=true;
+                        		    function show_hidenjy(t) {
+                        		        if(jypage==false){
+                        		            document.getElementById("jypage").style.width="100%";
+                        		            t.style.transform="rotate(180deg)";
+                        		            t.style.otransform="rotate(180deg)";
+                        		            t.style.mstransform="rotate(180deg)";
+                        		            t.style.moztransform="rotate(180deg)";
+                        		            t.style.webkittransform="rotate(180deg)";
+                        		            jypage=true;
+                        		        }else {
+                        		            document.getElementById("jypage").style.width="2rem";
+                        		            t.style.transform="rotate(0deg)";
+                        		            t.style.otransform="rotate(0deg)";
+                        		            t.style.mstransform="rotate(0deg)";
+                        		            t.style.moztransform="rotate(0deg)";
+                        		            t.style.webkittransform="rotate(0deg)";
+                        		            jypage=false;
+                        		        }
+                        		    }
+                        		
+                        		
+                        		    var jylist=[];
+                        		    var jytotalpage=1;
+                        		    var jynowcount=0;
+                        		    jygodown();
+                        		
+                        		    //跳转到指定页
+                        		    function gojyjumppage() {
+                        		        dynowcount=document.getElementById("jiaoyutopage").value;
+                        		        //alert(dynowcount);
+                        		        getjylist();
+                        		    }
+                        		
+                        		    function gojiaoyu(t) {
+                        		        var key=parseInt(t.id.substring(2));
+                        		        var url=jylist[key][7];
+                        		        //alert(wenjianid)
+                        		        userInfo.setItem("flid","/jdpt/HJResourse/jiaoyv"+jylist[key][7]);
+                        		        window.location.href="zhengxue.html";
+                        		    }
+                        		    //得到教育文件列表
+                        		    function getjylist() {
+                        				showmask(loadmask);
+                        		        $.ajax({
+                        		            url:uri+'queryAll/'+jynowcount+"/13",
+                        		            dataType:"JSON",//服务器返回json格式数据
+                        		            type:'GET',//HTTP请求类型
+                        		            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                        		            success:function(mes){
+                        		                console.log("教育咨询");
+                        		                 console.log(mes);
+                        		                if(mes.total==0){
+                        		                    document.getElementById("jylist").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                        		                }else {
+                        		
+                        		
+                        		                    document.getElementById("jycontent")
+                        		                    document.getElementById("jylist").innerHTML=null;
+                        		                    jylist.length=0;
+                        		                    jytotalpage=mes.total;
+                        		                    //当前页
+                        		                    jynowcount=mes.nowPage;
+                        		                    //填写当前页共多少页
+                        		                    document.getElementById("jy_page_totals").innerHTML=mes.nowPage+"/"+mes.total;
+                        		                    //得到selectpage的页码选择
+                        		                    var jypagestr="";
+                        		                    for(var i=1;i<=mes.total;i++){
+                        		                        jypagestr+="<option value='"+i+"'>"+i+"</option>";
+                        		                    }
+                        		                    document.getElementById("jytopage").innerHTML=jypagestr;
+                        		
+                        		                    for(var i=0;i<mes.record.length;i++){
+                        		                        var jyNmaeoffile="";//文件名
+                        		                        mes.record[i].jyNmaeoffile==null? jyNmaeoffile="未知": jyNmaeoffile=mes.record[i].jyNmaeoffile;
+                        		                        var jyId="";//文件id
+                        		                        mes.record[i].jyId==null?jyId="未知":jyId=mes.record[i].jyId;
+                        		                        var jyLujing="";//文件路径
+                        		                        mes.record[i].jyLujing==null? jyLujing="未知": jyLujing=mes.record[i].jyLujing;
+                        		                        var jyTime="";//发布时间
+                        		                        mes.record[i].jyTime==null?jyTime="":jyTime=mes.record[i].jyTime;
+                        		                        var jyFangwen="";//访问量
+                        		                        mes.record[i].jyFangwen==null? jyFangwen="未知": jyFangwen=mes.record[i].jyFangwen;
+                        		                        var jyPeople="";//发布人
+                        		                        mes.record[i].jyPeople==null?jyPeople="":jyPeople=mes.record[i].jyPeople;
+                        		                        var jySheng="";//省
+                        		                        mes.record[i].jySheng==null? jySheng="未知": jySheng=mes.record[i].jySheng;
+                        		                        var jyShi="";//市
+                        		                        mes.record[i].jyShi==null?jyShi="未知":jyShi=mes.record[i].jyShi;
+                        		                        var jyQu="";//区
+                        		                        mes.record[i].jyQu==null? jyQu="未知": jyQu=mes.record[i].jyQu;
+                        		                        var jyZhen="";//镇
+                        		                        mes.record[i].jyZhen==null?jyZhen="未知":jyZhen=mes.record[i].jyZhen;
+                        		                        var jyVillage="";//村
+                        		                        mes.record[i].jyVillage==null?jyVillage="未知":jyVillage=mes.record[i].jyVillage;
+                        		                        var jyZhenshilujing="";//图片
+                        		                        mes.record[i].jyZhenshilujing==null?jyZhenshilujing="":jyZhenshilujing=mes.record[i].jyZhenshilujing;
+                        		                        var place=jySheng+jyShi+jyQu+jyZhen+jyVillage+"";
+                        		
+                        		                        jylist[i]=[jyNmaeoffile,jyId,jyLujing,jyTime,jyFangwen,jyPeople,place,jyZhenshilujing];
+                        		                    }
+                        		                    getjyitem(jylist);
+                        							
+                        		                    //console.log(jylist[0])
+                        		                }
+                        						hiden(loadmask);
+                        		            },
+                        		            error:function(xhr,type,errorThrown){
+                        		
+                        		            }
+                        		        });
+                        		    }
+                        		
+                        		    //得到教育列表
+                        		    function getjyitem(jydata){
+                        		        var jylist=document.getElementById("jylist");
+                        		        var str="";
+                        		        for(var i=0;i<jydata.length;i++){
+                        		            var name=jydata[i][0];
+                        		            if(name.length>15){
+                        		                name=jydata[i][0].substring(0,15)+"......";
+                        		            }
+                        		                str+="<li class='table-view-cell'>"+"<a href='/jdpt/HJResourse/jiaoyv/"+jydata[i][7]+"' id='jy"+i+"'"+" onclick='gojiaoyu(this)'>"+"<div class='table-view-cell-body' style='position: relative;width: 100%'>"+name+"</div></a></li>";
+                        		
+                        		            
+                        		        }
+                        		        jylist.innerHTML=str;
+                        		    }
+                        		
+                        		    //下一页
+                        		    function jygodown() {
+                        		        if(jynowcount<jytotalpage){
+                        		            jynowcount+=1;
+                        		            getjylist();
+                        		        }else {
+                        		            return;
+                        		        }
+                        		    }
+                        		    //上一页
+                        		    function jygoup() {
+                        		        if(jynowcount==0){
+                        		            return
+                        		        }else{
+                        		            jynowcount-=1;
+                        		            //alert(dynowcount);
+                        		            getjylist();
+                        		        }
+                        		
+                        		    }
+                        		
+                        		*/
+    </script>
+    <!--&lt;!&ndash;资源&ndash;&gt;-->
+    <script>
+        var zypage = true;
+
+        function show_hidenzy(t) {
+            if (zypage == false) {
+                document.getElementById("zypage").style.width = "100%";
+                t.style.transform = "rotate(180deg)";
+                t.style.otransform = "rotate(180deg)";
+                t.style.mstransform = "rotate(180deg)";
+                t.style.moztransform = "rotate(180deg)";
+                t.style.webkittransform = "rotate(180deg)";
+                zypage = true;
+            } else {
+                document.getElementById("zypage").style.width = "2rem";
+                t.style.transform = "rotate(0deg)";
+                t.style.otransform = "rotate(0deg)";
+                t.style.mstransform = "rotate(0deg)";
+                t.style.moztransform = "rotate(0deg)";
+                t.style.webkittransform = "rotate(0deg)";
+                zypage = false;
+            }
+        }
+
+
+        var zylist = [];
+        var zytotalpage = 1;
+        var zynowcount = 0;
+        zygodown();
+
+        //跳转到指定页
+        function gozyjumppage() {
+            zynowcount = document.getElementById("zytopage").value;
+            getzylist();
+        }
+
+        function gozy(t) {
+            var key1 = parseInt(t.id.substring(2));
+            var key2 = parseInt(t.name.substring(2));
+            var zuid = zylist[key1][1][key2][2];
+            var child = zylist[key1][1][key2][0];
+            sessionStorage.setItem("zuid", zuid);
+            sessionStorage.setItem("child", child);
+            window.location.href = "ziyuaninfo.html";
+        }
+
+        function getzylist() {
+            showmask(loadmask);
+            var vId = sessionStorage.getItem("userVillageid");
+            $.ajax({
+                url: uri + 'ziyuanQueryByCunId/' + vId + "/" + zynowcount + "/13",
+                dataType: "JSON", //服务器返回json格式数据
+                type: 'GET', //HTTP请求类型
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                success: function(mes) {
+                    console.log("资源");
+                    console.log(mes);
+                    if (mes.data1.status == "null") {
+                        document.getElementById("zylist").innerHTML = "<img style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                    } else {
+                        document.getElementById("zylist").innerHTML = null;
+                        zylist.length = 0;
+                        zytotalpage = mes.data1.total;
+                        zynowcount = mes.data1.nowPage;
+                        document.getElementById("zy_page_totals").innerHTML = mes.data1.nowPage + "/" + mes.data1.total;
+                        //得到selectpage的页码选择
+                        var zypagestr = "";
+                        for (var i = 1; i <= mes.data1.total; i++) {
+                            zypagestr += "<option value='" + i + "'>" + i + "</option>";
+                        }
+                        document.getElementById("zytopage").innerHTML = zypagestr;
+
+                        for (var i = 0; i < mes.data2.length; i++) {
+                            var hostname = mes.data2[i].zu.zName;
+                            //  item.length=mes.data2[i].type.length;
+                            var item = [];
+                            for (var j = 0; j < mes.data2[i].type.length; j++) {
+                                item.length = mes.data2[i].type.length;
+                                var childid = mes.data2[i].type[j].Resources_Id;
+                                var childname = mes.data2[i].type[j].R_Type;
+                                var zid = mes.data2[i].type[j].R_zu;
+                                item[j] = [childid, childname, zid];
+                                /* console.log(hostname + item[j]);*/
+                            }
+                            zylist[i] = [hostname, item];
+                        }
+                        console.log(zylist);
+                        getzyitem(zylist);
+
+                    }
+                    hiden(loadmask);
+                },
+                error: function(xhr, type, errorThrown) {}
+            });
+        }
+
+        //得到教育列表
+        function getzyitem(zylist) {
+            var zylistdom = document.getElementById("zylist");
+
+            var str = "";
+            for (var i = 0; i < zylist.length; i++) {
+                str += "<div class='flod-body'><a class='flod-body-title'>" + zylist[i][0] + " </a><div class='flod-body-content'>"
+                for (var j = 0; j < zylist[i][1].length; j++) {
+                    str += "<a id='zy" + i + "' name='zy" + j + "' class='flod-body-content-right' onclick='gozy(this)'>" + zylist[i][1][j][1] + "</a>"
+                }
+                str += "</div></div>"
+            }
+            zylistdom.innerHTML = str;
+
+            var floders = document.getElementsByClassName("flod-body");
+            var floded = document.getElementsByClassName("flod-body flod-active");
+            for (var i = 0; i < floders.length; i++) {
+                floders[i].addEventListener("click", function() {
+                    //alert(1);
+                    if (this.className == "flod-body flod-active") {
+                        this.className = "flod-body";
+                    } else {
+                        this.className = "flod-body flod-active";
+                        floded.className = "flod-body";
+                        //floded.style.height="2.6rem";
+                    }
+
+                })
+            }
+
+        }
+
+        //下一页
+        function zygodown() {
+            if (zynowcount < zytotalpage) {
+                zynowcount += 1;
+                getzylist();
+            } else {
+                return;
+            }
+        }
+        //上一页
+        function zygoup() {
+            if (zynowcount == 0) {
+                return
+            } else {
+                zynowcount -= 1;
+                //alert(dynowcount);
+                getzylist();
+            }
+
+        }
+    </script>
+    <!--&lt;!&ndash;资产资金&ndash;&gt;-->
+    <script>
+        var zclist = [];
+
+        function gozc(t) {
+            var key = parseInt(t.id.substring(2));
+            var zuid = zclist[key][0];
+            var zname = zclist[key][1];
+            sessionStorage.setItem("zuid", zuid);
+            sessionStorage.setItem("zname", zname);
+            window.location.href = "zichaninfo0.html";
+        }
+
+        function gozj(t) {
+            var key = parseInt(t.id.substring(2));
+            var zuid = zclist[key][0];
+            var zname = zclist[key][1];
+            sessionStorage.setItem("zzjuid", zuid);
+            sessionStorage.setItem("zzjname", zname);
+            window.location.href = "zijinInfo.html";
+        }
+        getzclist();
+
+        function getzclist() {
+            showmask(loadmask);
+            var vId = sessionStorage.getItem("userVillageid");
+            $.ajax({
+                url: uri + 'findZuById/' + vId,
+                dataType: "JSON", //服务器返回json格式数据
+                type: 'GET', //HTTP请求类型
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                success: function(mes) {
+                    console.log("资产");
+                    console.log(mes);
+                    if (mes.total == 0) {
+                        document.getElementById("zclist").innerHTML = "<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                    } else {
+                        document.getElementById("zclist").innerHTML = null;
+                        zclist.length = 0;
+                        for (var i = 0; i < mes.record.length; i++) {
+                            var zid = mes.record[i].zKey;
+                            var zname = mes.record[i].zName;
+                            zclist[i] = [zid, zname];
+                        }
+                        getzcitem(zclist);
+
+                    }
+                    hiden(loadmask);
+                },
+                error: function(xhr, type, errorThrown) {
+                    //异常处理
+
+                }
+            });
+        }
+
+        //得到教育列表
+        function getzcitem(zclist) {
+            var zclistdom = document.getElementById("zclist");
+            var zjlistdom = document.getElementById("zjlist")
+            var str = "";
+            var str1 = "";
+            for (var i = 0; i < zclist.length; i++) {
+                str += "<li class='table-view-cell'>" + "<a id='zc" + i + "'" + " onclick='gozc(this)'>" + zclist[i][1] + "</a></li>"
+            }
+            for (var i = 0; i < zclist.length; i++) {
+                str1 += "<li class='table-view-cell'>" + "<a id='zc" + i + "'" + " onclick='gozj(this)'>" + zclist[i][1] + "</a></li>"
+            }
+            zclistdom.innerHTML = str;
+            zjlistdom.innerHTML = str1;
+        }
+    </script>
+    <!--&lt;!&ndash;项目建设信息&ndash;&gt;-->
+    <script>
+        var xjpage = true;
+
+        function show_hidenxj(t) {
+            if (xjpage == false) {
+                document.getElementById("xjpage").style.width = "100%";
+                t.style.transform = "rotate(180deg)";
+                t.style.otransform = "rotate(180deg)";
+                t.style.mstransform = "rotate(180deg)";
+                t.style.moztransform = "rotate(180deg)";
+                t.style.webkittransform = "rotate(180deg)";
+                xjpage = true;
+            } else {
+                document.getElementById("xjpage").style.width = "2rem";
+                t.style.transform = "rotate(0deg)";
+                t.style.otransform = "rotate(0deg)";
+                t.style.mstransform = "rotate(0deg)";
+                t.style.moztransform = "rotate(0deg)";
+                t.style.webkittransform = "rotate(0deg)";
+                xjpage = false;
+            }
+        }
+        var xjlist = [];
+        var xjtotalpage = 1;
+        var xjnowcount = 0;
+        xjgodown();
+        //点击查看项目建设详情
+        function showprojectInfo(t) {
+            var xjitem = parseInt(t.id.substring(2));
+            console.log(xjlist[xjitem]);
+            var xjid = xjlist[xjitem][1];
+            //alert(xjid);
+            sessionStorage.setItem("xjid", xjid);
+            window.location.href = "xiangjianinfo.html";
+        }
+
+        function goxjjumppage() {
+            xjnowcount = document.getElementById("xjtopage").value;
+            getxjlist();
+        }
+
+        function getxjlist() {
+            showmask(loadmask);
+            var xjname = document.getElementById("searchxjname").value;
+            var cId = userInfo.getItem("userVillageid");
+            if (xjname == null || xjname == "" || xjlist.length == 0) {
+                $.ajax({
+                    url: uri + 'queryOperationManagements/' + xjnowcount + "/12/" + cId,
+                    dataType: "JSON", //服务器返回json格式数据
+                    type: 'GET', //HTTP请求类型
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    success: function(mes) {
+                        console.log("xj")
+                        console.log(mes);
+                        //总页数
+                        //alert(document.getElementById("xmjslist"));
+                        if (mes.total == 0) {
+                            document.getElementById("xmjslist").innerHTML = "<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>";
+                        } else {
+
+                            document.getElementById("xmjslist").innerHTML = "";
+                            xjlist.length = 0;
+                            xjtotalpage = mes.total;
+                            //当前页
+                            xjnowcount = mes.nowPage;
+                            //填写当前页共多少页
+                            document.getElementById("xj_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                            //得到selectpage的页码选择
+                            var xjpagestr = "";
+                            for (var i = 1; i <= mes.total; i++) {
+                                xjpagestr += "<option value='" + i + "'>" + i + "</option>";
+                            }
+                            document.getElementById("xjtopage").innerHTML = xjpagestr;
+
+                            for (var i = 0; i < mes.OperationManagements.length; i++) {
+                                var xjName = "";
+                                mes.OperationManagements[i].om_Name == null ? jobName = "未知" : xjName = mes.OperationManagements[i].om_Name;
+                                var operationManagement_Id = "";
+                                mes.OperationManagements[i].operationManagement_Id == null ? operationManagement_Id = "未知" : operationManagement_Id = mes.OperationManagements[i].operationManagement_Id;
+
+                                xjlist[i] = [xjName, operationManagement_Id];
+
+                            }
+                            console.log(xjlist);
+                            getxjitem(xjlist);
+                        }
+                        hiden(loadmask);
+                    },
+                    error: function(xhr, type, errorThrown) {
+                        //异常处理
+
+                    }
+                });
+            } else {
+                xjnowcount = 1;
+                $.ajax({
+                    url: uri + 'queryOperationManagement/' + xjname + "/" + xjnowcount + "/12/" + cId,
+                    dataType: "JSON", //服务器返回json格式数据
+                    type: 'GET', //HTTP请求类型
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    success: function(mes) {
+                        console.log(mes);
+                        document.getElementById("xmjslist").innerHTML = "";
+                        xjlist.length = 0;
+                        for (var i = 0; i < mes.OperationManagement.length; i++) {
+                            var xjName = "";
+                            mes.OperationManagements[i].om_Name == null ? jobName = "未知" : xjName = mes.OperationManagements[i].om_Name;
+                            var operationManagement_Id = "";
+                            mes.OperationManagements[i].operationManagement_Id == null ? OperationManagement_Id = "未知" : OperationManagement_Id = mes.OperationManagements[i].OperationManagement_Id;
+
+                            xjlist[i] = [xjName, OperationManagement_Id];
+                        }
+                        getxjitem(xjlist);
+                        hiden(loadmask);
+                    },
+                    error: function(xhr, type, errorThrown) {}
+                });
+            }
+
+        }
+
+        function getxjitem(data) {
+            var xjlist = document.getElementById("xmjslist");
+            var str = "";
+            for (var i = 0; i < data.length; i++) {
+                var name = data[i][0];
+                if (name.length > 15) {
+                    name = data[i][0].substring(0, 15) + "......";
+                }
+                str += "<li class='table-view-cell'>" + "<a id='xj" + i + "'" + " onclick='showprojectInfo(this)'>" + name + "</a></li>"
+            }
+            xjlist.innerHTML = str;
+        }
+
+        //下一页
+        function xjgodown() {
+            if (xjnowcount < xjtotalpage) {
+                xjnowcount += 1;
+                getxjlist();
+            } else {
+                return;
+            }
+        }
+        //上一页
+        function xjgoup() {
+            if (xjnowcount == 0) {
+                return
+            } else {
+                xjnowcount -= 1;
+                getxjlist();
+            }
+
+        }
+    </script>
+    <!--&lt;!&ndash;政策学习&ndash;&gt;-->
+    <script>
+        /*
+                        		    var zxpage=true;
+                        		    function show_hidenzstu(t) {
+                        		        if(zxpage==false){
+                        		            document.getElementById("zstupage").style.width="100%";
+                        		            t.style.transform="rotate(180deg)";
+                        		            t.style.otransform="rotate(180deg)";
+                        		            t.style.mstransform="rotate(180deg)";
+                        		            t.style.moztransform="rotate(180deg)";
+                        		            t.style.webkittransform="rotate(180deg)";
+                        		            zxpage=true;
+                        		        }else {
+                        		            document.getElementById("zstupage").style.width="2rem";
+                        		            t.style.transform="rotate(0deg)";
+                        		            t.style.otransform="rotate(0deg)";
+                        		            t.style.mstransform="rotate(0deg)";
+                        		            t.style.moztransform="rotate(0deg)";
+                        		            t.style.webkittransform="rotate(0deg)";
+                        		            zxpage=false;
+                        		        }
+                        		    }
+                        		
+                        		    var zxnowpage=0;
+                        		    var zxtype=1;
+                        		    var  zxtotalpage=1;
+                        		    var zxlist=[];
+                        		    zstugodown();
+                        		    function addzx(it){
+                        		        document.getElementsByClassName("anniu activeselect")[0].classList.remove("activeselect");
+                        		
+                        		        it.classList.add("activeselect");
+                        		        switch(it.value){
+                        		            case "zx1":
+                        		                document.getElementById("zx1").classList.remove("liebiao");
+                        		                document.getElementById("zx2").classList.add("liebiao");
+                        		                document.getElementById("zx3").classList.add("liebiao");
+                        		                document.getElementById("zx4").classList.add("liebiao");
+                        		                zxtype=1;
+                        		                getzxItems(zxtype);
+                        		                break;
+                        		            case "zx2":
+                        		                //document.getElementsByClassName("table-view")[0].classList.add("liebiao");
+                        		                document.getElementById("zx2").classList.remove("liebiao");
+                        		                document.getElementById("zx1").classList.add("liebiao");
+                        		                document.getElementById("zx3").classList.add("liebiao");
+                        		                document.getElementById("zx4").classList.add("liebiao");
+                        		                zxtype=2;
+                        		                getzxItems(zxtype);
+                        		                break;
+                        		            case "zx3":
+                        		                //document.getElementsByClassName("table-view")[0].classList.add("liebiao");
+                        		                document.getElementById("zx3").classList.remove("liebiao");
+                        		                document.getElementById("zx2").classList.add("liebiao");
+                        		                document.getElementById("zx1").classList.add("liebiao");
+                        		                document.getElementById("zx4").classList.add("liebiao");
+                        		                zxtype=3;
+                        		                getzxItems(zxtype);
+                        		                break;
+                        		            case "zx4":
+                        		                //document.getElementsByClassName("table-view")[0].classList.add("liebiao");
+                        		                document.getElementById("zx4").classList.remove("liebiao");
+                        		                document.getElementById("zx2").classList.add("liebiao");
+                        		                document.getElementById("zx3").classList.add("liebiao");
+                        		                document.getElementById("zx1").classList.add("liebiao");
+                        		                zxtype=4;
+                        		                getzxItems(zxtype);
+                        		                break;
+                        		        }
+                        		    }
+                        		
+                        		
+                        		    function getzxItems(type){
+                        		        showmask(loadmask);
+                        		        $.ajax({
+                        		            url:uri+"queryPolicyByType/"+zxnowpage+"/12"+"/"+type,
+                        		            dataType:"JSON",//服务器返回json格式数据
+                        		            type:'GET',
+                        		            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        		            success:function (mes) {
+                        						console.log(mes);
+                        		                console.log(mes);
+                        		                if(mes.total===0){
+                        		                    switch (type) {
+                        		                        case 1:
+                        		                            document.getElementById("zx1").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                        		                            break;
+                        		                        case 2:
+                        		                            document.getElementById("zx2").innerHTML="<img style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                        		                            break;
+                        		                        case 3:
+                        		                            document.getElementById("zx3").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                        		                            break;
+                        		                        case 4:
+                        		                            document.getElementById("zx4").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                        		                            break;
+                        		                    }
+                        		                }else {
+                        		                    zxtotalpage = mes.total;
+                        		                    //当前页
+                        		                    zxnowpage = mes.nowPage;
+                        		                    //填写当前页共多少页
+                        		                    document.getElementById("zstu_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                        		                    //得到selectpage的页码选择
+                        		                    var dypagestr = "";
+                        		                    //显示跳转页的下拉框
+                        		                    for (var i = 1; i <= mes.total; i++) {
+                        		                        dypagestr += "<option value='" + i + "'>" + i + "</option>";
+                        		                    }
+                        		                    document.getElementById("zstutopage").innerHTML = dypagestr;
+                        		                    zxlist.length=0;
+                        		                    for (var i=0;i<mes.policyPage.length;i++){
+                        		                        var pName="";
+                        		                        mes.policyPage[i].pName==null?pName = "未知" : pName = mes.policyPage[i].pName;
+                        		                        var pDocumentpath="";
+                        		                        mes.policyPage[i].pDocumentpath==null?pDocumentpath="未知":pDocumentpath=mes.policyPage[i].pDocumentpath;
+                        		                        var pDatetime="";
+                        		                        mes.policyPage[i].pDatetime==null?pDatetime="未知":pDatetime=mes.policyPage[i].pDatetime;
+                        		                        zxlist[i]=[pName,pDocumentpath,pDatetime];
+                        		                    }
+                        		                    getzxshow(zxlist);}
+                        		                hiden(loadmask);
+                        		            },
+                        		            error:function () {
+                        		                //
+                        		            }
+                        		        })
+                        		        function getzxshow(zxlist) {
+                        		            var zx= document.getElementById("zx1");
+                        		            if(type==1){
+                        		                zx = document.getElementById("zx1");
+                        		            }else if(type==2){
+                        		                zx = document.getElementById("zx2");
+                        		            }else if(type==3){
+                        		                zx = document.getElementById("zx3");
+                        		            }else {
+                        		                zx = document.getElementById("zx4");
+                        		            }
+                        		
+                        		            var str = "";
+                        		            for (var i = 0; i < zxlist.length; i++) {
+                        		                var name=zxlist[i][0];
+                        		                if(name.length>15){
+                        		                    name=zxlist[i][0].substring(0,15)+"......";
+                        		                }
+                        		                str+="<li class='table-view-cell'><a href='/jdpt/HJResourse/Policy/"+zxlist[i][1]+"'  onclick='gowenjian(this)' class='navigate-right' id='zx"+i+"' style='text-decoration:none;color: black'>"+name+"</a></li>";
+                        		            }
+                        		            zx.innerHTML=str;
+                        		        }
+                        		    }
+                        		    function zstugoup() {
+                        		        if(zxnowpage>0){
+                        		            zxnowpage-=1;
+                        		            getzxItems(zxtype);
+                        		        }else {
+                        		            return
+                        		        }
+                        		    }
+                        		    function zstugodown() {
+                        		        if(zxnowpage<zxtotalpage){
+                        		            zxnowpage+=1;
+                        		            getzxItems(zxtype);
+                        		        }else {
+                        		            return;
+                        		        }
+                        		    }
+                        		    function gozstujumppage() {
+                        		        zxnowpage=document.getElementById("zstutopage").value;
+                        		        getzxItems(zxtype);
+                        		    }
+                        		    function gowenjian(t) {
+                        		        var key=parseInt(t.id.substring(2));
+                        		        sessionStorage.setItem("flid","http://47.105.118.98/jdpt/HJResourse/Policy/"+zxlist[key][1]);
+                        		        window.location.href="zhengxue.html";
+                        		    }
+                        		*/
+    </script>
+    <!--&lt;!&ndash;法律教育&ndash;&gt;-->
+    <script>
+        /*
+                        		    var lawpage=true;
+                        		    function show_hidenfl(t) {
+                        		        if(lawpage==false){
+                        		            document.getElementById("flpage").style.width="100%";
+                        		            t.style.transform="rotate(180deg)";
+                        		            t.style.otransform="rotate(180deg)";
+                        		            t.style.mstransform="rotate(180deg)";
+                        		            t.style.moztransform="rotate(180deg)";
+                        		            t.style.webkittransform="rotate(180deg)";
+                        		            lawpage=true;
+                        		        }else {
+                        		            document.getElementById("flpage").style.width="2rem";
+                        		            t.style.transform="rotate(0deg)";
+                        		            t.style.otransform="rotate(0deg)";
+                        		            t.style.mstransform="rotate(0deg)";
+                        		            t.style.moztransform="rotate(0deg)";
+                        		            t.style.webkittransform="rotate(0deg)";
+                        		            lawpage=false;
+                        		        }
+                        		    }
+                        		
+                        		    var lawnowpage=0;
+                        		    var type=1;
+                        		    var lawtotalpage=1;
+                        		    var lawlist=[];
+                        		    flgodown();
+                        		    function addfalv(it){
+                        		        document.getElementsByClassName("anniu1 activeselect1")[0].classList.remove("activeselect1");
+                        		
+                        		        it.classList.add("activeselect1");
+                        		
+                        		        switch(it.value){
+                        		            case "fv1":
+                        		                document.getElementById("falv1").classList.remove("liebiao1");
+                        		                document.getElementById("falv2").classList.add("liebiao1");
+                        		                document.getElementById("falv3").classList.add("liebiao1");
+                        		                document.getElementById("falv4").classList.add("liebiao1");
+                        		                type=1;
+                        		                getItems(type);
+                        		                break;
+                        		            case "fv2":
+                        		
+                        		                document.getElementById("falv2").classList.remove("liebiao1");
+                        		                document.getElementById("falv1").classList.add("liebiao1");
+                        		                document.getElementById("falv3").classList.add("liebiao1");
+                        		                document.getElementById("falv4").classList.add("liebiao1");
+                        		                type=2;
+                        		                getItems(type);
+                        		                break;
+                        		            case "fv3":
+                        		                document.getElementById("falv3").classList.remove("liebiao1");
+                        		                document.getElementById("falv2").classList.add("liebiao1");
+                        		                document.getElementById("falv1").classList.add("liebiao1");
+                        		                document.getElementById("falv4").classList.add("liebiao1");
+                        		                type=3;
+                        		                getItems(type);
+                        		                break;
+                        		            case "fv4":
+                        		                document.getElementById("falv4").classList.remove("liebiao1");
+                        		                document.getElementById("falv2").classList.add("liebiao1");
+                        		                document.getElementById("falv3").classList.add("liebiao1");
+                        		                document.getElementById("falv1").classList.add("liebiao1");
+                        		                type=4;
+                        		                getItems(type);
+                        		                break;
+                        		        }
+                        		    }
+                        		    function getItems(fvtype){
+                        		        showmask(loadmask);
+                        		        $.ajax({
+                        		            url:uri+"queryLawByType/"+lawnowpage+"/12"+"/"+fvtype,
+                        		            dataType:"JSON",//服务器返回json格式数据
+                        		            type:'GET',
+                        		            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        		            success:function (mes) {
+                        		                console.log(mes);
+                        		                lawlist.length=0;
+                        		                if(mes.total==0){
+                        		                    switch (fvtype) {
+                        		                        case 1:
+                        		                            document.getElementById("falv1").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                        		                            break;
+                        		                        case 2:
+                        		                            document.getElementById("falv2").innerHTML="<img style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                        		                            break;
+                        		                        case 3:
+                        		                            document.getElementById("falv3").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                        		                            break;
+                        		                        case 4:
+                        		                            document.getElementById("falv4").innerHTML="<img  style='z-index: 10000;position: relative;width: 100%' src='/jdpt/static/img/null.png'/>"
+                        		                            break;
+                        		                    }
+                        		                }else {
+                        		                    lawtotalpage = mes.total;
+                        		                    //当前页
+                        		                    lawnowpage = mes.nowPage;
+                        		                    //填写当前页共多少页
+                        		                    document.getElementById("fl_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                        		                    //得到selectpage的页码选择
+                        		                    var dypagestr = "";
+                        		                    //显示跳转页的下拉框
+                        		                    for (var i = 1; i <= mes.total; i++) {
+                        		                        dypagestr += "<option value='" + i + "'>" + i + "</option>";
+                        		                    }
+                        		                    document.getElementById("fltopage").innerHTML = dypagestr;
+                        		                    for (var i=0;i<mes.lawPage.length;i++){
+                        		                        var lTitle="";
+                        		                        mes.lawPage[i].lTitle==null?lTitle = "未知" : lTitle = mes.lawPage[i].lTitle;
+                        		                        var lPubdate="";
+                        		                        mes.lawPage[i].lPubdate==null?lPubdate="未知":lPubdate=mes.lawPage[i].lPubdate;
+                        		                        var  lawId="";
+                        		                        mes.lawPage[i].lawId==null?lawId="未知":lawId=mes.lawPage[i].lawId;
+                        		                        var lContent="";
+                        		                        mes.lawPage[i].lContent==null?lContent="未知":lContent=mes.lawPage[i].lContent;
+                        		                        lawlist[i]=[lTitle,lPubdate,lawId,lContent];
+                        		                    }
+                        		                    getlawshow(lawlist);}
+                        		                hiden(loadmask);
+                        		            },
+                        		            error:function () {
+                        		                //
+                        		            }
+                        		        });
+                        		    }
+                        		    function getlawshow(lawlist) {
+                        		        var law = document.getElementById("falv1");
+                        		        if(type==1){
+                        		            law = document.getElementById("falv1");
+                        		        }else if(type==2){
+                        		            law = document.getElementById("falv2");
+                        		        }else if(type==3){
+                        		            law = document.getElementById("falv3");
+                        		        }else {
+                        		            law = document.getElementById("falv4");
+                        		        }
+                        		
+                        		        var str = "";
+                        		        for (var i = 0; i < lawlist.length; i++) {
+                        		            var name=lawlist[i][0];
+                        		            if(name.length>15){
+                        		                name=lawlist[i][0].substring(0,15)+"......";
+                        		
+                        		            }
+                        		            str+="<li class='table-view-cell'><a href='/jdpt/HJResourse/Law/"+lawlist[i][3]+"' onclick='gogowenjian(this)' class='navigate-right' id='fv"+i+"' style='text-decoration:none;color: black'>"+name+"</a></li>";
+                        		        }
+                        		        law.innerHTML=str;
+                        		    }
+                        		    function flgoup() {
+                        		        if(lawnowpage>0){
+                        		            lawnowpage-=1;
+                        		            getItems(type);
+                        		        }else {
+                        		            return
+                        		        }
+                        		    }
+                        		    function flgodown() {
+                        		        if(lawnowpage<lawtotalpage){
+                        		            lawnowpage+=1;
+                        		            getItems(type);
+                        		        }else {
+                        		            return;
+                        		        }
+                        		    }
+                        		    function gofljumppage() {
+                        		        lawnowpage=document.getElementById("fltopage").value;
+                        		        getItems(type);
+                        		    }
+                        		    function gogowenjian(t) {
+                        		        var key=parseInt(t.id.substring(2));
+                        		        sessionStorage.setItem("flid","/jdpt/HJResourse/Law/"+lawlist[key][3]);
+                        		        window.location.href="zhengxue.html";
+                        		    }*/
+    </script>
+
+
+
+</div>
+<div class="mask" id="scz" style="background-color: rgba(0,0,0,0.2);">
+    <p style="top: 50vh;text-align: center;color: #007AFF;position: relative;"><span style="padding: 5px 10px;background-color: rgba(0,0,0,0.8);border-radius: 4px;">努力上传中.......请稍候</span></p>
+</div>
+<div class="index_content" id="thejianju">
+    <div class="header">
+        <p><label>标题:</label>
+            <input placeholder="请填写文字" type="text" id="biaoti" /></p>
+        <textarea id="text" placeholder="填写意见建议内容。"></textarea>
+    </div>
+    <table>
+        <tr>
+            <td>
+                <label for="shangchuan">
+						<span >+</span>
+					</label>
+                <input type="file" name="file" id="shangchuan" capture='camera' accept="image/png,image/jpg,image/gif,image/JPEG" onchange="imgPreview(this)" multiple="multiple" />
+            </td>
+            <td id="imgs">
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+            </td>
+            <td>
+                <span class="tishi">最多上传三张图片</span>
+            </td>
+        </tr>
+    </table>
+    <div class="radio">请选择意见建议类型:<select style="background-color: white;width: 200px;" id="type"></select></div>
+
+
+    <button id="tijiao">提交意见建议</button>
+
+    <script src="/jdpt/static/js/header.js"></script>
+    <script>
+        getphotos();
+
+        function getphotos() {
+            var ua = navigator.userAgent.toLowerCase();
+            var isIOS = (ua.indexOf('iphone') != -1 || (ua.indexOf('ipad') != -1));
+            if (isIOS) {
+                document.getElementById("shangchuan").removeAttribute("capture");
+            }
+        }
+        var zhenId;
+        $.ajax({
+            url: uri + 'AllBacktype',
+            dataType: "JSON", //服务器返回json格式数据
+            type: 'GET', //HTTP请求类型
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            success: function(mes) {
+                var str = ""
+                for (var i = 0; i < mes.backtype.length; i++) {
+                    str += "<option value='" + mes.backtype[i].bKey + "'>" + mes.backtype[i].bType + "</option>";
+                }
+                document.getElementById("type").innerHTML = str;
+            },
+            error: function() {}
+        });
+
+        $.ajax({
+            url: uri + 'FindByZid/' + userInfo.getItem("userId"),
+            dataType: "JSON", //服务器返回json格式数据
+            type: 'GET', //HTTP请求类型
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            success: function(mes) {
+                /* console.log("镇办");*/
+                console.log(mes);
+                zhenId = mes.zhen.zhenId;
+            },
+            error: function() {
+
+            }
+        });
+
+        var i = 0;
+        var imgs = [];
+        var tu = document.getElementById("imgs");
+
+        function imgPreview(obj) {
+            if (i > 2) {
+                alert("上传不能超过三张哦！");
+                return 0;
+            }
+            document.getElementById("imgs").innerHTML += "<img onclick='delit(this)' src=\"\" id=\"show" + i + "\" width=\"200\" style=\"opacity: 0;\">";
+            var newsrc = getObjectURL(obj.files[0]);
+            document.getElementById('show' + i).src = newsrc; //将图片的路径设置为返回上传的图片的地址
+            document.getElementById("show" + i).style.opacity = 1; //将图片设置为可见
+            i++;
+            imgs[i] = obj.files[0];
+        }
+        //删除图片
+        function delit(t) {
+            var tid = parseInt(t.id.substring(4));
+            var a = confirm("您是否确定删除该图片？");
+            if (a) {
+                //alert(t.id);
+                tu.removeChild(t);
+                for (var j = tid; j < imgs.length - 1; j++) {
+                    imgs[j] = imgs[j + 1];
+                }
+            }
+            i--;
+        }
+
+        //建立一个可存取到该file的url
+        function getObjectURL(file) {
+            var url = null;
+            // 下面函数执行的效果是一样的，只是需要针对不同的浏览器执行不同的 js 函数而已
+            if (window.createObjectURL != undefined) { // basic
+                url = window.createObjectURL(file);
+            } else if (window.URL != undefined) { // mozilla(firefox)
+                url = window.URL.createObjectURL(file);
+            } else if (window.webkitURL != undefined) { // webkit or chrome
+                url = window.webkitURL.createObjectURL(file);
+            }
+            return url;
+        }
+
+        function lishi(t) {
+            t.href = "fankuicentre.html";
+        }
+        document.getElementById("tijiao").addEventListener('click', function() {
+
+            var fTitle = document.getElementById("biaoti").value;
+            var fContent = document.getElementById("text").value;
+            if (fTitle == "" || fContent == "") {
+                alert("意见建议标题，内容不能为空！")
+            } else {
+                document.getElementById("scz").style.display = "block";
+                var userId = userInfo.getItem("userId");
+                var fType = document.getElementById("type").value;
+                var fBeiyong1 = zhenId;
+                //alert(fTitle+"/"+fContent+"/"+userId+"/"+fType+"/"+fBeiyong1);
+                var formdata = new FormData();
+
+                formdata.append("userId", userId);
+                formdata.append("fTitle", fTitle);
+                formdata.append("fType", fType);
+                formdata.append("fContent", fContent);
+                formdata.append("fBeiyong1", fBeiyong1);
+                for (var i = 0; i < imgs.length; i++) {
+                    formdata.append("photo", imgs[i]);
+                }
+
+
+                $.ajax({
+                    url: uri + 'TijiaoFeedback/',
+                    data: formdata,
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    enctype: 'multipart/form-data',
+                    dataType: "JSON", //服务器返回json格式数据
+                    type: 'POST', //HTTP请求类型
+                    // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    success: function(mes) {
+
+                        console.log(mes);
+                        if (mes.statue == "存在敏感词") {
+                            alert("意见建议内容中存在敏感词，请重新编辑！");
+                        }
+                        if (mes.statue == "success") {
+                            alert("提交成功！");
+
+                        }
+                        if (mes.statue == "超过每日最大意见建议次数") {
+                            alert("超过每日最大意见建议次数,请明天再意见建议！")
+                        }
+                        document.getElementById("scz").style.display = "none";
+                    },
+                    error: function(xhr, type, errorThrown) {
+                        //异常处理
+
+                    }
+                });
+
+
+
+            }
+
+        })
+    </script>
+
+</div>
+<div class="index_content" id="themine">
+    <div class="mycard">
+        <div class="info">
+            <p id="name">姓名：--</p>
+            <p id="phone">联系方式：--</p>
+            <p id="villige">所在村：--</p>
+        </div>
+    </div>
+    <a class="minea jianju" onclick="openjianju(this)"><span>意见建议中心</span></a>
+    <!--	<a class="minea family" onclick="openfamily(this)"><span>家庭成员</span></a>-->
+    <a class="minea xiugai" onclick="openxiugai(this)"><span>修改密码</span></a>
+    <div class="tuichu"><button>退出</button></div>
+    <script type="text/javascript">
+        var name = userInfo.getItem("userName");
+        var phone = userInfo.getItem("userPhone");
+        var cun = userInfo.getItem("vName");
+        document.getElementById("name").innerHTML = "姓名：" + isnull(name);
+        document.getElementById("phone").innerHTML = "联系方式：" + isnull(phone);
+        document.getElementById("villige").innerHTML = "所在村名：" + isnull(cun);
+
+        function openjianju(t) {
+            window.location.href = "fankui.html";
+        }
+
+        function openfamily(t) {
+            window.location.href = "family.html";
+        }
+
+        function openxiugai(t) {
+            window.location.href = "xiugai.html";
+        }
+        document.getElementsByClassName("tuichu")[0].addEventListener("click", function() {
+            if (confirm("确定退出吗？退出将会清除您的登录记录！")) {
+                userInfo.clear();
+                clearAllCookie();
+                window.location.replace("/jdpt/login.html");
+            }
+        })
+
+        function clearAllCookie() {           
+            var date = new Date();           
+            date.setTime(date.getTime() - 10000);           
+            var keys = document.cookie.match(/[^ =;]+(?=\=)/g);           
+            console.log("需要删除的cookie名字：" + keys);           
+            if (keys) {             
+                for (var i =  keys.length; i--;)               document.cookie = keys[i] + "=0; expire=" + date.toGMTString() + "; path=/";           
+            }         
+        }
+
+        function isnull(string1) {
+            if (string1 == null || string1 == "" || string1 == undefined) {
+                return "未知"
+            } else {
+                return string1
+            }
+        }
+    </script>
+</div>
+<nav>
+    <a class="tt" id="shouye">
+        <span class="iconfont icon-shouye2"></span>
+        <span>首页</span>
+    </a>
+    <a id="jianju" class="tt">
+        <span class="iconfont icon-fankuixinxi" style="font-size: 1rem;"></span>
+        <span>意见建议</span>
+    </a>
+    <a id="mine" class="tt">
+        <span class="iconfont icon-wode4"></span>
+        <span>我的</span>
+    </a>
+</nav>
+<script type="text/javascript">
+    var homekey = 1;
+    if (sessionStorage.hasOwnProperty("homekey")) {
+        //alert(homekey);
+        homekey = parseInt(sessionStorage.getItem("homekey"));
+    } else {
+        sessionStorage.setItem("homekey", homekey);
+    }
+    switch (homekey) {
+        case 1:
+            document.getElementById("shouye").className = "tt active";
+            document.getElementById("theshouye").style.display = "block";
+            document.getElementById("thejianju").style.display = "none";
+            document.getElementById("themine").style.display = "none";
+            sessionStorage.setItem("homekey", 1);
+            break;
+        case 2:
+            document.getElementById("jianju").className = "tt active";
+            document.getElementById("theshouye").style.display = "none";
+            document.getElementById("thejianju").style.display = "block";
+            document.getElementById("themine").style.display = "none";
+            sessionStorage.setItem("homekey", 2);
+            break;
+        case 3:
+            document.getElementById("cunbao").className = "tt active";
+            zframe.src = "cunbaolist.html";
+            break;
+        case 4:
+            document.getElementById("mine").className = "tt active";
+            document.getElementById("theshouye").style.display = "none";
+            document.getElementById("thejianju").style.display = "none";
+            document.getElementById("themine").style.display = "block";
+            sessionStorage.setItem("homekey", 4);
+            break;
+    }
+
+    document.getElementById("mine").addEventListener("click", function() {
+        document.getElementById("shouye").className = "tt";
+        document.getElementById("jianju").className = "tt";
+        //	document.getElementById("cunbao").className="tt"
+        this.className = "tt active";
+        sessionStorage.setItem("homekey", 4);
+        document.getElementById("theshouye").style.display = "none";
+        document.getElementById("thejianju").style.display = "none";
+        document.getElementById("themine").style.display = "block";
+    })
+    document.getElementById("shouye").addEventListener("click", function() {
+        document.getElementById("mine").className = "tt";
+        document.getElementById("jianju").className = "tt";
+        //document.getElementById("cunbao").className="tt"
+        this.className = "tt active";
+        sessionStorage.setItem("homekey", 1);
+        document.getElementById("theshouye").style.display = "block";
+        document.getElementById("thejianju").style.display = "none";
+        document.getElementById("themine").style.display = "none";
+    })
+
+    document.getElementById("jianju").addEventListener("click", function() {
+            document.getElementById("shouye").className = "tt";
+            document.getElementById("mine").className = "tt";
+            //document.getElementById("cunbao").className="tt"
+            this.className = "tt active";
+            sessionStorage.setItem("homekey", 2);
+            document.getElementById("theshouye").style.display = "none";
+            document.getElementById("thejianju").style.display = "block";
+            document.getElementById("themine").style.display = "none";
+        })
+        /*document.getElementById("cunbao").addEventListener("click",function(){
+				document.getElementById("shouye").className="tt";
+				document.getElementById("mine").className="tt";
+				document.getElementById("jianju").className="tt";
+				this.className="tt active";
+	            sessionStorage.setItem("homekey",3);
+				zframe.src="cunbaolist.html";
+			})*/
+</script>
+
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>村补助</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/cards.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet" />
+	</head>
+<style>
+	header{
+		height: 5vh;
+		line-height: 5vh;
+	}
+	.content{
+		position: relative;
+		top: 5vh;
+		height: 95vh;
+	}
+	.active{
+		background-color: #CF2D28!important;
+		color: white;
+	}
+	iframe{
+		position: fixed;
+		width: 100%;
+		top: 9vh;
+		height: 91vh;
+		overflow: scroll;
+		border: 0;
+	}
+</style>
+	<body>
+		<header >
+		   <span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+		    <span style="padding-left: 2rem;">补助信息</span>
+		</header>
+		<div class="content">
+		    <div class="xuanze">
+		    	<button class="active" onclick="buzhuiang(this)">补助项</button>
+		    	<button onclick="buzhuhu(this)">补助户</button>
+		    	<button  onclick="buzhuduixiang(this)">补助对象</button>
+		    </div>
+		    <iframe id="siframe" src="buzhuxiang.html"></iframe>
+		</div>
+
+		<script src="/jdpt/static/js/header.js">
+		</script>
+		<script type="text/javascript">
+			document.getElementsByClassName("go-back")[0].addEventListener("click",function(){
+				window.location.href="index.html";
+			});
+			var siframe=document.getElementById("siframe");
+			var buttons=document.getElementsByTagName("button");
+			function buzhuiang(t){
+				siframe.src="buzhuxiang.html";
+				for(var i=0;i<buttons.length;i++){
+					buttons[i].className="";
+				}
+				t.className="active";
+			}
+			function buzhuduixiang(t){
+				siframe.src="buzhuduixiang.html";
+				for(var i=0;i<buttons.length;i++){
+					buttons[i].className="";
+				}
+				t.className="active";
+			}
+			function buzhuhu(t){
+				siframe.src="buzhuhu.html";
+				for(var i=0;i<buttons.length;i++){
+					buttons[i].className="";
+				}
+				t.className="active";
+			}
+
+
+
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>村内事务</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="/jdpt/static/css/all.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/tablecard.css" />
+    <script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+    <script src="/jdpt/static/js/storage.js"></script>
+
+</head>
+
+<body>
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+    <img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+<header>
+    <a class="go-back">&lsaquo;</a>
+</header>
+<div class="body">
+
+</div>
+<script src="/jdpt/static/js/header.js"></script>
+<script src="/jdpt/static/js/mask.js"></script>
+<script>
+    var loadmask=document.getElementById("loadmask");
+    showmask(loadmask);
+    var type=userInfo.getItem("type");
+    switch (type) {
+        case "1":
+            var huiyiid=userInfo.getItem("huiyiid");
+            //huiyiid=1;
+            huiyiinfo();
+            break;
+        case "2":
+            var huodongid=userInfo.getItem("huodongid");
+            //huodongid=1;
+            huidonginfo();
+            break;
+        case "3":
+            var personid=userInfo.getItem("personid");
+            //huodongid=1;
+            getqrpersoninf(personid);
+            break;
+        case "4":
+            var personid=userInfo.getItem("personid");
+            //huodongid=1;
+            getqcpersoninf(personid);
+            break;
+    }
+
+   function huiyiinfo(){
+     showmask(loadmask);
+       $.ajax({
+           url:uri+"HuiYiXQ/"+huiyiid,
+           dataType:"JSON",//服务器返回json格式数据
+           type:'GET',//HTTP请求类型
+           headers: {'Content-Type':'application/x-www-form-urlencoded'},
+           success:function(mes){
+               console.log("村级事务");
+               console.log(mes);
+               var vaTitle="";
+               mes.villageaffair.vaTitle==null?vaTitle="未知":vaTitle=mes.villageaffair.vaTitle;
+               var vaTypeofaffair="";
+               mes.villageaffair.vaTypeofaffair==null?vaTypeofaffair="未知":vaTypeofaffair=mes.villageaffair.vaTypeofaffair;
+               var vaTime="";
+               mes.villageaffair.vaTime==null?vaTime="未知":vaTime=mes.villageaffair.vaTime;
+               var vaPlace="";
+               mes.villageaffair.vaPlace==null?vaPlace="未知":vaPlace=mes.villageaffair.vaPlace;
+               var vaAttendants="";
+               mes.villageaffair.vaAttendants==null?vaAttendants="未知":vaAttendants=mes.villageaffair.vaAttendants;
+               var vaContent="";
+               mes.villageaffair.vaContent==null?vaContent="未知":vaContent=mes.villageaffair.vaContent;
+               var vaHost="";
+               mes.villageaffair.vaHost==null?vaHost="未知":vaHost=mes.villageaffair.vaHost;
+               var vaNotetaker="";
+               mes.villageaffair.vaNotetaker==null?vaNotetaker="未知":vaNotetaker=mes.villageaffair.vaNotetaker;
+               var vaPhoto="";
+               mes.villageaffair.vaPhoto==null?vaPhoto="":vaPhoto=mes.villageaffair.vaPhoto;
+
+               var contents=vaContent.split("/n");
+               var photos=vaPhoto.split(",");
+		console.log(photos.length);
+               photos.length-=1;
+               var str="";
+		console.log(photos.length);
+console.log(contents.length);
+             
+               str+="<h2>"+vaTitle+"</h2><br>";
+               str+="<table><tr><td>会议时间：</td><td>"+vaTime+"</td></tr>";
+               str+="<tr><td>会议地点：</td><td>"+vaPlace+"</td></tr>";
+               str+="<tr><td>会议类型：</td><td>"+vaTypeofaffair+"</td></tr>";
+               str+="<tr><td>会议主持人：</td><td>"+vaHost+"</td></tr>";
+               str+="<tr><td>会议记录人：</td><td>"+vaNotetaker+"</td></tr>";
+               str+="<tr><td>会议参与人员：</td><td>"+vaAttendants+"</td></tr></table><br>";
+               
+               if(photos.length<=contents.length){
+                   for (var i=0;i<contents.length;i++) {
+                       if(i<photos.length){
+                           str+="<p>"+contents[i]+"</p>";
+                           str+="<img src='/jdpt/HJResourse/CunHuiyi/"+photos[i]+"'/>";
+                       }else {
+                           str+="<p>"+contents[i]+"</p>";
+                       }
+                   }
+               }else {
+                   for (var i=0;i<photos.length;i++) {
+                       if(i<contents.length){
+                           str+="<img src='/jdpt/HJResourse/CunHuiyi/"+photos[i]+"'/>";
+                           str+="<p>"+contents[i]+"</p>";
+                       }else {
+                           str+="<img src='/jdpt/HJResourse/CunHuiyi/"+photos[i]+"'/>";
+                       }
+                   }
+               }
+               document.getElementsByClassName("body")[0].innerHTML=str;
+               hiden(loadmask);
+           },
+           error:function(xhr,type,errorThrown){
+               //异常处理
+
+           }
+       });
+   }
+
+
+   function huidonginfo() {
+        showmask(loadmask);
+       $.ajax({
+           url:uri+"Cunzuzhihuodongxq/"+huodongid,
+           dataType:"JSON",//服务器返回json格式数据
+           type:'GET',//HTTP请求类型
+           headers: {'Content-Type':'application/x-www-form-urlencoded'},
+           success:function(mes){
+               console.log("村级事务");
+               console.log(mes);
+
+               var cdyzzhdName="";
+               mes.data.cdyzzhdName==null?cdyzzhdName="":cdyzzhdName=mes.data.cdyzzhdName;
+               var cdyzzhdContent="";
+               mes.data.cdyzzhdContent==null?cdyzzhdContent="":cdyzzhdContent=mes.data.cdyzzhdContent;
+               var cdyzzhdPlace="";
+               mes.data.cdyzzhdPlace==null?cdyzzhdPlace="":cdyzzhdPlace=mes.data.cdyzzhdPlace;
+               var cdyzzhdTime="";
+               mes.data.cdyzzhdTime==null?cdyzzhdTime="":cdyzzhdTime=mes.data.cdyzzhdTime;
+               var cdyzzhdLeixing="";
+               mes.data.cunhuodongleixing.chdlxName==null?cdyzzhdLeixing="":cdyzzhdLeixing=mes.data.cunhuodongleixing.chdlxName;
+               var cdyzzhdZhenshilujing="";
+               mes.data.cdyzzhdZhenshilujing==null?cdyzzhdZhenshilujing="":cdyzzhdZhenshilujing=mes.data.cdyzzhdZhenshilujing;
+               var contents=cdyzzhdContent.split("/n");
+               var photos=cdyzzhdZhenshilujing.split(",");
+               photos.length-=1;
+               var str="";
+               str+="<h2>"+cdyzzhdName+"</h2><br>";
+               str+="<table><tr><td>活动时间：</td><td>"+cdyzzhdTime.substring(0,10)+"</td></tr>";
+               str+="<tr><td>活动地点：</td><td>"+cdyzzhdPlace+"</td></tr>";
+               str+="<tr><td>活动类型：</td><td>"+cdyzzhdLeixing+"</td></tr></table>";
+
+               if(photos.length<=contents.length){
+                   for (var i=0;i<contents.length;i++) {
+                       if(i<photos.length){
+                           str+="<p>"+contents[i]+"</p>";
+                           str+="<img src='/jdpt/HJResourse/Cunhuodong/"+photos[i]+"'/>";
+                       }else {
+                           str+="<p>"+contents[i]+"</p>";
+                       }
+                   }
+               }else {
+                   for (var i=0;i<photos.length;i++) {
+                       if(i<contents.length){
+                           str+="<img src='/jdpt/HJResourse/Cunhuodong/"+photos[i]+"'/>";
+                           str+="<p>"+contents[i]+"</p>";
+                       }else {
+                           str+="<img src='/jdpt/HJResourse/Cunhuodong/"+photos[i]+"'/>";
+                       }
+                   }
+               }
+               document.getElementsByClassName("body")[0].innerHTML=str;
+               hiden(loadmask);
+           },
+           error:function(xhr,type,errorThrown){
+               //异常处理
+
+           }
+       });
+   }
+
+   function getqrpersoninf(id) {
+       showmask(loadmask);
+       $.ajax({
+           url:uri+"FindHKQYById/"+id,
+           dataType:"JSON",//服务器返回json格式数据
+           type:'GET',//HTTP请求类型
+           headers: {'Content-Type':'application/x-www-form-urlencoded'},
+           success:function(mes){
+               console.log("迁移人员详情");
+               console.log(mes);
+              /* "hukouqianyi": - {                //类型：Object  可有字段  备注：无
+                   "hkqyName":"mock",                //类型：String  必有字段  备注：姓名
+                   "hkqySex":"mock",                //类型：String  必有字段  备注：性别
+                   "hkqyDizhi":"mock",                //类型：String  必有字段  备注：地址
+                   "hkqyTime":"mock",                //类型：String  必有字段  备注：时间
+                   "hkqyZhengming":"mock"                //类型：String  必有字段  备注：证明
+               }*/
+               var hkqyName="";
+               mes.hukouqianyi.hkqyName==null?hkqyName="未知":hkqyName=mes.hukouqianyi.hkqyName;
+               var hkqySex="";
+               mes.hukouqianyi.hkqySex==null?hkqySex="未知":hkqySex=mes.hukouqianyi.hkqySex;
+               var hkqyDizhi="";
+               mes.hukouqianyi.hkqyDizhi==null?hkqyDizhi="未知":hkqyDizhi=mes.hukouqianyi.hkqyDizhi;
+               var hkqyTime="";
+               mes.hukouqianyi.hkqyTime==null?hkqyTime="未知":hkqyTime=mes.hukouqianyi.hkqyTime;
+               var hkqyZhengming="";
+               mes.hukouqianyi.hkqyZhengming==null?hkqyZhengming="":hkqyZhengming=mes.hukouqianyi.hkqyZhengming;
+
+               var photos=hkqyZhengming.split(",");
+               photos.length-=1;
+               var str="";
+               str+="<table><tr><td>姓名：</td><td>"+hkqyName+"</td></tr>";
+               str+="<tr><td>性别：</td><td>"+hkqySex+"</td></tr>";
+               str+="<tr><td>时间：</td><td>"+hkqyTime+"</td></tr>";
+               str+="<tr><td>迁入地址：</td><td>"+hkqyDizhi+"</td></tr></table>";
+				
+				if(photos.length===0){
+					str+="<p>迁出证明：未知</p>"
+				}else{
+					str+="<p>迁出证明：</p>"
+					for(var i=0;i<photos.length;i++){
+					    str+="<img src='/jdpt/HJResourse/Cunhuodong/"+photos[i]+"'/>";
+					}
+				}
+               document.getElementsByClassName("body")[0].innerHTML=str;
+               hiden(loadmask);
+           },
+           error:function(xhr,type,errorThrown){
+               //异常处理
+
+           }
+       });
+   }
+
+    function getqcpersoninf(id) {
+        showmask(loadmask);
+        $.ajax({
+            url:uri+"FindHKQYById/"+id,
+            dataType:"JSON",//服务器返回json格式数据
+            type:'GET',//HTTP请求类型
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            success:function(mes){
+                console.log("迁移人员详情");
+                console.log(mes);
+                /* "hukouqianyi": - {                //类型：Object  可有字段  备注：无
+                     "hkqyName":"mock",                //类型：String  必有字段  备注：姓名
+                     "hkqySex":"mock",                //类型：String  必有字段  备注：性别
+                     "hkqyDizhi":"mock",                //类型：String  必有字段  备注：地址
+                     "hkqyTime":"mock",                //类型：String  必有字段  备注：时间
+                     "hkqyZhengming":"mock"                //类型：String  必有字段  备注：证明
+                 }*/
+                var hkqyName="";
+                mes.hukouqianyi.hkqyName==null?hkqyName="未知":hkqyName=mes.hukouqianyi.hkqyName;
+                var hkqySex="";
+                mes.hukouqianyi.hkqySex==null?hkqySex="未知":hkqySex=mes.hukouqianyi.hkqySex;
+                var hkqyDizhi="";
+                mes.hukouqianyi.hkqyDizhi==null?hkqyDizhi="未知":hkqyDizhi=mes.hukouqianyi.hkqyDizhi;
+                var hkqyTime="";
+                mes.hukouqianyi.hkqyTime==null?hkqyTime="未知":hkqyTime=mes.hukouqianyi.hkqyTime;
+                var hkqyZhengming="";
+                mes.hukouqianyi.hkqyZhengming==null?hkqyZhengming="":hkqyZhengming=mes.hukouqianyi.hkqyZhengming;
+
+                var photos=hkqyZhengming.split(",");
+                photos.length-=1;
+                var str="";
+                str+="<table><tr><td>姓名：</td><td>"+hkqyName+"</td></tr>";
+                str+="<tr><td>性别：</td><td>"+hkqySex+"</td></tr>";
+                str+="<tr><td>时间：</td><td>"+hkqyTime+"</td></tr>";
+                str+="<tr><td>迁出地址：</td><td>"+hkqyDizhi+"</td></tr></table>";
+				if(photos.length===0){
+					str+="<p>迁出证明：未知</p>";
+				}else{
+					str+="<p>迁出证明：</p>";
+					for(var i=0;i<photos.length;i++){
+					    str+="<img src='/jdpt/HJResourse/Cunhuodong/"+photos[i]+"'/>";
+					}
+				}
+                document.getElementsByClassName("body")[0].innerHTML=str;
+                hiden(loadmask);
+            },
+            error:function(xhr,type,errorThrown){
+                //异常处理
+
+            }
+        });
+    }
+</script>
+</body>
+</html>

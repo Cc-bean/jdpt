@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>资源</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="/jdpt/static/css/all.css" />
+    <link rel="stylesheet" href="/jdpt/static/css/tablecard.css" />
+    <script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+    <script src="/jdpt/static/js/storage.js"></script>
+
+</head>
+<style type="text/css">
+	header{
+		position: fixed;
+height: 6vh;
+line-height: 6vh;
+	}
+	.body{
+		position: relative;
+		top:6vh ;
+		width: 96%;
+		left: 2%;
+	}
+</style>
+<body>
+<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+    <img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+</div>
+<header>
+    <a class="go-back">&lsaquo;</a>
+</header>
+<div class="body">
+
+</div>
+<script src="/jdpt/static/js/header.js"></script>
+<script src="/jdpt/static/js/mask.js"></script>
+<script>
+
+        var zcid=sessionStorage.getItem("zcitemId");
+        showmask(loadmask);
+        $.ajax({
+            url:uri2+"resources/quaryResourcesdetails",
+            data:{
+                ResourcesDetails_Id:zcid
+            },
+            dataType:"JSON",//服务器返回json格式数据
+            type:'post',//HTTP请求类型
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            success:function(mes){
+                console.log("资源信息");
+                console.log(mes);
+                var rdName="";//名字
+                mes.Resourcesdetails.rdName==null?rdName="未知":rdName=mes.Resourcesdetails.rdName;
+                var rdAreacovered="";//占地面积
+				var rdDetails="";//细节
+				mes.Resourcesdetails.rdDetails==null?rdDetails="未知":rdDetails=mes.Resourcesdetails.rdDetails;
+				
+                mes.Resourcesdetails.rdAreacovered==null?rdAreacovered="未知":rdAreacovered=mes.Resourcesdetails.rdAreacovered;
+                var rdAdress="";//地址
+                mes.Resourcesdetails.rdAdress==null?rdAdress="未知":rdAdress=mes.Resourcesdetails.rdAdress;
+                var rType="";//类型
+                mes.Rtype.rType==null?rType="未知":rType=mes.Rtype.rType;
+                var photostring="";//图片
+                mes.Resourcesdetails.rdBeiyong1==null?photostring="未知":photostring=mes.Resourcesdetails.rdBeiyong1;
+
+                var photos=photostring.split(",");
+                console.log(photos.length);
+                photos.length-=1;
+                var str="";
+                console.log(photos.length);
+                //console.log(contents.length);
+                str+="<h2>"+rdName+"</h2><br>";
+                str+="<table><tr><td>占地面积：</td><td>"+rdAreacovered+"</td></tr>";
+                str+="<tr><td>地址：</td><td>"+rdAdress+"</td></tr>";
+				 str+="<tr><td>细节：</td><td>"+rdDetails+"</td></tr>";
+                str+="<tr><td>类型：</td><td>"+rType+"</td></tr></table><br>";
+				if(photos.length===0){
+					str+="<p>图片：暂无</p>";
+				}else{
+					str+="<p>图片：</p>";
+				}
+                for(var i=0;i<photos.length;i++){
+                    str+="<img src='/jdpt/HJResourse/CunHuiyi/"+photos[i]+"'/>";
+                }
+                document.getElementsByClassName("body")[0].innerHTML=str;
+                hiden(loadmask);
+            },
+            error:function(xhr,type,errorThrown){
+                //异常处理
+
+            }
+        });
+
+
+
+
+
+</script>
+</body>
+</html>

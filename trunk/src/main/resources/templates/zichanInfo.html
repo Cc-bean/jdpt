@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>资产</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="/jdpt/static/css/all.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/iconfont.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/cards.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/swiper.min.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/searchAndlist.css" rel="stylesheet"/>
+		<link href="/jdpt/static/css/zhengcexuezi.css" rel="stylesheet" />
+		<link href="/jdpt/static/css/swiperiframe.css" rel="stylesheet"/>
+		<script src="/jdpt/static/js/mask.js"></script>
+		<script src="/jdpt/static/js/swiper.min.js"></script>
+		<script src="/jdpt/static/js/jquery-2.1.0.min.js"></script>
+		<script src="/jdpt/static/js/storage.js"></script>
+	</head>
+	<style>
+		.search{
+			margin: -1rem 0;
+		}
+		.open{
+			position: relative;
+			float: right;
+			color: #CF2D28;
+			top: 0.1rem;
+			font-size: 1.8rem;
+			right: 1rem;
+		}
+		.select button:first-child{
+			margin-right: 1rem;
+		}
+		.select button{
+			padding: 0 1rem;
+		}
+		.pageselect{
+			bottom: 0.1rem;
+			position: fixed;
+		}
+		li a button{
+			position: relative;
+			height: 1.6rem;
+			font-size: 0.9rem;
+			padding: 0 0.5rem;
+			margin:0 1rem;
+			color: white;
+			float: right;
+			background-color: #CF2D28;
+			-webkit-border-radius: 0.2rem;
+			-moz-border-radius: 0.2rem;
+			border-radius: 0.2rem;
+		}
+	</style>
+	<body>
+
+	<div class="mask" id="loadmask" style="text-align: center;background-color: white">
+		<img style="position: relative;width: 8rem;height: 8rem;border-radius: 4rem;top: 30%;" src="/jdpt/static/img/loading1.gif"/>
+	</div>
+
+		<div id="omask" class="mask" onclick="hiden(this)">
+
+		</div>
+		<header>
+			<span class="go-back" style="color: #CF2D28;">&lsaquo;</span>
+			<span style="padding-left: 2rem;" id="title"></span>
+		</header>
+					<div class="pageselect" id="opage">
+						<button  onclick="show_hideno(this)"  class="iconfont icon-zuo2"></button>
+						<button onclick="ogoup()">上一页</button>
+						<button id="o_page_totals"></button>
+						<select id="otopage">
+						</select>
+						<button onclick="ogojumppage()">跳转</button>
+						<button onclick="ogodown()">下一页</button>
+					</div>
+
+                      <ul class="table-view" id="olist" style="margin-top: 3.1rem;">
+
+		    		</ul>
+
+
+		<script src="/jdpt/static/js/header.js"></script>
+		<script>
+            var loadmask=document.getElementById("loadmask");
+            showmask(loadmask);
+
+            var aid=sessionStorage.getItem("aid");
+            var aname=sessionStorage.getItem("aname");
+            document.getElementById("title").innerHTML=aname;
+
+            var opage=true;
+            function show_hideno(t) {
+                if(opage==false){
+                    document.getElementById("opage").style.width="100%";
+                    t.style.transform="rotate(180deg)";
+                    t.style.otransform="rotate(180deg)";
+                    t.style.mstransform="rotate(180deg)";
+                    t.style.moztransform="rotate(180deg)";
+                    t.style.webkittransform="rotate(180deg)";
+                    opage=true;
+                }else {
+                    document.getElementById("opage").style.width="2rem";
+                    t.style.transform="rotate(0deg)";
+                    t.style.otransform="rotate(0deg)";
+                    t.style.mstransform="rotate(0deg)";
+                    t.style.moztransform="rotate(0deg)";
+                    t.style.webkittransform="rotate(0deg)";
+                    opage=false;
+                }
+            }
+            var buttons=document.getElementsByTagName("button");
+
+
+            var olist=[];
+            var ototalpage=1;
+            var onowcount=0;
+            ogodown();
+            //点击查看党员详情
+            function showtaizhang(t){
+                var oitem=parseInt(t.id.substring(2));
+                var omask=document.getElementById("omask");
+                var str="";
+                str+="<div id='ocard' class='dycard'><table cellpadding='0' cellspacing='0'><tr><td>资产名称：</td><td>";
+                str+=olist[oitem][0]+"</td></tr><tr><td>单位：</td><td>";
+                str+=olist[oitem][1][0]+"</td></tr><tr><td>数量：</td><td>";
+                str+=olist[oitem][1][1]+"</td></tr><tr><td>单价：</td><td>";
+                str+=olist[oitem][1][2]+"元</td></tr><tr><td>原值：</td> <td>";
+                str+=olist[oitem][1][3]+" 元</td></tr><tr><td>现值：</td><td>";
+                str+=olist[oitem][1][4]+"元</td></tr><tr><td>变动情况：</td><td>";
+                str+=olist[oitem][1][5]+"</td></tr><tr><td>品牌：</td><td>";
+                str+=olist[oitem][1][6]+"</td></tr><tr><td>型号：</td><td>";
+                str+=olist[oitem][1][7]+"</td></tr><tr><td>构建时间：</td> <td>";
+                str+=olist[oitem][1][8]+" </td></tr><tr><td>来源：</td><td>";
+                str+=olist[oitem][1][9]+"</td></tr><tr><td>预计使用年限：</td><td>";
+                str+=olist[oitem][1][10]+"</td></tr><tr><td>管理部门：</td><td>";
+                str+=olist[oitem][1][11]+"</td></tr><tr><td>管理人员：</td><td>";
+                str+=olist[oitem][1][12]+"</td></tr><tr><td>状态：</td> <td>";
+                str+=olist[oitem][1][13]+" </td></tr><tr><td>备注：</td><td>";
+                str+=olist[oitem][1][14]+"</td></tr></table></div>";
+                omask.innerHTML=str;
+                showmask(omask);
+            }
+            function showrun(t){
+                var oitem=parseInt(t.id.substring(2));
+                var omask=document.getElementById("omask");
+                var str="";
+                str+="<div id='ocard' class='dycard'><table cellpadding='0' cellspacing='0'><tr><td>资产名称：</td><td>";
+                str+=olist[oitem][0]+"</td></tr><tr><td>承租人：</td><td>";
+                str+=olist[oitem][2][0]+"</td></tr><tr><td>状态：</td><td>";
+                str+=olist[oitem][2][1]+"</td></tr><tr><td>支付情况：</td><td>";
+                str+=olist[oitem][2][2]+"</td></tr><tr><td>备注：</td> <td>";
+                str+=olist[oitem][2][3]+" </td></tr>";
+                if(olist[oitem][2][4]==true){
+                   str+= "<tr><td>有无签订合同：</td><td>有</td></tr>";
+                    str+="<tr><td>合同期限：</td><td>";
+                    str+=olist[oitem][2][5]+"</td></tr><tr><td>支付合同金额：</td><td>";
+                    str+=olist[oitem][2][6]+"元</td></tr><tr><td>合同图片：</td>";
+                    var imgs=olist[oitem][2][7].split(",");
+                    if(imgs.length>0){
+                        for(var j=0;j<imgs.length-1;j++){
+                            str+="<tr><td><img src='"+imgs[j]+"'/></td></tr>"
+						}
+                        str+="</table></div>";
+					}else {
+                        str+="<td>暂无</td></tr></table></div>";
+					}
+
+				}
+                omask.innerHTML=str;
+                showmask(omask);
+            }
+
+            function ogojumppage() {
+                onowcount=document.getElementById("otopage").value;
+                //alert(onowcount);
+                getolist();
+            }
+            function getolist() {
+                showmask(loadmask);
+                $.ajax({
+                    url:uri+'findZichanmingziById/'+aid+"/"+onowcount+"/15",
+                    dataType:"JSON",//服务器返回json格式数据
+                    type:'GET',//HTTP请求类型
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    success:function(mes){
+                        console.log(mes);
+                        //总页数
+						if(mes.status=="null"){
+                            document.getElementById("olist").innerHTML="<img style='position: relative;width: 100%;' src='/jdpt/static/img/null.png'/>"
+
+                        }else {
+                        document.getElementById("olist").innerHTML="";
+                        olist.length=0;
+                        ototalpage=mes.total;
+                      /*  if (mes.total!=0) {*/
+                            //当前页
+                            onowcount = mes.nowPage;
+                            //填写当前页共多少页
+                            document.getElementById("o_page_totals").innerHTML = mes.nowPage + "/" + mes.total;
+                            //得到selectpage的页码选择
+                            var opagestr = "";
+                            for (var i = 1; i <= mes.total; i++) {
+                                opagestr += "<option value='" + i + "'>" + i + "</option>";
+                            }
+                            document.getElementById("otopage").innerHTML = opagestr;
+
+                            for (var i = 0; i < mes.data.length; i++) {
+                                var taizhang=[];
+                                var jinying=[];
+                                var zcmzName="";
+                                mes.data[i].zichanmingzi.zcmzName == null ? zcmzName = "未知" : zcmzName = mes.data[i].zichanmingzi.zcmzName;
+                                    if(mes.data[i].zichanjingying==null){
+                                        jinying.length=0;
+									}else {
+                                        var zcjyChengzhuren = ""
+                                        mes.data[i].zichanjingying.zcjyChengzhuren == null ? zcjyChengzhuren = "未知" : zcjyChengzhuren = mes.data[i].zichanjingying.zcjyChengzhuren;
+                                        var zcjyZhuangtai = ""
+                                        mes.data[i].zichanjingying.zcjyZhuangtai == null ? zcjyZhuangtai = "未知" : zcjyZhuangtai = mes.data[i].zichanjingying.zcjyZhuangtai;
+                                        var zcjyZhifuqinkuang = ""
+                                        mes.data[i].zichanjingying.zcjyZhifuqinkuang == null ? zcjyZhifuqinkuang = "未知" : zcjyZhifuqinkuang = mes.data[i].zichanjingying.zcjyZhifuqinkuang;
+                                        var zcjyBeizhu = ""
+                                        mes.data[i].zichanjingying.zcjyBeizhu == null ? zcjyBeizhu = "未知" : zcjyBeizhu = mes.data[i].zichanjingying.zcjyBeizhu;
+                                        var zcjyHetong = ""
+                                        mes.data[i].zichanjingying.zcjyHetong == null ? zcjyHetong = "未知" : zcjyHetong = mes.data[i].zichanjingying.zcjyHetong;
+                                        var zcjyHetongqixian = ""
+                                        mes.data[i].zichanjingying.zcjyHetongqixian == null ? zcjyHetongqixian = "未知" : zcjyHetongqixian = mes.data[i].zichanjingying.zcjyHetongqixian;
+                                        var zcjyHetongjine = ""
+                                        mes.data[i].zichanjingying.zcjyHetongjine == null ? zcjyHetongjine = "未知" : zcjyHetongjine = mes.data[i].zichanjingying.zcjyHetongjine;
+                                        var zcjyZhenshilujing = ""
+                                        mes.data[i].zichanjingying.zcjyZhenshilujing == null ? zcjyZhenshilujing = "未知" : zcjyZhenshilujing = mes.data[i].zichanjingying.zcjyZhenshilujing;
+                                        jinying = [zcjyChengzhuren, zcjyZhuangtai, zcjyZhifuqinkuang, zcjyBeizhu, zcjyHetong, zcjyHetongqixian, zcjyHetongjine, zcjyZhenshilujing];
+                                    }
+                               
+                                    if (mes.data[i].zichantaizhang==null) {
+                                        taizhang.length = 0;
+                                    }else {
+                                    var zjtzJilangdanwei = "";
+                                    mes.data[i].zichantaizhang.zjtzJilangdanwei == null ? zjtzJilangdanwei = "未知" : zjtzJilangdanwei = mes.data[i].zichantaizhang.zjtzJilangdanwei;
+                                    var zjtzShuliang = "";
+                                    mes.data[i].zichantaizhang.zjtzShuliang == null ? zjtzShuliang = "未知" : zjtzShuliang = mes.data[i].zichantaizhang.zjtzShuliang;
+                                    var zjtzDanjian = "";
+                                    mes.data[i].zichantaizhang.zjtzDanjian == null ? zjtzDanjian = "未知" : zjtzDanjian = mes.data[i].zichantaizhang.zjtzDanjian;
+                                    var zjtzYuanzhi = "";
+                                    mes.data[i].zichantaizhang.zjtzYuanzhi == null ? zjtzYuanzhi = "未知" : zjtzYuanzhi = mes.data[i].zichantaizhang.zjtzYuanzhi;
+                                    var zjtzPinpai = "";
+                                    mes.data[i].zichantaizhang.zjtzPinpai == null ? zjtzPinpai = "未知" : zjtzPinpai = mes.data[i].zichantaizhang.zjtzPinpai;
+                                    var zjtzBiandongqingkuang = "";
+                                    mes.data[i].zichantaizhang.zjtzBiandongqingkuang == null ? zjtzBiandongqingkuang = "未知" : zjtzBiandongqingkuang = mes.data[i].zichantaizhang.zjtzBiandongqingkuang;
+                                    var zjtzXianzhi = "";
+                                    mes.data[i].zichantaizhang.zjtzXianzhi == null ? zjtzXianzhi = "未知" : zjtzXianzhi = mes.data[i].zichantaizhang.zjtzXianzhi;
+                                    var zjtzXinghao = "";
+                                    mes.data[i].zichantaizhang.zjtzXinghao == null ? zjtzXinghao = "未知" : zjtzXinghao = mes.data[i].zichantaizhang.zjtzXinghao;
+                                    var zjtzGoujianshijian = "";
+                                    mes.data[i].zichantaizhang.zjtzGoujianshijian == null ? zjtzGoujianshijian = "未知" : zjtzGoujianshijian = mes.data[i].zichantaizhang.zjtzGoujianshijian;
+                                    var zjtzLaiyuan = "";
+                                    mes.data[i].zichantaizhang.zjtzLaiyuan == null ? zjtzLaiyuan = "未知" : zjtzLaiyuan = mes.data[i].zichantaizhang.zjtzLaiyuan;
+                                    var zjtzYvjinianxian = "";
+                                    mes.data[i].zichantaizhang.zjtzYvjinianxian == null ? zjtzYvjinianxian = "未知" : zjtzYvjinianxian = mes.data[i].zichantaizhang.zjtzYvjinianxian;
+                                    var zjtzDepartment = "";
+                                    mes.data[i].zichantaizhang.zjtzDepartment == null ? zjtzDepartment = "未知" : zjtzDepartment = mes.data[i].zichantaizhang.zjtzDepartment;
+                                    var zjtzPeople = "";
+                                    mes.data[i].zichantaizhang.zjtzPeople == null ? zjtzPeople = "未知" : zjtzPeople = mes.data[i].zichantaizhang.zjtzPeople;
+                                    var zjtzZhuangtai = "";
+                                    mes.data[i].zichantaizhang.zjtzZhuangtai == null ? zjtzZhuangtai = "未知" : zjtzZhuangtai = mes.data[i].zichantaizhang.zjtzZhuangtai;
+                                    var zjtzBeizhu = "";
+                                    mes.data[i].zichantaizhang.zjtzBeizhu == null ? zjtzZhuangtai = "未知" : zjtzZhuangtai = mes.data[i].zichantaizhang.zjtzZhuangtai;
+                                    taizhang = [zjtzJilangdanwei, zjtzShuliang, zjtzDanjian, zjtzYuanzhi, zjtzXianzhi, zjtzBiandongqingkuang, zjtzPinpai, zjtzXinghao,
+                                        zjtzGoujianshijian, zjtzLaiyuan, zjtzYvjinianxian, zjtzDepartment, zjtzPeople, zjtzZhuangtai, zjtzBeizhu];
+                                }
+                                
+                                olist[i] = [zcmzName, taizhang, jinying];
+                            }
+                            getoitem(olist);
+
+                       }
+                        hiden(loadmask);
+                    },
+                    error:function(){
+                        document.getElementById("olist").innerHTML="<p class='title'><span>哎呀！您的网络好像断了。。。</span></p>" +"<img class='errorimg' src='/jdpt/static/img/losem.jpg'/>"
+
+                    }
+                });
+            }
+
+            function getoitem(dydata){
+                var dylist=document.getElementById("olist");
+                var str="";
+                for(var i=0;i<dydata.length;i++){
+						console.log(i+"/"+dydata[i][1]+dydata[i][2]);
+                    if(dydata[i][1].length==0&&dydata[i][2].length==0){
+                        var name=dydata[i][0];
+                        if(name.length>18){
+                            name=dydata[i][0].substring(0,18)+"......"
+                        }
+                        str+="<li class='table-view-cell'>"+"<a>"+name+"</a></li>"
+					}
+					if(dydata[i][1].length!=0&&dydata[i][2].length==0){
+                        var name=dydata[i][0];
+                        if(name.length>13){
+                            name=dydata[i][0].substring(0,13)+"......"
+                        }
+                        str+="<li class='table-view-cell'>"+"<a>"+name+"<button id='tz"+i+"' onclick='showtaizhang(this)'>台账表</button></a></li>"
+
+                    }if(dydata[i][1].length==0&&dydata[i][2].length!=0){
+                        var name=dydata[i][0];
+                        if(name.length>13){
+                            name=dydata[i][0].substring(0,13)+"......"
+                        }
+                        str+="<li class='table-view-cell'>"+"<a>"+name+"<button id='jy"+i+"' onclick='showrun(this)'>经营表</button></a></li>"
+
+                    }if(dydata[i][1].length!=0&&dydata[i][2].length!=0){
+                        var name=dydata[i][0];
+                        if(name.length>8){
+                            name=dydata[i][0].substring(0,8)+"......"
+                        }
+                        str += "<li class='table-view-cell'>" + "<a>" + name + "<button id='tz" + i + "' onclick='showtaizhang(this)'>台账表</button><button id='jy" + i + "' onclick='showrun(this)'>经营表</button></a></li>"
+                    }
+				}
+                dylist.innerHTML=str;
+            }
+
+            //下一页
+            function ogodown() {
+                if(onowcount<ototalpage){
+                    onowcount+=1;
+                    getolist();
+                }else {
+                    return;
+                }
+            }
+            //上一页
+            function ogoup() {
+                if(onowcount==0){
+                    return
+                }else{
+                    onowcount-=1;
+                    // alert(dynowcount);
+                    getolist();
+                }
+
+            }
+
+
+
+
+		</script>
+
+  <script>
+
+
+  </script>
+
+	</body>
+</html>

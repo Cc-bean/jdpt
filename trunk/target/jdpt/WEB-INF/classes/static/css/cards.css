@@ -1,0 +1,28 @@
+		.dycard,.dangyuan{
+			position: absolute;
+			width: 92%;
+			left: 4%;
+			bottom: 15%;
+			min-height: 40%;
+			max-height: 70%;
+			overflow-y:scroll;	
+			border-radius: 1rem;
+			box-shadow: 0px 0px 2px #CCCCCC;
+			z-index: 100000;
+			background-color: white;
+		}
+		.dycard  table,.dangyuan table{
+			position: relative;
+			top: 1rem;
+			width: 100%;
+			padding: 0;
+			color: #555555;
+		}
+		.dycard  table td:nth-child(1),.dangyuan  table td:nth-child(1){
+			width: 30%;
+			font-size: 16px;
+			position: relative;
+			text-align: right;
+			padding: 0.2rem 0rem;
+		}
+		

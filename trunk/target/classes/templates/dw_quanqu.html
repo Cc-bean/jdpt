@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/all.css" />
+    <link rel="stylesheet" href="../css/swiper.min.css" />
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../js/all.js"></script>
+    <script src="../js/echarts.js"></script>
+    <script src="../js/swiper.min.js"></script>
+    <title>全区反馈</title>
+</head>
+<style>
+	 td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    
+    .table thead {
+        background-color: rgba(30, 143, 255, 0.171);
+    }
+    
+    .table tr:nth-child(2n) {
+        background-color: rgba(30, 143, 255, 0.171);
+    }
+    
+    .table td button {
+        padding: 4px 10px;
+        letter-spacing: 2px;
+        background-color: rgba(30, 143, 255, 0.616);
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+    }
+    
+    select {
+        margin-left: 1vw;
+        margin-right: 2vw;
+        padding: 0px 10px;
+    }
+    
+    button {
+        border: none;
+        background-color: dodgerblue;
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+        margin: 0 1vw;
+    }
+    
+    td button {
+        padding: 4px 10px;
+        letter-spacing: 2px;
+        background-color: rgba(30, 143, 255, 0.616);
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+    }
+    
+	.table2 thead th:nth-child(2),
+	.table2 thead th:nth-child(3),
+	.table2 thead th:nth-child(4),
+	.table2 thead th:nth-child(5){
+		text-align: center;
+	}
+	.table2 tr td:nth-child(2),
+	.table2 tr td:nth-child(3),
+	.table2 tr td:nth-child(4),
+	.table2 tr td:nth-child(5){
+		text-align: center;
+	}
+	.table1 tr td:nth-child(1),
+	.table1 tr td:nth-child(2),
+	.table1 tr td:nth-child(5){
+		cursor: pointer;
+	}
+	a{
+		cursor: pointer;
+	}
+</style>
+<body>
+	<div class="mask_lg" style="display: none;">
+        <div class="exit glyphicon glyphicon-resize-small" onclick="hidenimg()"></div>
+        <div class="content">
+            <div class="swiper-container" id="myimgs" style="text-align: center;">
+                <div class="swiper-wrapper" id="fkimgs">
+                </div>
+                <!-- <div class="swiper-pagination"></div>-->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingdiv" class="loadingdiv">
+        <img src="../images/loading.gif" />
+    </div>
+    <div id="hoverdiv" class="hoverdiv">
+        <div class="exit glyphicon glyphicon-remove" onclick="hidenhoverdiv()"></div>
+        <div id="hoverdivcontent" style="margin-top: 1vw;">
+        </div>
+    </div>
+    <div class="container-fluid" style="padding-top: 10px;">
+    	<div style="margin-bottom: 10px;">
+    		年：
+    		<select id="years">
+    		</select> 
+    		镇(街道):
+    		<select id="zheniedao">
+    		</select>
+    		<button onclick="getallhd()">搜索</button>
+    	</div>
+        <table class="table table1" style="table-layout: fixed;width: 100%">
+            <thead>
+                <th width="28%">组织活动主题</th>
+                <th width="30%">组织活动内容</th>
+                <th width="8%">活动类型</th>
+                <th width="8%">活动时间</th>
+                <th width="18%">活动地点</th>
+                <th width="8%">图片</th>
+            </thead>
+            <tbody id="cunganbu_list">
+
+            </tbody>
+
+        </table>
+        <div>
+            共<span id="count" style="color: dodgerblue;"></span>条数据 请选择每次显示的数据条数：
+            <select id="pagesize" onchange="tothepagesize()">
+            		<option value="10">10</option>
+            		<option value="14">14</option>
+            		<option value="16">16</option>
+            		<option value="18">18</option>
+            		<option value="20">20</option>
+            	</select> 当前页：
+            <span id="thepage" style="color: dodgerblue;"></span>总页码：<span id="total" style="color: dodgerblue;"></span>
+            <button onclick="pageup()">上一页</button> 请选择您要查询的页码：
+            <select id="pages" onchange="tozhepage()"></select>
+            <button onclick="pagedown()">下一页</button>
+        </div>
+    </div>
+    <div class="container-fluid" style="padding-top: 2vh;">
+        <div class="row">
+            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12" style="height: 96vh;">
+                <div class="tu_contain">
+                    <div class="tu_card_header">
+                        <p>各镇(街道)所辖行政村党员发展情况统计表（单位:人）</p>
+                    </div>
+                    <div class="tu_info">
+                        <table class="table table-hover table2">
+                            <thead>
+                                <tr>
+                                    <th>镇(街道)</th>
+                                    <th>积极分子</th>
+                                    <th>发展对象</th>
+                                    <th>预备党员</th>
+                                    <th>正式党员</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dw_qq">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-7 col-xs-12" style="height: 96vh;">
+                <div class="tu_contain">
+                    <div class="tu_card_header">
+                        <p>各镇(街道)所辖行政村党员发展数量总结</p>
+                    </div>
+                    <div class="dy_tu" style="margin-top: 10px;">
+                        <table class="card_table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                    	<a id="1" onclick="getdylist(this)">
+                                        <span>积极分子</span><br>
+                                        <span id="jjfz"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<a id="2" onclick="getdylist(this)">
+                                        <span>发展对象</span><br>
+                                        <span id="fzdx"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<a id="3" onclick="getdylist(this)">
+                                        <span>预备党员</span><br>
+                                        <span id="ybdy"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<a id="4" onclick="getdylist(this)">
+                                        <span>正式党员</span><br>
+                                        <span id="dy"></span>
+                                        <a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="dy_tu" id="dw_tu1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    zhenId=0;
+    var pagesize = 10;
+    var startpage = 1;
+    var total = 0;
+    (function(){
+    	var str="";
+    	for(var i=year;i>=2018;i--){
+    		str+="<option value='"+i+"'>"+i+"年</option>";
+    	}
+    	document.getElementById("years").innerHTML=str;
+    	var str1="";
+    	str1+="<option value='0'>全区</option>";
+    	for(var i=0,len=zhensx.length;i<len;i++){
+    		str1+="<option value='"+zhensx[i].zhenid+"'>"+zhensx[i].zhenName+"</option>"
+    	}
+    	document.getElementById("zheniedao").innerHTML=str1;
+    })();
+    
+    getcunganbu_list(zhenId,year, startpage, pagesize);
+
+    function pageup() {
+        if (startpage <= 1) {
+            alert("已经是第一页了！")
+        } else {
+            startpage--;
+           getcunganbu_list(zhenId,year, startpage, pagesize);
+
+        }
+    }
+
+    function pagedown() {
+        if (startpage >= total) {
+            alert("已经是最后一页了！")
+        } else {
+            startpage++;
+            getcunganbu_list(zhenId,year, startpage, pagesize);
+
+        }
+    }
+
+    function tozhepage() {
+        startpage = document.getElementById("pages").value;
+        getcunganbu_list(zhenId,year, startpage, pagesize);
+
+    }
+
+    function tothepagesize() {
+        pagesize = document.getElementById("pagesize").value;
+        startpage = 1;
+        getcunganbu_list(zhenId,year, startpage, pagesize);
+
+    }
+	function getallhd(){
+		var zhenId=document.getElementById("zheniedao").value;
+		var year=document.getElementById("years").value;
+//		alert(zhenId);
+//		alert(year);
+		getcunganbu_list(zhenId,year, startpage, pagesize);
+
+	}
+    function getcunganbu_list(zhenId,year, startpage, pagesize) {
+        $("#loadingdiv").show();
+        $.ajax({
+            url: uri + "h/huodongFindByZhenAndTime" ,
+            dataType: 'json', //服务器返回json格式数据
+            data:{
+            	mZhenid:zhenId,
+            	year:year,
+            	startPage:startpage,
+            	pageSize:pagesize
+            },
+            type: 'post', //HTTP请求类型
+            timeout: 10000, //超时时间设置为10秒；
+            success: function(mes) {
+                console.log("组织活动");
+                console.log(mes);
+                $("#total").html(mes.total);
+                $("#thepage").html(startpage);
+                $("#count").html(mes.size);
+                var str1 = "";
+                total = mes.total;
+                for (var i = 1, len = total; i <= len; i++) {
+                    str1 += "<option value='" + i + "'>" + i + "</option>";
+                }
+                $("#pages").html(str1);
+                var str = "";
+                for (var i = 0, len = mes.data.length; i < len; i++) {
+                    str += "<tr>";
+                    str += "<td onclick='showcontent(this)'>" + isnull_unde(mes.data[i].DYZZHD_Name) + "</td>";
+                    str += "<td onclick='showcontent(this)'>" + isnull_unde(mes.data[i].DYZZHD_Content) + "</td>";
+                    str += "<td onclick='showcontent(this)'>" + isnull_unde(mes.data[i].HDLX_Name) + "</td>";
+                    str += "<td onclick='showcontent(this)'>" + isnull_unde(mes.data[i].DYZZHD_Time) + "</td>";
+                    str += "<td onclick='showcontent(this)'>" + isnull_unde(mes.data[i].Z_Name+mes.data[i].V_Name+mes.data[i].DYZZHD_Place) + "</td>";
+                    if (mes.data[i].DYZZHD_ZhenshiluJing == null || mes.data[i].DYZZHD_ZhenshiluJing == "") {
+                        str += "<td>无</td>";
+                    } else {
+                        str += "<td><button id='" + mes.data[i].DYZZHD_ZhenshiluJing + "' onclick='showimg(this)'>查看</button></td>";
+                    }
+                    str += "</tr>";
+                }
+                document.getElementById("cunganbu_list").innerHTML = str;
+                $("#loadingdiv").hide();
+            },
+            error: function() {
+
+            }
+        })
+
+    }
+
+    function showcontent(it) {
+        document.getElementById("hoverdiv").style.display = "block";
+        document.getElementById("hoverdivcontent").innerHTML = it.innerHTML;
+    }
+    
+
+    function showimg(it) {
+        // alert(it.id);
+        var photos = it.id.split(",");
+        photos.length--;
+        var str = "";
+        for (var i = 0, len = photos.length; i < len; i++) {
+            str += "<div class='swiper-slide'><img src='" + uri1 + "HJResourse/Zuzhihuodong/" + photos[i] + "' /></div>";
+        }
+        document.getElementById("fkimgs").innerHTML = str;
+        
+        $(".mask_lg")[0].style.display = "block";
+        var imgswiper =new Swiper("#myimgs", {
+	        slidesPerView: 1,
+	        loop: true,
+	        observer: true,
+	        observeParents: true,
+	        navigation: {
+	            nextEl: '.swiper-button-next',
+	            prevEl: '.swiper-button-prev',
+	        },
+    	});
+    }
+
+    function hidenimg() {
+        $(".mask_lg")[0].style.display = "none";
+    }
+
+    function hidenhoverdiv() {
+        document.getElementById("hoverdiv").style.display = "none";
+    }
+</script>
+
+<script>
+    var dwChart2 = echarts.init(document.getElementById('dw_tu1'));
+    dwChart2.showLoading();
+    qqDynumber();
+	
+	function getdylist(it){
+		var etity=it.id;
+		//alert(etity);
+		switch (etity){
+			case "1":
+				
+				window.location.href="qqjijifenzi.html";
+				break;
+			case "2":
+				
+				window.location.href="qqfazhandx.html";
+				break;
+			case "3":
+				window.location.href="qqybdy.html";
+				break;
+			case "4":
+				window.location.href="qqzsdy.html";
+				break;
+		}
+		
+	}
+	
+    function qqDynumber() {
+        $.ajax({
+            url: uri + "CountByqu",
+            dataType: 'json', //服务器返回json格式数据
+            type: 'post', //HTTP请求类型
+            timeout: 5000, //超时时间设置为10秒；
+            success: function(data) {
+                console.log("全区党员情况变更");
+                console.log(data);
+                var jjfz = 0,
+                    fzdx = 0,
+                    ybdy = 0,
+                    dy = 0
+
+                var str = "";
+                for (var j = 0, len1 = zhensx.length; j < len1; j++) {
+                	
+	               for (var i = 0; i < data.data.length; i += 5) {
+	               		if(zhensx[j].zhenName==data.data[i]){
+	               			jjfz += data.data[i + 1];
+	                    	fzdx += data.data[i + 2];
+	                    	ybdy += data.data[i + 3];
+	                    	dy += data.data[i + 4];
+	                    	str += "<tr><td>" + data.data[i] + "</td><td>" + data.data[i + 1] + "</td><td>" + data.data[i + 2] + "</td><td>" + data.data[i + 3] + "</td><td>" + data.data[i + 4] + "</td></tr>";
+	                
+	               		}
+	                   }
+				}
+                str += "<tbody></table>";
+                document.getElementById("dw_qq").innerHTML = str;
+                document.getElementById("jjfz").innerHTML = jjfz + "人";
+                document.getElementById("fzdx").innerHTML = fzdx + "人";
+                document.getElementById("ybdy").innerHTML = ybdy + "人";
+                document.getElementById("dy").innerHTML = dy + "人";
+                dwoption2 = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    series: [{
+                        name: '人数',
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '20',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: [{
+                            value: jjfz,
+                            name: '积极分子',
+                            itemStyle: {
+                                color: "lightgreen"
+                            },
+                        }, {
+                            value: fzdx,
+                            name: '发展对象',
+                            itemStyle: {
+                                color: "gold"
+                            },
+                        }, {
+                            value: ybdy,
+                            name: '预备党员',
+                            itemStyle: {
+                                color: "aqua"
+                            },
+                        }, {
+                            value: dy,
+                            name: '党员',
+                            itemStyle: {
+                                color: "lightskyblue"
+                            },
+                        }]
+                    }],
+
+                };
+                dwChart2.hideLoading();
+                dwChart2.setOption(dwoption2);
+
+            },
+            error: function(xhr, type, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    }
+</script>
+
+</html>

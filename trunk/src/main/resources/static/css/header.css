@@ -1,0 +1,14 @@
+header{
+	position: relative;
+	width: 100%;
+	height: 3rem;
+	line-height: 3rem;
+	background-color: white;
+}
+.go-back{
+	color: #CF2D28;font-size: 2rem;
+	display: inline-block;
+	width: 2rem;
+	text-align: center;
+}
+	
